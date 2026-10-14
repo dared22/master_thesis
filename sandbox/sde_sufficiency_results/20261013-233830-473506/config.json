@@ -1,0 +1,31 @@
+{
+  "trajectory_counts": [
+    5,
+    10,
+    20,
+    40
+  ],
+  "observation_counts": [
+    501,
+    1001,
+    3001,
+    7501,
+    15000
+  ],
+  "data_replicates": 5,
+  "training_steps": 1500,
+  "batch_size": 2048,
+  "drift_tolerance": 0.05,
+  "diffusion_tolerance": 0.02,
+  "simulation_seed": 9090,
+  "fit_seed": 2026,
+  "first_pool": "original train_paths, originally simulated with seed 42",
+  "A": 1.0,
+  "k": 1.0,
+  "sigma": 1.1,
+  "t0": 0.0,
+  "t1": 500.0,
+  "solver_dt_limit": 0.01,
+  "master_observations": 15000,
+  "test_paths": 60
+}
