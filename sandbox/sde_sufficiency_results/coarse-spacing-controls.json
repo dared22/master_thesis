@@ -1,0 +1,12 @@
+{
+  "same_coarse_spacing": {
+    "best_step": 100,
+    "initial_validation_loss": 0.5268789529800415,
+    "best_validation_loss": 0.455024778842926
+  },
+  "1000_dense_observations": {
+    "best_step": 100,
+    "initial_validation_loss": 0.6141558289527893,
+    "best_validation_loss": 0.600053071975708
+  }
+}

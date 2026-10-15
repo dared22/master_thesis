@@ -1,0 +1,123 @@
+{
+  "initial": {
+    "sigma": 1.0000001192092896,
+    "coarse_training": {
+      "nll": 0.5368854999542165,
+      "residual_term": 0.5368853807449341,
+      "log_sigma": 1.1920928244535446e-07
+    },
+    "fine_validation_sample": {
+      "nll": 0.6146110296249319,
+      "residual_term": 0.6146109104156494,
+      "log_sigma": 1.1920928244535446e-07
+    },
+    "coarse_validation_sample": {
+      "nll": 0.5253659486770559,
+      "residual_term": 0.5253658294677734,
+      "log_sigma": 1.1920928244535446e-07
+    }
+  },
+  "trained": {
+    "sigma": 0.9636690020561218,
+    "coarse_training": {
+      "nll": 0.46485464690709627,
+      "residual_term": 0.5018620491027832,
+      "log_sigma": -0.03700740219568693
+    },
+    "fine_validation_sample": {
+      "nll": 0.6177134406426005,
+      "residual_term": 0.6547208428382874,
+      "log_sigma": -0.03700740219568693
+    },
+    "coarse_validation_sample": {
+      "nll": 0.4547554445126108,
+      "residual_term": 0.49176284670829773,
+      "log_sigma": -0.03700740219568693
+    }
+  },
+  "trained_drift_initial_sigma": {
+    "sigma": 1.0,
+    "coarse_training": {
+      "nll": 0.4660581648349762,
+      "residual_term": 0.4660581648349762,
+      "log_sigma": 0.0
+    },
+    "fine_validation_sample": {
+      "nll": 0.6080116629600525,
+      "residual_term": 0.6080116629600525,
+      "log_sigma": 0.0
+    },
+    "coarse_validation_sample": {
+      "nll": 0.45667946338653564,
+      "residual_term": 0.45667946338653564,
+      "log_sigma": 0.0
+    }
+  },
+  "trained_drift_true_sigma": {
+    "sigma": 1.1,
+    "coarse_training": {
+      "nll": 0.48048221907472594,
+      "residual_term": 0.385172039270401,
+      "log_sigma": 0.09531017980432493
+    },
+    "fine_validation_sample": {
+      "nll": 0.597799090956211,
+      "residual_term": 0.502488911151886,
+      "log_sigma": 0.09531017980432493
+    },
+    "coarse_validation_sample": {
+      "nll": 0.47273120126581175,
+      "residual_term": 0.3774210214614868,
+      "log_sigma": 0.09531017980432493
+    }
+  },
+  "initial_drift_trained_sigma": {
+    "sigma": 0.9636690020561218,
+    "coarse_training": {
+      "nll": 0.5411232602455668,
+      "residual_term": 0.5781306624412537,
+      "log_sigma": -0.03700740219568693
+    },
+    "fine_validation_sample": {
+      "nll": 0.6248198044159464,
+      "residual_term": 0.6618272066116333,
+      "log_sigma": -0.03700740219568693
+    },
+    "coarse_validation_sample": {
+      "nll": 0.5287186395981364,
+      "residual_term": 0.5657260417938232,
+      "log_sigma": -0.03700740219568693
+    }
+  },
+  "true_coefficients": {
+    "sigma": 1.1,
+    "coarse_training": {
+      "nll": 0.48318633279657347,
+      "residual_term": 0.38787615299224854,
+      "log_sigma": 0.09531017980432493
+    },
+    "fine_validation_sample": {
+      "nll": 0.5974955841050147,
+      "residual_term": 0.5021854043006897,
+      "log_sigma": 0.09531017980432493
+    },
+    "coarse_validation_sample": {
+      "nll": 0.4757624848828314,
+      "residual_term": 0.38045230507850647,
+      "log_sigma": 0.09531017980432493
+    }
+  },
+  "settings": {
+    "seed": 100,
+    "training_steps": 1500,
+    "training_spacing": 0.5005005005005005,
+    "validation_spacing": 0.03333555570371358,
+    "true_sigma": 1.1,
+    "best_step": 0
+  },
+  "full_fine_validation": {
+    "initial": 0.6022024184944265,
+    "trained": 0.6044660165316482,
+    "trained_drift_true_sigma": 0.5876319837552434
+  }
+}
