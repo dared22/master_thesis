@@ -1,0 +1,39 @@
+\input{config/preamble}
+\input{config/metadata}
+
+\begin{document}
+
+
+% If you need a List of Acronyms, place them before the \startthesis command. You will need "\usepackage[nohyperlinks]{acronym}", see line 4.
+
+% \section*{List of Acronyms}
+% \begin{acronym}
+%   \acro{TSO}{Transmission System Operator}
+%   \acro{LSTM}{Long Short-Term Memory}
+% \end{acronym}
+
+\startthesis % This command will separate the Roman-numbered pages above and the Arabic-numbered pages below as well as create the table of contents, list of figures, list of tables, and potentially list of acronyms
+
+
+\input{sections/01-introduction/section}
+\clearpage
+\input{sections/02-theory/section}
+\clearpage
+\input{sections/03-literature-review/section}
+\clearpage
+\input{sections/04-methodology/section}
+\clearpage
+\input{sections/05-results/section}
+\clearpage
+\input{sections/06-discussion/section}
+\clearpage
+\input{sections/07-conclusion/section}
+
+% References precede the appendices in the NMBU template.
+\clearpage
+\references
+
+\clearpage
+\input{appendices/appendices}
+
+\end{document}

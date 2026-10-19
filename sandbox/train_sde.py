@@ -20,9 +20,6 @@ def train_nsde(
     validation_size=4096,
     seed=100,
     validation_seed=102,
-    patience=None,
-    min_delta=1e-4,
-    min_steps=0,
     verbose=True,
 ):
     """Train a fresh NSDE and return its best validation checkpoint and history.
@@ -31,8 +28,7 @@ def train_nsde(
     Validation paths must be independent of training paths. Keep validation
     data and validation_seed fixed across dataset sizes for comparable scores.
     The loss is the notebook's increment NLL with model-independent terms
-    omitted. Patience counts validation checks, not optimizer updates.
-    A validation plateau is a stopping heuristic, not proof of convergence.
+    omitted. Training always runs for training_steps optimizer updates.
     """
     def prepare_increments(paths, times):
         """Flatten paths into starting positions, increments, and time steps."""
@@ -63,7 +59,7 @@ def train_nsde(
         return eqx.apply_updates(model, updates), opt_state, loss
 
     evaluate = eqx.filter_jit(loss_function)
-    # A fixed sample, drawn without replacement, reused at every check.
+    
     validation_indices = jr.choice(
         jr.PRNGKey(validation_seed), validation_data[0].size,
         shape=(min(validation_size, validation_data[0].size),), replace=False,
@@ -71,11 +67,9 @@ def train_nsde(
     validation_batch = tuple(values[validation_indices] for values in validation_data)
     best_loss = float(evaluate(model, *validation_batch))
     best_model, best_step = model, 0
-    plateau_loss, stale_checks = best_loss, 0
     loss_history = []
     validation_steps = [0]
     validation_history = [best_loss]
-    stopping_reason = "maximum_steps"
 
     for step in range(1, training_steps + 1):
         batch_key, sample_key = jr.split(batch_key)
@@ -94,19 +88,11 @@ def train_nsde(
         if validation_loss < best_loss:
             best_model, best_loss, best_step = model, validation_loss, step
 
-        # Patience uses min_delta; the best checkpoint keeps any improvement.
-        if validation_loss < plateau_loss - min_delta:
-            plateau_loss, stale_checks = validation_loss, 0
-        else:
-            stale_checks += 1
         if verbose:
             print(
                 f"Step {step}: training = {batch_loss:.4f}, "
                 f"validation = {validation_loss:.4f}"
             )
-        if patience is not None and step >= min_steps and stale_checks >= patience:
-            stopping_reason = "validation_plateau"
-            break
 
     return {
         "model": best_model,
@@ -117,7 +103,6 @@ def train_nsde(
         "validation_steps": np.asarray(validation_steps),
         "validation_history": np.asarray(validation_history),
         "steps_completed": len(loss_history),
-        "stopping_reason": stopping_reason,
         "n_trajectories": int(np.shape(training_paths)[0]),
         "n_observations": int(len(training_times)),
         "n_increments": int(data[0].size),
