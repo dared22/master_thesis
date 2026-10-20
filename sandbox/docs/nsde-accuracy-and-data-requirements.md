@@ -12,8 +12,9 @@ exploring trajectory count, duration, and observation spacing.
 
 Because you know the true coefficients in your synthetic experiment, measure
 coefficient recovery directly. Your current model in
-[`sde_test_data.ipynb`](../sde_test_data.ipynb) learns periodic drift and constant
-positive diffusion through `raw_sigma`; its declared diffusion MLP is unused.
+[`sde_test_data.ipynb`](../sde_test_data.ipynb) learns periodic drift and
+constant positive diffusion through `raw_sigma`. The unused diffusion MLP has
+been removed.
 
 | Metric | What it measures | Role |
 | --- | --- | --- |
@@ -41,7 +42,7 @@ recovery across the whole period; weighting by a fixed test-state distribution
 instead emphasizes frequently visited regions. State which objective you use.
 
 If you later learn state-dependent diffusion, use a grid-based error for either
-the amplitude `sigma(x)` or the variance coefficient `a(x)=sigma(x)^2`, and state
+the amplitude `sigma(x)` or the variance coefficient `a(x)=sigma(x)^2`. State
 which coefficient you evaluate.
 
 ## Why plot coefficient errors separately
@@ -163,18 +164,19 @@ simulator changes do not confound the comparison.
 
 ## Using the existing experiment helper
 
-[`sde_data_sufficiency.py`](../sde_data_sufficiency.py) already calculates drift
-error, constant-diffusion error, a combined tolerance score, and fixed-test NLL.
-It also fits a direct coefficient estimator as a baseline. If the baseline
-succeeds while the neural model struggles, investigate optimization and model
-choice before concluding that you need more data.
+[`train_sde.py`](../train_sde.py) provides `train_nsde`, which initializes a
+fresh model and optimizer for each fit, samples observed increments, and
+returns the best validation checkpoint, losses, and dataset counts. The
+notebook computes coefficient errors on a fixed grid and runs the data sweeps
+and candidate repeats. The helper does not fit a direct parametric baseline
+or estimate uncertainty across independently generated datasets.
 
-The helper uses a fixed training-update budget, which does not guarantee
-convergence. Its plotting helper requires at least two trajectory counts and
-two observation counts, so a one-dimensional experiment needs a separate
-learning-curve plot. Its repeat bands show the 25th–75th percentile range, and
-its heatmap markers use the empirical 90th percentile of the combined score.
-These summaries are descriptive, not confidence guarantees.
+The update budget is fixed and does not guarantee convergence. Validation
+loss selects the checkpoint, including the untrained initial model as a
+candidate. A selected step of zero means no evaluated trained checkpoint
+improved on the initial validation loss.
 
-A minimum sufficient dataset size can only be estimated after running the
-repeated experiment and checking coefficient accuracy and convergence.
+See [reproducing the experiment results](reproducing-experiments.md) to rerun
+the notebooks and inspect their exported tables. A minimum sufficient dataset
+size still requires repeated configurations and checks of coefficient
+accuracy and convergence.

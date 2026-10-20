@@ -21,6 +21,7 @@ def train_nsde(
     seed=100,
     validation_seed=102,
     verbose=True,
+    checkpoint_steps=(),
 ):
     """Train a fresh NSDE and return its best validation checkpoint and history.
 
@@ -29,7 +30,16 @@ def train_nsde(
     data and validation_seed fixed across dataset sizes for comparable scores.
     The loss is the notebook's increment NLL with model-independent terms
     omitted. Training always runs for training_steps optimizer updates.
+    Optional checkpoint_steps retain current and best models at the requested
+    validation steps, allowing comparisons of nested optimization budgets.
     """
+    checkpoint_steps = tuple(checkpoint_steps)
+    if any(
+        step <= 0 or step > training_steps
+        or (step % validation_every != 0 and step != training_steps)
+        for step in checkpoint_steps
+    ):
+        raise ValueError("Checkpoint steps must be evaluated validation steps.")
     def prepare_increments(paths, times):
         """Flatten paths into starting positions, increments, and time steps."""
         paths, times = np.asarray(paths), np.asarray(times)
@@ -70,6 +80,7 @@ def train_nsde(
     loss_history = []
     validation_steps = [0]
     validation_history = [best_loss]
+    checkpoints = []
 
     for step in range(1, training_steps + 1):
         batch_key, sample_key = jr.split(batch_key)
@@ -87,6 +98,16 @@ def train_nsde(
         validation_history.append(validation_loss)
         if validation_loss < best_loss:
             best_model, best_loss, best_step = model, validation_loss, step
+
+        if step in checkpoint_steps:
+            checkpoints.append({
+                "step": step,
+                "model": model,
+                "best_model": best_model,
+                "validation_loss": validation_loss,
+                "best_validation_loss": best_loss,
+                "best_step": best_step,
+            })
 
         if verbose:
             print(
@@ -107,4 +128,5 @@ def train_nsde(
         "n_observations": int(len(training_times)),
         "n_increments": int(data[0].size),
         "seed": seed,
+        "checkpoints": checkpoints,
     }
