@@ -12,9 +12,25 @@ limitations of fitting a local transition approximation to coarsely sampled data
 \label{sec:analytic-results}
 
 Brownian motion and the randomly forced harmonic oscillator illustrate the
-analytic diffusion estimators in Section~\ref{sec:sde-theory}. In the Brownian
-example, endpoint and increment estimates are $0.8111$ and $0.8028$ for a true
-diffusion amplitude of $0.8$. For the oscillator, corrected totals give
+analytic diffusion estimators in Section~\ref{sec:sde-theory}. The Brownian
+example uses a true diffusion amplitude of $0.8$. From the endpoints of 300
+independent paths at $T=40$, the variance-based formula
+$\widehat{\sigma}=\sqrt{\frac{1}{NT}\sum_j(X_T^{(j)})^2}$ gives $0.8111$.
+Fitting a normal distribution to these endpoints using SciPy's
+\texttt{norm.fit}, with its mean fixed at zero, and dividing the fitted
+standard deviation by $\sqrt{T}$ gives the same value. These are two ways of
+calculating the endpoint estimator in
+Equation~\eqref{eq:brownian-endpoint-mle}.
+
+The estimate $0.8028$ instead uses all 2,000 increments of the last path,
+with spacing $h=0.02$. It is calculated as
+$\widehat{\sigma}=\sqrt{\frac{1}{mh}\sum_i(\Delta X_i)^2}$, following
+Equation~\eqref{eq:brownian-increment-mle}. This also uses the known zero
+mean and the variance identity, applied to increments rather than endpoints.
+The two reported values therefore differ because they use different data
+summaries, rather than because one uses SciPy and the other uses variance.
+
+For the oscillator, corrected totals give
 $0.2596$, whereas pooled drift-corrected velocity increments give $0.3000024$
 for a true amplitude of $0.3$. These are individual simulated datasets using
 different observation summaries; the estimates illustrate the calculations
@@ -100,8 +116,27 @@ short-time fluctuations. Here, extending duration gives an overall improvement
 in drift recovery that is absent when only the already fine sampling is made
 denser. This is an observed tendency, not a monotonic learning curve or a
 separation of the two coefficients: both depend on the data and fitting
-procedure. In particular, checks with longer training budgets show that drift
-errors remain sensitive to optimization and checkpoint selection.
+procedure.
+
+\paragraph{Number of training trajectories.}
+A further comparison uses 5, 10, 20, 30, 40, and 50 trajectories, keeping
+$T=500$, 15,000 observations per path, and 1,500 updates fixed. Across five
+fits per configuration, median drift error decreases from $16.25\%$ with five
+paths to $10.72\%$ with 50, but fluctuates between these settings; its lowest
+value is $8.34\%$ with 40 paths. Median diffusion error remains below $1\%$
+throughout. More trajectories therefore do not consistently reduce the errors
+under this fixed training budget.
+
+\paragraph{Number of training updates.}
+Full-duration, shorter-duration, and coarse-sampling configurations are also
+checked at 1,500, 3,000, and 6,000 updates, using two data/training seed pairs.
+Each fit continues along the same training sequence, selecting the best
+validation checkpoint available at each budget. More updates do not
+consistently improve drift recovery: in one shorter-duration run, selected
+drift error changes from $13.41\%$ to $33.33\%$ and then $18.68\%$, despite
+small improvements in validation loss. These checks do not establish
+convergence at 1,500 updates and show that lower validation loss need not mean
+more accurate drift.
 
 \subsection{Coarse sampling and validation at the original scale}
 

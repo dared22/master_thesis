@@ -32,36 +32,6 @@ extension to a finite observation horizon. Under uniqueness, the initial state
 and vector field determine the trajectory. A general treatment of ODEs and
 their neural extensions is given by \textcite{Kidger2022}.
 
-\subsubsection{Potential-driven dynamics}
-
-For a scalar state in a potential $U$, the dynamics
-\begin{equation}
-    \frac{dx}{dt}=-U'(x)
-    \label{eq:gradient-flow}
-\end{equation}
-move toward lower potential values. Indeed,
-$dU(x(t))/dt=-[U'(x(t))]^2\leq 0$. The periodic potential used in the
-experiments is
-\begin{equation}
-    U(x)=A[1-\cos(kx)],\qquad
-    b(x)=-U'(x)=-Ak\sin(kx),
-    \label{eq:periodic-potential}
-\end{equation}
-where $A>0$ and $k>0$. Its spatial period is $2\pi/k$. Near a minimum at
-$x=0$, $\sin(kx)\approx kx$, giving $dx/dt\approx-Ak^2x$. Thus small
-displacements relax toward the minimum at an approximately exponential rate.
-
-A second example is the undamped harmonic oscillator,
-\begin{equation}
-    \frac{dX}{dt}=V,\qquad
-    \frac{dV}{dt}=-\omega_0^2X,
-    \label{eq:deterministic-oscillator}
-\end{equation}
-where $\omega_0>0$ is the natural angular frequency. Writing the state as
-$(X,V)$ converts the second-order equation $X''+\omega_0^2X=0$ into a
-first-order system. Unlike gradient flow, this oscillator conserves the energy
-$E=(V^2+\omega_0^2X^2)/2$.
-
 \subsubsection{Numerical approximation}
 
 A numerical solver approximates the solution at discrete times. Explicit Euler
@@ -72,9 +42,7 @@ uses
 \end{equation}
 For sufficiently smooth solutions on a fixed finite interval, its global error
 is of order $h$ for a uniform step size $h$. Accuracy also depends on numerical
-stability. In particular, explicit Euler does not conserve harmonic-oscillator
-energy: without noise, each update multiplies $V_i^2+\omega_0^2X_i^2$ by
-$1+\omega_0^2h^2$.
+stability.
 
 The integration step and the observation interval serve different purposes.
 The integration step controls numerical approximation, while the observation
@@ -92,8 +60,7 @@ forcing. In the It\^o convention, a scalar diffusion satisfies
     \label{eq:sde}
 \end{equation}
 where $b$ is the drift, $s$ is the diffusion amplitude, and $W_t$ is standard
-Brownian motion. The terminology distinguishes $s$ from the variance
-coefficient $s^2$ and the Fokker--Planck diffusivity $s^2/2$.
+Brownian motion.
 The stochastic integral and numerical approximation follow the framework
 described by \textcite{Higham2001} and \textcite{Kidger2022}.
 
@@ -121,23 +88,6 @@ approximating sums. For a square-integrable adapted process $H$, it satisfies
        =\mathbb{E}\!\left[\int_0^t H_u^2\,du\right].
     \label{eq:ito-isometry}
 \end{equation}
-The second identity is the It\^o isometry. Global Lipschitz and linear-growth
-conditions on $b$ and $s$ are sufficient for a unique strong solution with a
-square-integrable initial condition. Here, a strong solution is defined for a
-specified Brownian motion and initial state.
-
-It\^o's formula replaces the ordinary chain rule. For a smooth function $g$,
-\begin{equation}
-    dg(t,X_t)=
-    \left(g_t+b g_x+\frac{1}{2}s^2g_{xx}\right)dt
-       +s g_x\,dW_t.
-    \label{eq:ito-formula}
-\end{equation}
-Brownian quadratic variation produces the second-derivative term. Converting
-a scalar Stratonovich SDE to It\^o form adds $s\,\partial_xs/2$ to its drift.
-The Stratonovich convention uses a different stochastic integral. The
-correction vanishes for the constant diffusion used in the experiments.
-
 \subsubsection{Euler--Maruyama and local increments}
 
 Euler--Maruyama extends explicit Euler by adding a Gaussian noise increment:
@@ -147,10 +97,10 @@ Euler--Maruyama extends explicit Euler by adding a Gaussian noise increment:
     \qquad Z_i\stackrel{\mathrm{iid}}{\sim}\mathcal{N}(0,1).
     \label{eq:euler-maruyama}
 \end{equation}
-Under standard regularity assumptions, the method has strong order $1/2$;
-weak order one holds under additional smoothness assumptions
-\parencite{Higham2001}. Strong error concerns approximation under the same
-Brownian forcing, whereas weak error concerns expectations of test functions.
+Under suitable assumptions, Euler--Maruyama has strong convergence order $1/2$
+and weak convergence order one \parencite{Higham2001}. Strong convergence
+measures path accuracy under the same Brownian forcing, while weak convergence
+measures accuracy in averages of functions of the state.
 
 Freezing the coefficients over a short observation interval gives
 \begin{equation}
@@ -158,34 +108,28 @@ Freezing the coefficients over a short observation interval gives
        \approx\mathcal{N}\!\left(b(t_i,x)h_i,s(t_i,x)^2h_i\right).
     \label{eq:local-gaussian}
 \end{equation}
-This transition law is exact for the Euler update, but generally approximate
-for the continuous SDE. It is also generally approximate for observations
-separated by several numerical integration steps. The drift contribution is
-of order $h$, while the noise contribution is of order $\sqrt{h}$. Finer
-sampling therefore does not strengthen the drift signal in each increment.
+The Gaussian transition approximation treats the coefficients as constant over
+each observation interval. It is exact for a single Euler--Maruyama update,
+but generally approximate for the underlying SDE. Over shorter intervals, the
+drift contribution becomes smaller relative to the noise, so denser sampling
+does not necessarily improve drift recovery.
 
 \subsubsection{Probability densities}
 
-When a sufficiently regular transition density exists, its evolution obeys the
-Fokker--Planck equation
+\paragraph{Brownian motion.}
+For Brownian motion with constant diffusion amplitude $\sigma>0$, no drift,
+and a fixed initial state $X_0=x_0$, the state at time $T>0$ is
 \begin{equation}
-    \frac{\partial p}{\partial t}
-      =-\frac{\partial}{\partial x}(bp)
-       +\frac{1}{2}\frac{\partial^2}{\partial x^2}(s^2p).
-    \label{eq:fokker-planck}
+    X_T=x_0+\sigma W_T,\qquad
+    X_T\sim\mathcal{N}(x_0,\sigma^2T).
 \end{equation}
-An initial state $X_0=x_0$ corresponds to a point-mass initial distribution.
-Numerical solutions of this equation provide model-based endpoint density
-predictions. Comparing these densities with simulated endpoint histograms
-assesses distributional behavior. Individual trajectories need not agree
-pointwise to have the same law.
+The distribution is normal, with mean $x_0$ and variance $\sigma^2T$.
+Thus, endpoints of many independent trajectories form an approximately
+bell-shaped histogram centered around the initial state. Its spread increases
+with time, with standard deviation $\sigma\sqrt{T}$.
 
-For the periodic drift in Equation~\eqref{eq:periodic-potential}, additive
-noise permits random movement between potential wells. Close to $x=0$, the
-linearized SDE is $dX_t\approx-Ak^2X_t\,dt+\sigma\,dW_t$, an
-Ornstein--Uhlenbeck approximation. This local approximation describes
-fluctuations near a minimum; it does not represent transitions across the
-entire periodic landscape.
+\paragraph{Fokker--Planck equation.}
+[...]
 
 \subsubsection{Brownian diffusion and maximum likelihood}
 \label{sec:brownian-mle-theory}
@@ -217,15 +161,42 @@ Both variance estimators are unbiased in this model; taking a square root does
 not preserve unbiasedness. Their observed accuracy depends on the number of
 independent Gaussian quantities entering the estimate.
 
+\paragraph{Alternative derivation using variance.}
+The endpoint estimator can also be obtained from the identity
+\begin{equation}
+    \operatorname{Var}(X_T)
+      =\mathbb{E}[X_T^2]-\bigl(\mathbb{E}[X_T]\bigr)^2.
+\end{equation}
+For the same Brownian model with $X_0=0$, the mean is zero and the variance
+is $\sigma^2T$. Substituting these values gives
+\begin{equation}
+    \sigma^2T=\mathbb{E}[X_T^2]-0^2,
+    \qquad
+    \sigma^2=\frac{\mathbb{E}[X_T^2]}{T}.
+\end{equation}
+Replacing the expected squared endpoint by its average over $N$ independent
+trajectories gives
+\begin{equation}
+    \widehat{\sigma}^2
+      =\frac{1}{T}\left(\frac{1}{N}
+         \sum_{j=1}^{N}\left(X_T^{(j)}\right)^2\right).
+\end{equation}
+This moment-based derivation gives the same estimator as maximum likelihood
+in Equation~\eqref{eq:brownian-endpoint-mle}. The mean is known to be zero,
+so it is not replaced by the sample mean, which can differ from zero in a
+finite dataset.
+
 \subsubsection{The randomly forced harmonic oscillator}
 \label{sec:oscillator-theory}
 
-Adding noise to the velocity equation gives
+A harmonic oscillator with random forcing of its velocity satisfies
 \begin{equation}
     dX_t=V_t\,dt,\qquad
     dV_t=-\omega_0^2X_t\,dt+\sigma\,dW_t.
     \label{eq:stochastic-oscillator}
 \end{equation}
+Here $X_t$ is position, $V_t$ is velocity, $\omega_0>0$ is the natural angular
+frequency, and $\sigma>0$ is the diffusion amplitude.
 Integrating the velocity equation and removing the restoring-force
 contribution gives
 \begin{equation}
@@ -350,7 +321,7 @@ equations and their stochastic extensions are developed in
 
 For the periodic-potential experiment, the drift network receives
 $(\sin x,\cos x)$ as inputs. This enforces the known period $2\pi$, appropriate
-to the generating value $k=1$. Its four hidden layers each contain 64 units
+to the generating drift $b(x)=-\sin x$. Its four hidden layers each contain 64 units
 with hyperbolic-tangent activation. The architecture learns the shape of the
 periodic drift while incorporating prior knowledge of its period.
 
@@ -367,10 +338,14 @@ law through $s_\theta^2$.
 
 \subsubsection{Likelihood training from observed increments}
 
-For fully observed states, Equation~\eqref{eq:local-gaussian} gives an
-approximate conditional likelihood without simulating a new path at every
-optimization step. With $r_i=\Delta X_i-b_\theta(X_i)h_i$, the Gaussian
-negative log-likelihood per observation is
+For each observed increment $\Delta X_i$, the model predicts a normal
+distribution with mean $b_\theta(X_i)h_i$ and variance $s_\theta(X_i)^2h_i$,
+as in Equation~\eqref{eq:local-gaussian}. Evaluating its probability density
+at the observed increment gives the likelihood of that increment given its
+starting state. Training adjusts the parameters to increase this likelihood.
+Equivalently, we minimize its negative logarithm. Writing the difference
+between the observed and predicted increment as
+$r_i=\Delta X_i-b_\theta(X_i)h_i$, this gives
 \begin{equation}
     \mathcal{L}_i(\theta)
        =\frac{r_i^2}{2s_\theta(X_i)^2h_i}
@@ -378,14 +353,18 @@ negative log-likelihood per observation is
         +\frac{1}{2}\log(2\pi h_i).
     \label{eq:neural-sde-nll}
 \end{equation}
-The implementation minimizes the mean of the first two terms; the final term
-is independent of the learned parameters. Actual elapsed times $h_i$ enter the
-loss, including when selecting a subset of saved observations. Consecutive
+Taking the negative logarithm of the normal density turns its exponential
+into the squared-residual term. Its normalizing factor gives
+$\log s_\theta(X_i)+\tfrac12\log(2\pi h_i)$. The implementation averages
+the first two terms in Equation~\eqref{eq:neural-sde-nll}, omitting the final
+term because it does not depend on the learned parameters and therefore
+does not affect training. Actual elapsed times $h_i$ enter the loss,
+including when selecting a subset of saved observations. Consecutive
 increments form conditional transition factors through the Markov property;
 their starting states are not assumed to be independent.
 
 The residual term measures agreement with the local drift and noise scale.
-The logarithmic term prevents arbitrarily increasing diffusion to reduce the
+The $\log s_\theta(X_i)$ term prevents arbitrarily increasing diffusion to reduce the
 standardized residual. Drift and diffusion are therefore coupled in training.
 Adam performs parameter updates using randomly sampled minibatches.
 The data-size experiments select a checkpoint using a fixed sample of
@@ -393,10 +372,12 @@ held-out increments. This fitting strategy assumes direct state observations
 without measurement noise; noisy or partially observed states require a
 different observation model or inference procedure.
 
-\subsubsection{Assessing coefficient and distribution recovery}
+\subsubsection{Checking the learned model}
 
-For synthetic data, known generating coefficients permit direct evaluation.
-On a fixed grid $\{x_q\}_{q=1}^{Q}$ covering one period, the reported errors are
+Because the data are simulated, we know the true drift and diffusion. We can
+therefore compare them directly with the learned values. To check the drift,
+we evaluate both functions at the same $Q$ evenly spaced positions $x_q$
+covering one period. The percentage errors are
 \begin{equation}
     E_b=100\sqrt{
        \frac{\sum_{q=1}^{Q}[b_\theta(x_q)-b(x_q)]^2}
@@ -404,21 +385,28 @@ On a fixed grid $\{x_q\}_{q=1}^{Q}$ covering one period, the reported errors are
     E_\sigma=100\frac{|\widehat{\sigma}-\sigma|}{\sigma}.
     \label{eq:coefficient-errors}
 \end{equation}
-These definitions require nonzero reference drift norm and $\sigma>0$.
-Uniform-grid drift error measures the entire period, including regions that
-may be visited infrequently. Projecting the learned drift onto
-$-k\sin(kx)$ instead produces an effective amplitude and does not measure all
-shape errors.
+Here $b$ is the true drift, $b_\theta$ is the learned drift, $\sigma$ is the
+true diffusion amplitude, and $\widehat{\sigma}$ is its learned value.
+The drift error $E_b$ combines the differences across the sampled positions
+and expresses their size relative to the true drift. The diffusion error
+$E_\sigma$ is the difference between the learned and true amplitudes,
+relative to the true amplitude. Zero means an exact match at the evaluated
+positions for drift, or an exact match of the amplitude for diffusion.
+These relative errors require at least one nonzero true drift value on the
+evaluation grid and $\sigma>0$.
 
-Held-out likelihood assesses local transition fit, while endpoint statistics
-assess a consequence of the learned dynamics over a longer horizon. Neither
-alone establishes accurate coefficient recovery. For a fixed drift mismatch
-$\delta b$, its contribution to the standardized squared residual scales as
-$(\delta b)^2h/s^2$. This helps explain why fine-interval likelihood can be
-relatively insensitive to drift discrepancies.
+We also check the loss on observations not used for training and compare
+the final positions of simulated trajectories. These checks answer different
+questions: the loss measures how well the model explains observed increments,
+while the final positions show its behavior over a longer time. A low
+validation loss or similar final-position distributions do not by themselves
+guarantee that the learned drift and diffusion are correct. In particular,
+at short observation intervals, drift errors can have little effect on the
+loss because their contribution is small relative to the noise.
 
-Finally, $M$ paths with $K$ observations contain $M(K-1)$ observed increments,
-but this count does not fully describe their information. Observation spacing,
-duration, and independent trajectory count play different roles. The
-experiments vary these quantities separately and report their effects without
-assuming that equal increment counts imply equal recovery accuracy.
+The amount of data also needs to be described carefully. With $M$ trajectories
+and $K$ observations per trajectory, there are $M(K-1)$ observed increments.
+However, the same increment count can come from densely sampled short paths
+or sparsely sampled long paths. These need not be equally useful for learning
+the coefficients, so the experiments distinguish observation spacing,
+trajectory duration, and the number of independent trajectories.
