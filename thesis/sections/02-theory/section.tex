@@ -64,7 +64,7 @@ Brownian motion.
 The stochastic integral and numerical approximation follow the framework
 described by \textcite{Higham2001} and \textcite{Kidger2022}.
 
-\subsubsection{Brownian motion and the It\^o integral}
+\subsubsection{Brownian motion}
 
 Standard Brownian motion starts at zero, has continuous paths, and has
 independent Gaussian increments:
@@ -79,15 +79,7 @@ Equation~\eqref{eq:sde} is interpreted through an integral equation,
         +\int_0^t s(u,X_u)\,dW_u.
     \label{eq:sde-integral}
 \end{equation}
-The It\^o integral uses adapted integrands and left-endpoint evaluation in its
-approximating sums. For a square-integrable adapted process $H$, it satisfies
-\begin{equation}
-    \mathbb{E}\!\left[\int_0^t H_u\,dW_u\right]=0,
-    \qquad
-    \mathbb{E}\!\left[\left(\int_0^t H_u\,dW_u\right)^2\right]
-       =\mathbb{E}\!\left[\int_0^t H_u^2\,du\right].
-    \label{eq:ito-isometry}
-\end{equation}
+
 \subsubsection{Euler--Maruyama and local increments}
 
 Euler--Maruyama extends explicit Euler by adding a Gaussian noise increment:
@@ -234,8 +226,8 @@ For zero initial conditions, linearity gives
        \int_0^T\sin(\omega_0(T-u))\,dW_u,\\
     V_T&=\sigma\int_0^T\cos(\omega_0(T-u))\,dW_u.
 \end{align}
-These variables are jointly Gaussian with zero means. Applying the It\^o
-isometry gives
+These variables are jointly Gaussian with zero means. Their variances and
+covariance are
 \begin{align}
     \operatorname{Var}(X_T)
        &=\frac{\sigma^2}{\omega_0^2}
@@ -248,14 +240,7 @@ isometry gives
        &=\frac{\sigma^2}{2\omega_0^2}\sin^2(\omega_0T).
 \end{align}
 Position and velocity are therefore generally dependent. These expressions
-describe the continuous model. For Euler simulations, the exact discrete
-covariance instead follows
-\begin{equation}
-    C_{i+1}=M C_i M^{\mathsf T}+Q,\qquad
-    M=\begin{pmatrix}1&h\\-\omega_0^2h&1\end{pmatrix},\qquad
-    Q=\begin{pmatrix}0&0\\0&\sigma^2h\end{pmatrix}.
-    \label{eq:oscillator-discrete-covariance}
-\end{equation}
+describe the continuous model.
 The oscillator is undamped. It\^o's formula gives
 $d\mathbb{E}[E_t]/dt=\sigma^2/2$, so its expected energy increases even in the
 continuous model. This physical growth is distinct from Euler's additional

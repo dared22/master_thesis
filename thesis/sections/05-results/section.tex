@@ -134,9 +134,10 @@ Each fit continues along the same training sequence, selecting the best
 validation checkpoint available at each budget. More updates do not
 consistently improve drift recovery: in one shorter-duration run, selected
 drift error changes from $13.41\%$ to $33.33\%$ and then $18.68\%$, despite
-small improvements in validation loss. These checks do not establish
-convergence at 1,500 updates and show that lower validation loss need not mean
-more accurate drift.
+small improvements in validation loss. Validation loss changes little beyond
+1,500 updates, suggesting that it has approximately stabilized. However, the
+learned drift remains sensitive to further training, showing that similar
+validation losses can correspond to substantially different drift errors.
 
 \subsection{Coarse sampling and validation at the original scale}
 
