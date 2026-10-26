@@ -358,9 +358,31 @@ distribution with mean $b_\theta(X_i)h_i$ and variance $s_\theta(X_i)^2h_i$,
 as in Equation~\eqref{eq:local-gaussian}. Evaluating its probability density
 at the observed increment gives the likelihood of that increment given its
 starting state. Training adjusts the parameters to increase this likelihood.
-Equivalently, we minimize its negative logarithm. Writing the difference
-between the observed and predicted increment as
-$r_i=\Delta X_i-b_\theta(X_i)h_i$, this gives
+Equivalently, we minimize its negative logarithm.
+
+To derive the loss, write the predicted mean as $\mu_i=b_\theta(X_i)h_i$
+and the variance as $v_i=s_\theta(X_i)^2h_i$. The normal probability density
+evaluated at the observed increment is
+\begin{equation*}
+    p_\theta(\Delta X_i\mid X_i)
+      =\frac{1}{\sqrt{2\pi v_i}}
+       \exp\!\left(-\frac{(\Delta X_i-\mu_i)^2}{2v_i}\right).
+\end{equation*}
+Taking the negative logarithm turns the product into a sum and removes the
+exponential:
+\begin{equation*}
+    -\log p_\theta(\Delta X_i\mid X_i)
+      =\frac{(\Delta X_i-\mu_i)^2}{2v_i}
+       +\frac{1}{2}\log(2\pi v_i).
+\end{equation*}
+Substituting the mean and variance, and writing the residual as
+$r_i=\Delta X_i-b_\theta(X_i)h_i$, gives the loss below. The logarithmic
+term splits into two terms because $s_\theta(X_i)>0$:
+\begin{equation*}
+    \frac12\log(2\pi s_\theta(X_i)^2h_i)
+      =\log s_\theta(X_i)+\frac12\log(2\pi h_i).
+\end{equation*}
+The negative log-likelihood is therefore
 \begin{equation}
     \mathcal{L}_i(\theta)
        =\frac{r_i^2}{2s_\theta(X_i)^2h_i}
@@ -368,9 +390,7 @@ $r_i=\Delta X_i-b_\theta(X_i)h_i$, this gives
         +\frac{1}{2}\log(2\pi h_i).
     \label{eq:neural-sde-nll}
 \end{equation}
-Taking the negative logarithm of the normal density turns its exponential
-into the squared-residual term. Its normalizing factor gives
-$\log s_\theta(X_i)+\tfrac12\log(2\pi h_i)$. The implementation averages
+The implementation averages
 the first two terms in Equation~\eqref{eq:neural-sde-nll}, omitting the final
 term because it does not depend on the learned parameters and therefore
 does not affect training. Actual elapsed times $h_i$ enter the loss,
