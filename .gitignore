@@ -221,6 +221,9 @@ __marimo__/
 # Local reading notes
 /reading/
 
+# Local datasets
+/Data/
+
 # Thesis compilation output
 /thesis/build/
 
