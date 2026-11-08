@@ -1,0 +1,16 @@
+{
+  "training_data_seed": 1000,
+  "training_seed": 2000,
+  "validation_seed": 102,
+  "simulation_seed": 2026,
+  "n_training_paths": 50,
+  "n_generated_paths": 50,
+  "duration": 500.0,
+  "n_saved_times": 15000,
+  "integration_step": 0.008333888836205006,
+  "best_step": 1500,
+  "sigma_estimate": 1.0935873985290527,
+  "drift_error_percent": 14.792012235737126,
+  "validation_loss": 0.5975450277328491,
+  "notebook_sha256": "405529f5700a9f4f3201902750391de0937203826fe0cc905ef2e3250ca813d6"
+}
