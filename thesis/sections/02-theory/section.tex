@@ -1,82 +1,135 @@
 \section{Theory}
 \label{sec:theory}
 
-Differential equations describe how a system changes through time. Ordinary
-differential equations specify a deterministic rate of change, while stochastic
-differential equations add random forcing. Neural differential equations retain
-this continuous-time structure and use neural networks to represent unknown
-coefficients. This section develops these models in that order and derives the
-likelihood expressions used to estimate their coefficients.
-
-Toy examples from the notebooks illustrate the concepts alongside the theory.
-These exploratory simulations support understanding of the methods; they do
-not establish a general benchmark or a minimum training-data requirement.
+Financial time series are commonly modelled as realizations of stochastic
+processes because their future evolution is uncertain \parencite{PishroNik2014}.
+This section first introduces ordinary differential equations (ODEs) to describe
+continuous-time dynamics and stochastic processes to describe randomness. It
+then brings these ideas together in stochastic differential equations (SDEs),
+which describe how a system evolves under both systematic and random
+influences. For the financial data considered here, the aim is to learn these
+dynamics from observed time series. SDEs can be fitted to discrete observations,
+including sparsely sampled data, although sparse observations can make the
+underlying dynamics difficult to identify \parencite{SarkkaSolin2019}.
+Neural SDEs use neural networks to learn unknown dynamics from data
+\parencite{Kidger2022}.
+\bgroup\markoverwith{\textcolor{yellow}{\rule[-0.5ex]{2pt}{2.5ex}}}\ULon{The
+section develops these concepts toward the thesis's aim of generating
+equity-return paths and assessing their dependence and risk characteristics.}
 
 \subsection{Ordinary differential equations}
 \label{sec:ode-theory}
 
-An ordinary differential equation (ODE) relates a state to its time derivative.
-For a state $x(t)\in\mathbb{R}^{d}$, an initial-value problem takes the form
+An ordinary differential equation (ODE) describes how a system changes over
+time by relating its state to its rate of change
+\parencite{kohler2014elementary}.
+
+The state $x(t)\in\mathbb{R}^{d}$ contains the $d$ quantities used to describe
+the system at time $t$. An ODE together with a specified starting state is
+called an initial-value problem:
 \begin{equation}
-    \frac{dx(t)}{dt}=f(t,x(t)),\qquad x(t_0)=x_0.
+    \frac{dx(t)}{dt}=f(x(t),u(t),t),\qquad x(t_0)=x_0.
     \label{eq:ode}
 \end{equation}
-The vector field $f$ specifies the instantaneous direction and speed of motion.
-The equation is autonomous when $f$ has no explicit time dependence. Its
-integral form is
+Here $u(t)$ is a known input with no randomness, and $f$ gives the rate of
+change based on the current state, input, and time. The derivative $dx(t)/dt$
+is the rate of change, while $x(t_0)=x_0$ specifies the starting state.
+
+Integrating the rate of change gives the state at time $t$ as the starting
+state plus the accumulated change. By the fundamental theorem of calculus
+\parencite{thomas2003thomas},
 \begin{equation}
-    x(t)=x_0+\int_{t_0}^{t}f(s,x(s))\,ds.
+    x(t)=x_0+\int_{t_0}^{t}f(x(s),u(s),s)\,ds.
     \label{eq:ode-integral}
 \end{equation}
-If $f$ is continuous in time and locally Lipschitz in the state, the
-initial-value problem has a unique local solution. Additional conditions,
-such as a suitable linear-growth bound, prevent finite-time blow-up and permit
-extension to a finite observation horizon. Under uniqueness, the initial state
-and vector field determine the trajectory. A general treatment of ODEs and
-their neural extensions is given by \textcite{Kidger2022}.
+When a unique solution exists, the starting state, input, and function $f$
+determine one path of the state over time \parencite{kohler2014elementary}.
 
 \subsubsection{Numerical approximation}
 
-A numerical solver approximates the solution at discrete times. Explicit Euler
-uses
+A numerical solver approximates the solution at a sequence of times. Euler's
+method uses the rate of change at the start of each step to estimate the next
+state \parencite{kohler2014elementary}:
 \begin{equation}
-    x_{i+1}=x_i+h_i f(t_i,x_i),\qquad h_i=t_{i+1}-t_i.
+    x_{i+1}=x_i+h_i f(x_i,u(t_i),t_i),\qquad h_i=t_{i+1}-t_i.
     \label{eq:euler-ode}
 \end{equation}
-For sufficiently smooth solutions on a fixed finite interval, its global error
-is of order $h$ for a uniform step size $h$. Accuracy also depends on numerical
-stability.
+Here $x_i$ approximates $x(t_i)$, and $h_i$ is the time between two steps. The
+update adds the estimated change, given by the rate multiplied by the step
+size, to the current state.
 
-The integration step and the observation interval serve different purposes.
-The integration step controls numerical approximation, while the observation
-interval determines which state values enter statistical estimation. Several
-integration steps can occur between observations. This distinction matters
-when assessing the effect of observation density.
+For sufficiently smooth solutions and small, constant steps, halving the step
+size roughly halves the error over a fixed time interval
+\parencite{kohler2014elementary}.
 
-\subsection{Stochastic differential equations}
-\label{sec:sde-theory}
+If the step size is too large, numerical errors can grow and make the
+approximation unreliable \parencite{kohler2014elementary}.
 
-Stochastic differential equations (SDEs) represent dynamics driven by random
-forcing. In the It\^o convention, a scalar diffusion satisfies
+The solver's step size and the time between observations serve different
+purposes. The step size controls how the solution is approximated, while the
+observation interval describes how often data are recorded.
+
+The solver can take several steps between two observations. Using smaller
+steps can improve the numerical approximation, but it does not provide
+additional observations for learning the model.
+
+\subsection{Stochastic processes}
+\label{sec:stochastic-processes}
+
+A stochastic process is a family of random variables indexed by time, written
+$\{X_t:t\in\mathcal{T}\}$. At a fixed time $t$, $X_t$ is a random variable
+describing the possible states at that time. One outcome of the process across
+time is called a realization or sample path \parencite[Section~10.1.0]{PishroNik2014}.
+Thus the process describes a collection of possible paths, while an observed
+time series records values from one realized path.
+
+For a continuous-time process, the time index ranges over an interval, such as
+$\mathcal{T}=[0,T]$; for a discrete-time process, it ranges over a countable set.
+Continuous time alone does not require continuous sample paths
+\parencite[Section~10.1.0]{PishroNik2014}.
+In a model with direct observations of a continuous-time state, the data are
 \begin{equation}
-    dX_t=b(t,X_t)\,dt+s(t,X_t)\,dW_t,
-    \label{eq:sde}
+    y_i=X_{t_i},\qquad i=0,\ldots,n.
+    \label{eq:process-observations}
 \end{equation}
-where $b$ is the drift, $s$ is the diffusion amplitude, and $W_t$ is standard
-Brownian motion.
-The stochastic integral and numerical approximation follow the framework
-described by \textcite{Higham2001} and \textcite{Kidger2022}.
+The observation times may be regularly or irregularly spaced. Daily values
+sample a path without revealing its within-day evolution. Generating paths
+therefore requires a model for how the state evolves between observations.
 
 \subsubsection{Brownian motion}
+\label{sec:brownian-motion}
 
-Standard Brownian motion starts at zero, has continuous paths, and has
-independent Gaussian increments:
+Brownian motion is the stochastic process used to drive the SDEs below.
+Standard Brownian motion $W_t$ starts at zero, has continuous paths, and has
+independent Gaussian increments \parencite[Section~2]{Higham2001}:
 \begin{equation}
     W_{t+h}-W_t\sim\mathcal{N}(0,h),\qquad h>0.
     \label{eq:brownian-increments}
 \end{equation}
-Its paths are almost surely nowhere differentiable. Consequently,
-Equation~\eqref{eq:sde} is interpreted through an integral equation,
+Its paths are almost surely nowhere differentiable
+\parencite[Section~4]{Higham2001}. Its increments supply random variation
+over each time interval; the SDE specifies how that variation affects the state.
+
+\subsection{Stochastic differential equations}
+\label{sec:sde-theory}
+
+An SDE combines the rate-of-change description of an ODE with a stochastic
+driving process. In the It\^o convention, a scalar diffusion driven by Brownian
+motion satisfies
+\begin{equation}
+    dX_t=b(t,X_t)\,dt+s(t,X_t)\,dW_t,
+    \label{eq:sde}
+\end{equation}
+where $b$ is the drift, $s$ is the diffusion amplitude, and $W_t$ is the
+Brownian motion introduced in Section~\ref{sec:brownian-motion}.
+The drift describes the systematic contribution to the evolution, while the
+diffusion amplitude controls the strength of the random forcing
+\parencite[Section~3.2]{SarkkaSolin2019}. The solution $X_t$ is itself a
+stochastic process: each realization of the driving Brownian motion generates
+a state trajectory for a given initial condition when a unique solution exists.
+
+Since Brownian paths are not differentiable, we use the integral form
+\parencite[Section~4]{Higham2001},
 \begin{equation}
     X_t=X_0+\int_0^t b(u,X_u)\,du
         +\int_0^t s(u,X_u)\,dW_u.
@@ -85,7 +138,8 @@ Equation~\eqref{eq:sde} is interpreted through an integral equation,
 
 \subsubsection{Euler--Maruyama and local increments}
 
-Euler--Maruyama extends explicit Euler by adding a Gaussian noise increment:
+Euler--Maruyama extends explicit Euler by adding a Gaussian noise increment
+\parencite[Section~4]{Higham2001}:
 \begin{equation}
     X_{i+1}=X_i+b(t_i,X_i)h_i
        +s(t_i,X_i)\sqrt{h_i}\,Z_i,
@@ -97,7 +151,9 @@ and weak convergence order one \parencite{Higham2001}. Strong convergence
 measures path accuracy under the same Brownian forcing, while weak convergence
 measures accuracy in averages of functions of the state.
 
-Freezing the coefficients over a short observation interval gives
+Freezing the coefficients over a short observation interval gives the Euler
+Gaussian transition approximation
+\parencite[Section~11.4]{SarkkaSolin2019}
 \begin{equation}
     \Delta X_i\mid X_i=x
        \approx\mathcal{N}\!\left(b(t_i,x)h_i,s(t_i,x)^2h_i\right).
@@ -125,7 +181,8 @@ and a fixed initial state $X_0=x_0$, the state at time $T>0$ is
     X_T=x_0+\sigma W_T,\qquad
     X_T\sim\mathcal{N}(x_0,\sigma^2T).
 \end{equation}
-The distribution is normal, with mean $x_0$ and variance $\sigma^2T$.
+The distribution is normal, with mean $x_0$ and variance $\sigma^2T$, by the
+Brownian increment distribution \parencite[Section~2]{Higham2001}.
 Thus, endpoints of many independent trajectories form an approximately
 bell-shaped histogram centered around the initial state. Its spread increases
 with time, with standard deviation $\sigma\sqrt{T}$.
@@ -136,6 +193,8 @@ with time, with standard deviation $\sigma\sqrt{T}$.
 \subsubsection{Brownian diffusion and maximum likelihood}
 \label{sec:brownian-mle-theory}
 
+Maximum likelihood estimates parameters by maximizing the likelihood of the
+observed data \parencite[Section~1.3.6.5.2]{NISTHandbook}.
 For $dX_t=\sigma\,dW_t$ with $X_0=0$, $X_T\sim\mathcal{N}(0,\sigma^2T)$.
 For $N$ independent paths observed at the same final time, maximum likelihood
 gives
@@ -159,9 +218,10 @@ Differentiating with respect to $\sigma^2$ yields
        =\frac{1}{mh}\sum_{i=0}^{m-1}(\Delta X_i)^2.
     \label{eq:brownian-increment-mle}
 \end{equation}
-Both variance estimators are unbiased in this model; taking a square root does
-not preserve unbiasedness. Their observed accuracy depends on the number of
-independent Gaussian quantities entering the estimate.
+Both variance estimators are unbiased in this model: each squared endpoint has
+expectation $\sigma^2T$ and each squared increment has expectation $\sigma^2h$.
+Taking a square root does not preserve unbiasedness. Their observed accuracy
+depends on the number of independent Gaussian quantities entering the estimate.
 
 \paragraph{Alternative derivation using variance.}
 The endpoint estimator can also be obtained from the identity
@@ -177,7 +237,8 @@ is $\sigma^2T$. Substituting these values gives
     \sigma^2=\frac{\mathbb{E}[X_T^2]}{T}.
 \end{equation}
 Replacing the expected squared endpoint by its average over $N$ independent
-trajectories gives
+trajectories is a method-of-moments estimate
+\parencite[Section~1.3.6.5.1]{NISTHandbook} and gives
 \begin{equation}
     \widehat{\sigma}^2
       =\frac{1}{T}\left(\frac{1}{N}
@@ -194,8 +255,8 @@ The Brownian
 example uses a true diffusion amplitude of $0.8$. From the endpoints of 300
 independent paths at $T=40$, the variance-based formula
 $\widehat{\sigma}=\sqrt{\frac{1}{NT}\sum_j(X_T^{(j)})^2}$ gives $0.8111$.
-Fitting a normal distribution to these endpoints using SciPy's
-\texttt{norm.fit}, with its mean fixed at zero, and dividing the fitted
+Fitting a normal distribution to these endpoints using \texttt{norm.fit} in
+SciPy \parencite{SciPy}, with its mean fixed at zero, and dividing the fitted
 standard deviation by $\sqrt{T}$ gives the same value. These are two ways of
 calculating the endpoint estimator in
 Equation~\eqref{eq:brownian-endpoint-mle}.
@@ -203,7 +264,8 @@ Equation~\eqref{eq:brownian-endpoint-mle}.
 \subsubsection{The randomly forced harmonic oscillator}
 \label{sec:oscillator-theory}
 
-A harmonic oscillator with random forcing of its velocity satisfies
+A harmonic oscillator with random forcing of its velocity is a linear SDE
+of the type discussed by \textcite[Sections~3.1 and~6.1]{SarkkaSolin2019}:
 \begin{equation}
     dX_t=V_t\,dt,\qquad
     dV_t=-\omega_0^2X_t\,dt+\sigma\,dW_t.
@@ -242,14 +304,15 @@ It uses individual corrected increments before squaring, whereas
 Equation~\eqref{eq:oscillator-total-mle} first sums the increments within
 each path. These retain different amounts of information about diffusion.
 
-For zero initial conditions, linearity gives
+For zero initial conditions, the linear-SDE solution formula
+\parencite[Section~6.1]{SarkkaSolin2019} gives
 \begin{align}
     X_T&=\frac{\sigma}{\omega_0}
        \int_0^T\sin(\omega_0(T-u))\,dW_u,\\
     V_T&=\sigma\int_0^T\cos(\omega_0(T-u))\,dW_u.
 \end{align}
-These variables are jointly Gaussian with zero means. Their variances and
-covariance are
+These variables are jointly Gaussian with zero means. Applying the covariance
+formula for linear SDEs \parencite[Section~6.1]{SarkkaSolin2019} gives
 \begin{align}
     \operatorname{Var}(X_T)
        &=\frac{\sigma^2}{\omega_0^2}
@@ -263,7 +326,9 @@ covariance are
 \end{align}
 Position and velocity are therefore generally dependent. These expressions
 describe the continuous model.
-The oscillator is undamped. It\^o's formula gives
+The oscillator is undamped. For the energy
+$E_t=(V_t^2+\omega_0^2X_t^2)/2$, It\^o's formula
+\parencite[Section~4.2]{SarkkaSolin2019} gives
 $d\mathbb{E}[E_t]/dt=\sigma^2/2$, so its expected energy increases even in the
 continuous model. This physical growth is distinct from Euler's additional
 numerical energy growth.
@@ -276,7 +341,15 @@ in this simulated dataset. The two estimates use
 different observation summaries; they illustrate the calculations without
 establishing a general accuracy ranking.
 
-\subsection{Neural ordinary differential equations}
+\subsection{Neural stochastic differential equations}
+\label{sec:neural-sde-theory}
+
+Neural differential equations use neural networks to represent unknown
+coefficient functions. The deterministic neural ODE provides a starting point
+for introducing neural drift and diffusion functions in an SDE
+\parencite{Kidger2022}.
+
+\subsubsection{Neural ordinary differential equations}
 \label{sec:neural-ode-theory}
 
 A neural ODE replaces a prescribed vector field by a parameterized neural
@@ -288,7 +361,8 @@ network \parencite{Chen2018}:
 The parameters $\theta$ determine the dynamics, while a numerical solver
 evaluates the trajectory. Euler discretization gives
 $z_{i+1}=z_i+h_i f_\theta(t_i,z_i)$, connecting the model to residual updates.
-The continuous model separates the vector field from the solver's time grid.
+The continuous model separates the vector field from the solver's time grid
+\parencite[Section~1]{Chen2018}.
 
 For fully observed deterministic trajectories $y_j$ at times $t_j$, one
 possible objective is
@@ -302,6 +376,7 @@ Observation likelihoods or regularization terms can replace or augment this
 objective. Training differentiates a loss through the dynamics. This can be
 done through numerical solver operations or through sensitivity equations.
 For a terminal loss $\Phi(z(T))$, the continuous adjoint satisfies
+\parencite[Section~2]{Chen2018}
 \begin{equation}
     \frac{da}{dt}
        =-\left(\frac{\partial f_\theta}{\partial z}\right)^{\mathsf T}a,
@@ -318,8 +393,7 @@ uncertainty, but the vector field alone does not add random forcing during
 evolution. The present experiments do not train a neural ODE baseline; this
 model supplies the conceptual bridge to neural SDEs.
 
-\subsection{Neural stochastic differential equations}
-\label{sec:neural-sde-theory}
+\subsubsection{From neural ODEs to neural SDEs}
 
 A neural SDE parameterizes the drift and, where required, the diffusion:
 \begin{equation}
@@ -328,7 +402,8 @@ A neural SDE parameterizes the drift and, where required, the diffusion:
 \end{equation}
 Each independent realization has its own Brownian forcing. Neural networks
 provide flexible coefficient functions, but their parameterization must still
-respect the conditions needed for a well-defined SDE. Neural differential
+respect the conditions needed for a well-defined SDE
+\parencite[Section~4.5]{SarkkaSolin2019}. Neural differential
 equations and their stochastic extensions are developed in
 \textcite{Kidger2022}.
 
@@ -358,11 +433,13 @@ distribution with mean $b_\theta(X_i)h_i$ and variance $s_\theta(X_i)^2h_i$,
 as in Equation~\eqref{eq:local-gaussian}. Evaluating its probability density
 at the observed increment gives the likelihood of that increment given its
 starting state. Training adjusts the parameters to increase this likelihood.
-Equivalently, we minimize its negative logarithm.
+Equivalently, we minimize its negative logarithm. This is the
+approximated-likelihood approach based on Euler transition densities
+\parencite[Section~11.4]{SarkkaSolin2019}.
 
 To derive the loss, write the predicted mean as $\mu_i=b_\theta(X_i)h_i$
 and the variance as $v_i=s_\theta(X_i)^2h_i$. The normal probability density
-evaluated at the observed increment is
+\parencite[Section~1.3.6.6.1]{NISTHandbook} evaluated at the observed increment is
 \begin{equation*}
     p_\theta(\Delta X_i\mid X_i)
       =\frac{1}{\sqrt{2\pi v_i}}
@@ -396,16 +473,19 @@ term because it does not depend on the learned parameters and therefore
 does not affect training. Actual elapsed times $h_i$ enter the loss,
 including when selecting a subset of saved observations. Consecutive
 increments form conditional transition factors through the Markov property;
-their starting states are not assumed to be independent.
+their starting states are not assumed to be independent
+\parencite[Sections~5.4 and~11.4]{SarkkaSolin2019}.
 
 The residual term measures agreement with the local drift and noise scale.
 The $\log s_\theta(X_i)$ term prevents arbitrarily increasing diffusion to reduce the
 standardized residual. Drift and diffusion are therefore coupled in training.
-Adam performs parameter updates using randomly sampled minibatches.
+Adam \parencite{KingmaBa2015} performs parameter updates using randomly sampled
+minibatches.
 The data-size experiments select a checkpoint using a fixed sample of
 held-out increments. This fitting strategy assumes direct state observations
 without measurement noise; noisy or partially observed states require a
-different observation model or inference procedure.
+different observation model or inference procedure
+\parencite[Section~11.5]{SarkkaSolin2019}.
 
 \subsubsection{Checking the learned model}
 
