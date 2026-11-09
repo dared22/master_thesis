@@ -1,1 +1,21 @@
 \section{Introduction}
+
+Portfolio risk depends on how stocks move together, especially during periods of
+large losses. Historical simulation and copula models provide established ways
+to estimate this risk, but their results depend on the available history and
+assumptions about dependence. Neural stochastic differential equations (neural
+SDEs) can generate joint return paths. Whether those paths lead to more useful
+risk estimates is an open question.
+
+This thesis will fit a multivariate neural SDE to the daily returns of a selected
+group of OSEBX stocks. It will generate return paths and assess how well they
+reproduce features of observed data, including volatility clustering, dependence
+between stocks, and joint losses. Applying portfolio weights to the generated
+paths will give a distribution of portfolio losses from which value at risk
+(VaR) can be estimated.
+
+The neural SDE will be compared with historical simulation, weighted historical
+simulation, and Gaussian- and Student's \emph{t}-copula models using the same
+portfolio and evaluation period. The aim is to find out whether the neural SDE
+adds value for generating realistic scenarios and estimating portfolio risk,
+while acknowledging that rare losses are difficult to assess from limited data.
