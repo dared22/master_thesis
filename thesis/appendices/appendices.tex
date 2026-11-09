@@ -6,8 +6,8 @@
 This preliminary study illustrates coefficient learning for the periodic SDE
 in Equation~\eqref{eq:periodic-toy-sde}, with true drift $b(x)=-\sin x$,
 constant diffusion amplitude $\sigma=1.1$, and initial state $X_0=0$.
-It explores observation spacing, trajectory duration, and fitting choices;
-it is not evidence answering the equity-return research question.
+It explores observation spacing, trajectory duration, and fitting choices.
+It is not evidence answering the equity-return research question.
 The observation-spacing comparison is shown in Figure~\ref{fig:repeated-density}
 in Section~\ref{sec:observation-spacing-example}.
 
@@ -47,7 +47,7 @@ of 4,096 held-out increments at the original fine observation spacing,
 including the untrained model as a candidate. Coefficient errors follow
 Equation~\eqref{eq:coefficient-errors}, with drift evaluated on 512 uniformly
 spaced points over one period. The figures report medians and interquartile
-ranges across five fits; the bands describe variation between runs, rather
+ranges across five fits. The bands describe variation between runs, rather
 than confidence intervals.
 
 The implementation averages the first two terms in
@@ -132,7 +132,7 @@ these endpoints.
     \includegraphics[width=0.9\linewidth]{figures/results/repeated-duration.pdf}
     \caption{Exploratory duration sweep with 50 training trajectories and
     fixed observation spacing $\Delta t\approx0.03334$. Lines show median
-    coefficient errors over five fits; bands show the 25th--75th percentiles.}
+    coefficient errors over five fits. Bands show the 25th--75th percentiles.}
     \label{fig:repeated-duration}
 \end{figure}
 
@@ -178,3 +178,108 @@ and the time scale assumed by the loss all matter when interpreting learned
 SDE coefficients. Full experiment details and outputs remain in
 \texttt{likelihood\_calc.ipynb}, \texttt{sde\_test\_data.ipynb}, and
 \texttt{sandbox/experiments/experiment\_results}.
+
+\clearpage
+
+\section{Derivation of the neural SDE training loss}
+\label{app:neural-sde-nll-derivation}
+
+This appendix derives the loss in Equation~\eqref{eq:neural-sde-nll} using
+the local normal approximation to SDE transitions
+\parencite{SarkkaSolin2019}. We assume a one-dimensional state observed
+without measurement noise, drift $b_\theta(x)$, and positive diffusion
+$s_\theta(x)$. The calculation conditions on the observed starting state.
+
+\subsection{Distribution of an observed change}
+
+Let $x_i$ be the observed state at time $t_i$, and define
+\begin{equation}
+    h_i=t_{i+1}-t_i>0,\qquad
+    \Delta x_i=x_{i+1}-x_i,\qquad
+    \mu_i=b_\theta(x_i)h_i,\qquad
+    v_i=s_\theta(x_i)^2h_i.
+\end{equation}
+Treating the drift and diffusion as constant over the interval gives
+$\Delta X_i\mid X_{t_i}=x_i\approx\mathcal{N}(\mu_i,v_i)$, as in
+Equation~\eqref{eq:local-gaussian}. The normal density evaluated at the
+observed change is \parencite{NISTHandbook}
+\begin{equation}
+    q_\theta(\Delta x_i\mid x_i)
+      =\frac{1}{\sqrt{2\pi v_i}}
+       \exp\!\left(-\frac{(\Delta x_i-\mu_i)^2}{2v_i}\right).
+\end{equation}
+Here $q_\theta$ denotes the approximate transition density. Since the starting
+state $x_i$ is given, this also describes the density of the next observation
+$x_{i+1}=x_i+\Delta x_i$.
+
+\subsection{Negative log-likelihood for one change}
+
+Define the residual as the observed change minus its predicted mean,
+\begin{equation}
+    r_i=\Delta x_i-\mu_i
+       =\Delta x_i-b_\theta(x_i)h_i.
+\end{equation}
+Taking the negative logarithm and separating the product gives
+\begin{align*}
+    -\log q_\theta(\Delta x_i\mid x_i)
+      &=-\log\!\left[(2\pi v_i)^{-1/2}
+               \exp\!\left(-\frac{r_i^2}{2v_i}\right)\right]\\
+      &=-\log\!\left[(2\pi v_i)^{-1/2}\right]
+        -\log\!\left[\exp\!\left(-\frac{r_i^2}{2v_i}\right)\right]\\
+      &=\frac12\log(2\pi v_i)+\frac{r_i^2}{2v_i}.
+\end{align*}
+Substituting $v_i=s_\theta(x_i)^2h_i$ gives
+\begin{equation*}
+    -\log q_\theta(\Delta x_i\mid x_i)
+      =\frac{r_i^2}{2s_\theta(x_i)^2h_i}
+       +\frac12\log\!\left(2\pi s_\theta(x_i)^2h_i\right).
+\end{equation*}
+Because $s_\theta(x_i)>0$ and $h_i>0$, the logarithmic term expands as
+\begin{align*}
+    \frac12\log\!\left(2\pi s_\theta(x_i)^2h_i\right)
+       &=\frac12\log(2\pi)+\log s_\theta(x_i)+\frac12\log h_i\\
+       &=\log s_\theta(x_i)+\frac12\log(2\pi h_i).
+\end{align*}
+The loss for one observed change is therefore
+\begin{equation}
+    \mathcal{L}_i(\theta)
+       =\frac{r_i^2}{2s_\theta(x_i)^2h_i}
+        +\log s_\theta(x_i)
+        +\frac12\log(2\pi h_i),
+\end{equation}
+which is the expression used in the main text.
+
+\subsection{Combining changes into the training objective}
+
+For observations $x_0,\ldots,x_n$, the Markov transition model gives the
+following approximate likelihood conditional on $x_0$
+\parencite{SarkkaSolin2019}:
+\begin{equation}
+    \widetilde{p}_\theta(x_1,\ldots,x_n\mid x_0)
+       =\prod_{i=0}^{n-1}q_\theta(\Delta x_i\mid x_i).
+\end{equation}
+Each factor conditions on the starting state of that change. This does not
+assume that consecutive states are independent. Taking the negative logarithm
+turns the product into a sum,
+\begin{equation}
+    -\log\widetilde{p}_\theta(x_1,\ldots,x_n\mid x_0)
+       =-\sum_{i=0}^{n-1}\log q_\theta(\Delta x_i\mid x_i)
+       =\sum_{i=0}^{n-1}\mathcal{L}_i(\theta).
+\end{equation}
+Averaging gives
+\begin{align*}
+    \frac1n\sum_{i=0}^{n-1}\mathcal{L}_i(\theta)
+       &=\frac1n\sum_{i=0}^{n-1}
+          \left[\frac{r_i^2}{2s_\theta(x_i)^2h_i}
+                     +\log s_\theta(x_i)\right]+C,\\
+    C&=\frac{1}{2n}\sum_{i=0}^{n-1}\log(2\pi h_i).
+\end{align*}
+The observation intervals are fixed, so $C$ does not depend on $\theta$.
+Dropping it leaves the same minimizing parameters. The implementation
+therefore averages only the first two terms. For several independent
+trajectories, the same loss is summed over trajectories and averaged over
+the total number of observed changes.
+
+This is the likelihood of the local Euler approximation. It is generally
+an approximation to the likelihood of the underlying SDE, because the drift
+and diffusion can change within an observation interval.

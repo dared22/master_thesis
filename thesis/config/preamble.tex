@@ -1,13 +1,30 @@
 \documentclass[masters,en,listoffigures,listoftables]{NMBU}
 \usepackage[normalem]{ulem}
+\usepackage{float}
+
+\usepackage[skip=3pt,indent=0pt]{parskip}
+\usepackage[font=small,labelfont=bf,skip=6pt]{caption}
+\usepackage{microtype}
+
+% Consistent paragraph, figure, and page spacing.
+\setlength{\emergencystretch}{2em}
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\raggedbottom
+\AtBeginBibliography{\raggedright}
+
 % Check the NMBU.cls for all the options and more details
 
-% If you'd like to use chapters instead of sections, add 'book' to the options, as \documentclass[book,...]{NMBU}. Recall that you now have to use \chapter{} and then \section{}, \subsection{}, ... 
+% If you'd like to use chapters instead of sections, add 'book' to the options, as \documentclass[book,...]{NMBU}. Recall that you now have to use \chapter{} and then \section{}, \subsection{}, ...
 
 % \usepackage[nohyperlinks]{acronym} % If you need a List of Acronyms, consider using this package
 
 % \usepackage[font=small]{caption} % if you prefer smaller captions
-% \captionsetup{width=0.9\linewidth} 
+% \captionsetup{width=0.9\linewidth}
 
 % Word of advice: When you are done with your thesis, change the compiler in Overleaf to XeLaTeX! This will make your fonts and title page look much nicer than in pdfLaTeX. Just go to "Menu", in the "Settings", find "Compiler" and change to XeLaTeX.
 
@@ -17,7 +34,7 @@
 
 % If you would like to have a bibliography with named authors, organised alphabetically, add "namedauthors" to the parameters of the document class.
 
-\addbibresource{references/bib.bib} % here you include the bibliography file. 
+\addbibresource{references/bib.bib} % here you include the bibliography file.
 
 % If you are using Norwegian dates in your bibliography, add "norwegiandates" to the document class.
 
@@ -26,4 +43,3 @@
 % Good luck with your thesis! If you get in trouble with LaTeX stuff, write to me: leonardo.rydin@gmail.com
 
 % In your .tex file, you need to include the following information to produce the first page of your thesis
-

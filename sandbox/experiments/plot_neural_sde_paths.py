@@ -27,15 +27,20 @@ reference = next(
     if row["sweep"] == "observation_density" and row["data_seed"] == "1000"
     and row["n_observations"] == "15000"
 )
+saved_paths = artifacts / "paths.npz"
+if saved_paths.exists() and "original_training_paths" in np.load(saved_paths).files:
+    training_paths = jnp.asarray(np.load(saved_paths)["original_training_paths"])
+else:
+    print("Reproducing the 50 original training paths...", flush=True)
+    training_keys = jr.split(jr.PRNGKey(1000), 50)
+    training_paths = jax.jit(jax.vmap(simulate_one))(training_keys)
 if checkpoint.exists():
     model = eqx.tree_deserialise_leaves(checkpoint, NeuralSDE(jr.PRNGKey(0)))
     metadata = json.loads(metadata_path.read_text())
     print("Loaded reproduced checkpoint.", flush=True)
 else:
-    print("Simulating 50 training paths and the original validation paths...", flush=True)
-    training_keys = jr.split(jr.PRNGKey(1000), 50)
+    print("Simulating the original validation paths...", flush=True)
     original_keys = jr.split(jr.PRNGKey(42), 100)
-    training_paths = jax.jit(jax.vmap(simulate_one))(training_keys)
     validation_paths = jax.jit(jax.vmap(simulate_one))(original_keys[40:])
     jax.block_until_ready(validation_paths)
     print("Fitting the full-observation model (training seed 2000)...", flush=True)
@@ -72,7 +77,7 @@ else:
     }
     eqx.tree_serialise_leaves(checkpoint, model)
     metadata_path.write_text(json.dumps(metadata, indent=2) + "\n")
-    del training_paths, validation_paths, fit
+    del validation_paths, fit
     print("Verified fit against the recorded experiment and saved weights.", flush=True)
 
 @eqx.filter_jit
@@ -91,16 +96,27 @@ def generate_paths(model, key):
 paths = np.asarray(generate_paths(model, jr.PRNGKey(2026)))
 assert paths.shape == (50, len(ts)) and np.isfinite(paths).all()
 assert np.all(paths[:, 0] == 0)
-np.savez_compressed(artifacts / "paths.npz", times=np.asarray(ts), paths=paths)
-fig, ax = plt.subplots(figsize=(6.2, 2.8), layout="constrained")
-for path in paths:
-    ax.plot(np.asarray(ts), path, color="#0072B2", linewidth=0.55, alpha=0.35,
-            rasterized=True)
-ax.set(xlabel=r"Time $t$", ylabel=r"State $X_t$", xlim=(0, t1))
-ax.spines[["top", "right"]].set_visible(False)
-ax.grid(alpha=0.15)
+original_paths = np.asarray(training_paths)
+assert original_paths.shape == paths.shape and np.isfinite(original_paths).all()
+assert np.all(original_paths[:, 0] == 0)
+np.savez_compressed(artifacts / "paths.npz", times=np.asarray(ts), paths=paths,
+                    original_training_paths=original_paths)
+fig, axes = plt.subplots(1, 2, figsize=(6.2, 2.0), sharex=True, sharey=True,
+                         layout="constrained")
+for ax, data, title in zip(
+    axes, (original_paths, paths),
+    ("Original SDE", "Fitted neural SDE"),
+):
+    for path in data:
+        ax.plot(np.asarray(ts), path, color="#0072B2", linewidth=0.55, alpha=0.35,
+                rasterized=True)
+    ax.set(xlabel=r"Time $t$", xlim=(0, t1), title=title)
+    ax.title.set_fontsize(10)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.grid(alpha=0.15)
+axes[0].set_ylabel(r"State $X_t$")
 output = folder.parents[1] / "thesis/figures/theory/neural-sde-paths.pdf"
 fig.savefig(output, dpi=300)
 fig.savefig("/tmp/neural-sde-paths-preview.png", dpi=180)
 plt.close(fig)
-print(f"Saved {output}: 50 new paths from the fitted neural SDE.", flush=True)
+print(f"Saved {output}: 50 original training paths and 50 new neural SDE paths.", flush=True)

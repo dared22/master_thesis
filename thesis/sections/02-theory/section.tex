@@ -57,7 +57,7 @@ the error over a fixed time interval \parencite{kohler2014elementary}.
     \centering
     \includegraphics[width=0.9\linewidth]{figures/theory/ode-euler.pdf}
     \caption{Exact solution of $dx/dt=2x$, $x(0)=1$, and Euler approximations
-    with three step sizes $h$. Markers show computed values; straight lines
+    with three step sizes $h$. Markers show computed values. Straight lines
     connect them. The vertical line marks the error $\epsilon$ between the
     exact solution and the Euler approximation with $h=0.2$ at $t=0.8$.}
     \label{fig:ode-euler}
@@ -79,7 +79,7 @@ time \parencite{SarkkaSolin2019}. An observed time series records values from
 just one realization.
 
 For a continuous-time process, the time index ranges over an interval, such as
-$\mathcal{T}=[0,T]$; for a discrete-time process, it ranges over a countable set.
+$\mathcal{T}=[0,T]$. For a discrete-time process, it ranges over a countable set.
 Continuous time alone does not require continuous sample paths
 \parencite{PishroNik2014}.
 If the state is observed without measurement error, the data are
@@ -131,8 +131,8 @@ Figure~\ref{fig:brownian-paths} illustrates ten paths of the same process.
     \includegraphics[width=0.9\linewidth]{figures/theory/brownian-paths.pdf}
     \caption{Ten simulated standard Brownian paths, with theoretical mean
     $\mathbb{E}[W_t]=0$ and shaded bounds $\pm1.96\sqrt{t}$. At each fixed
-    $t>0$, these bounds contain $W_t$ with approximately 95\% probability;
-    they do not guarantee that an entire path stays inside them.}
+    $t>0$, these bounds contain $W_t$ with approximately 95\% probability.
+    They do not guarantee that an entire path stays inside them.}
     \label{fig:brownian-paths}
 \end{figure}
 
@@ -196,9 +196,10 @@ interval gives \parencite{SarkkaSolin2019}
     \label{eq:local-gaussian}
 \end{equation}
 The mean change is $b(t_i,x)h_i$ and its variance is $s(t_i,x)^2h_i$.
-This distribution is exact for one Euler--Maruyama step, but generally
-approximate for the SDE itself. Over a long observation interval, $b$ and $s$
-may change substantially, making this approximation less reliable.
+This normal distribution describes one Euler--Maruyama update exactly.
+For the underlying SDE, it is an approximation because the drift and diffusion
+may change during the interval. Widely spaced observations can therefore make
+this approximation less reliable.
 
 \subsubsection{Example: a randomly forced oscillator}
 \label{sec:oscillator-theory}
@@ -217,7 +218,7 @@ random changes in velocity.
 
 Figure~\ref{fig:oscillator-paths} shows ten paths simulated with
 Euler--Maruyama from the same starting state. Their differences arise from
-the random forcing of velocity; no measurement noise is added.
+the random forcing of velocity. No measurement noise is added.
 
 \begin{figure}[htbp]
     \centering
@@ -263,8 +264,8 @@ network \parencite{Chen2018}:
 \end{equation}
 In the earlier example $dx/dt=2x$, the rate $2x$ was specified in advance.
 Replacing it with $f_\theta(t,x)$ makes the rate a function learned from data.
-A numerical solver produces a trajectory for each choice of $\theta$;
-training adjusts these parameters to fit observed trajectories, for example
+A numerical solver produces a trajectory for each choice of $\theta$.
+Training adjusts these parameters to fit observed trajectories, for example
 by minimizing squared differences between predicted and observed states
 \parencite{Chen2018}. With fixed parameters and initial state, the resulting
 neural ODE remains deterministic.
@@ -283,17 +284,20 @@ respect the conditions needed for a well-defined SDE
 equations and their stochastic extensions are developed in
 \textcite{Kidger2022}.
 
-\subsubsection{Likelihood training from observed increments}
+\subsubsection{Illustration: training a neural SDE}
+\label{sec:neural-example}
 
-One way to train a neural SDE is to make the observed changes likely under
-the normal approximation in Equation~\eqref{eq:local-gaussian}. Here we
-assume that the state is observed without measurement noise and that the
-diffusion $s_\theta$ is positive \parencite{SarkkaSolin2019}.
-
-For an observed change $\Delta X_i$, the predicted mean change is
-$b_\theta(X_i)h_i$. Their difference,
-$r_i=\Delta X_i-b_\theta(X_i)h_i$, is the residual. Taking the negative
-logarithm of the normal density gives the training loss
+We first generate 50 training paths with Euler--Maruyama from the original SDE
+\begin{equation}
+    dX_t=-\sin(X_t)\,dt+1.1\,dW_t,\qquad X_0=0.
+    \label{eq:periodic-toy-sde}
+\end{equation}
+We then fit a neural drift and a positive constant diffusion to the observed
+changes, assuming no measurement noise. The residual
+$r_i=\Delta X_i-b_\theta(X_i)h_i$ is the observed change minus its predicted
+mean. We evaluate the normal density in
+Equation~\eqref{eq:local-gaussian} at each observed change. Its negative
+logarithm gives the negative log-likelihood, which we use as the training loss
 \parencite{SarkkaSolin2019,NISTHandbook}:
 \begin{equation}
     \mathcal{L}_i(\theta)
@@ -302,68 +306,53 @@ logarithm of the normal density gives the training loss
         +\frac{1}{2}\log(2\pi h_i).
     \label{eq:neural-sde-nll}
 \end{equation}
-The first term penalizes prediction errors relative to the model's noise
-scale. The second discourages making the diffusion large simply to hide
-those errors. The final term does not depend on the parameters, so it can be
-omitted during training. We adjust the parameters to reduce the average loss
-over observed changes. Each change is assessed given its starting state;
-consecutive states need not be independent \parencite{SarkkaSolin2019}.
+The first term penalizes prediction errors relative to the noise scale.
+The second discourages increasing diffusion simply to hide those errors.
+The final term does not depend on the parameters and can be omitted.
+Training reduces the average loss over observed changes. The full calculation
+is given in Appendix~\ref{app:neural-sde-nll-derivation}.
 
-The example below uses this training rule; the financial model's training
-method remains a separate choice. Noisy or incomplete observations require
-a suitable observation model or another inference method
-\parencite{SarkkaSolin2019}.
+After training, we generate 50 new paths from the fitted neural SDE.
+Figure~\ref{fig:neural-sde-paths} compares them with the original training
+paths. The learned parameters stay fixed, while new Brownian increments
+produce different realizations.
 
-\subsubsection{Illustration: observation spacing}
-\label{sec:neural-example}
-\label{sec:observation-spacing-example}
-
-Consider the periodic toy SDE
-\begin{equation}
-    dX_t=-\sin(X_t)\,dt+1.1\,dW_t,\qquad X_0=0.
-    \label{eq:periodic-toy-sde}
-\end{equation}
-A neural drift and positive constant diffusion are fitted using
-Equation~\eqref{eq:neural-sde-nll}. Figure~\ref{fig:neural-sde-paths} shows
-50 new paths from one fitted model. They share the same starting state and
-learned parameters, but use different Brownian increments.
-
-\begin{figure}[!htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.9\linewidth]{figures/theory/neural-sde-paths.pdf}
-    \caption{Fifty new paths simulated with Euler--Maruyama from a neural SDE
-    fitted to 50 training paths, each with 15,000 observations over $T=500$.
-    All generated paths start at $X_0=0$ and use independent Brownian
-    increments. The integration step is approximately $0.00833$.}
+    \caption{Original training paths (left) and new neural SDE paths (right),
+    50 in each panel. All start at $X_0=0$ and use Euler--Maruyama over
+    $T=500$ with step approximately $0.00833$.
+    Each training path has 15,000 observations.}
     \label{fig:neural-sde-paths}
 \end{figure}
 
-Figure~\ref{fig:repeated-density} varies
-observation spacing while keeping the duration at $T=500$ for each of 50
-training trajectories. At fixed duration, more observations per path mean
-shorter intervals between them. Each configuration is fitted five times with new
-training data and training seeds. Errors compare the learned drift over one
-period and the learned diffusion amplitude with their known simulation values.
-The plot reports medians and interquartile ranges across fits; the bands show
-variation between runs, not confidence intervals.
+\subsubsection{A limitation of the Gaussian likelihood approximation}
+\label{sec:observation-spacing-example}
+
+With very sparse observations, the normal approximation used to construct
+this particular loss can become unreliable. It treats drift and diffusion as
+constant within each interval, although they may change as the state evolves \parencite{SarkkaSolin2019}. To explore this limitation,
+we vary observation spacing while keeping 50 training paths of duration
+$T=500$. Each configuration is fitted five times with new training data and
+training seeds. Figure~\ref{fig:repeated-density} compares the learned drift
+and diffusion with their known simulation values.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\linewidth]{figures/results/repeated-observation-density.pdf}
-    \caption{Exploratory observation-density sweep at fixed duration $T=500$
-    with 50 training trajectories. Lines show median coefficient errors over
-    five fits; bands show the 25th--75th percentiles. Validation uses the
-    original fine observation spacing for every configuration.}
+    \caption{Coefficient errors for different observation counts, using 50
+    training paths over $T=500$. Lines show medians of five fits and bands
+    show the 25th--75th percentiles. Validation uses the original fine
+    observation spacing.}
     \label{fig:repeated-density}
 \end{figure}
 
-The plot shows sensitivity to observation spacing in this example: diffusion
-recovery improves overall with finer sampling, while drift error does not
-improve monotonically. A plausible contributor at coarse spacing is approximation
-error: the local Gaussian transition treats coefficients as constant over
-an interval in which the state and drift may change substantially. The
-experiment does not establish this as the cause or isolate it from
-optimization and checkpoint-selection effects. The network structure, training
-settings, error definitions, duration comparison, and coarse-sampling checkpoint
-results are given in Appendix~\ref{app:periodic-toy-study}. This preliminary
-illustration does not answer the equity-return research question.
+Finer sampling improves diffusion recovery overall, but drift error does not
+improve monotonically. Both the approximation and training choices may affect
+these results. The network, training settings, and further exploratory results
+are described in Appendix~\ref{app:periodic-toy-study}.
+
+This sensitivity to observation spacing is why the main equity-return study
+will use a different training approach. The local Gaussian likelihood loss
+is used here only as an illustration.
