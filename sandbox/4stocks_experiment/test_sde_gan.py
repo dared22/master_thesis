@@ -24,6 +24,7 @@ from training import (
     generate_batch, generator_loss, gradient_penalty, initialize_models,
     kernel_bandwidth, make_updates, mmd_squared, sample_paths, train,
     tree_finite, validate_windows,
+    temporal_autocorrelation, temporal_penalty,
 )
 
 
@@ -97,7 +98,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(2), jnp.array(True)
+            return model, state, jnp.ones(4), jnp.array(True)
         with patch('training.make_updates', return_value=(g_opt, d_opt, g_update, d_update)), \
              patch('training.generate_batch', return_value=jnp.zeros((2, 20, 4))), \
              patch('training.sample_paths', return_value=np.zeros((4, 20, 4))), \
@@ -113,7 +114,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(2), jnp.array(True)
+            return model, state, jnp.ones(4), jnp.array(True)
         def sample(model, n_paths, key, config):
             noise_keys.append(np.asarray(key))
             return np.zeros((n_paths, 20, 4))

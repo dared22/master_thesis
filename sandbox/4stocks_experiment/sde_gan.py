@@ -48,6 +48,12 @@ class SDEGAN:
             'selected_step': result['best_step'],
             'validation_score': result['validation_score'],
             'kernel_bandwidth': result['kernel_bandwidth'],
+            'temporal_penalty': {
+                'weight': self.config.temporal_penalty_weight,
+                'lags': [1, 2, 3, 4, 5],
+                'units': 'standardized log returns',
+                'training_target': result['temporal_target'],
+            },
             'package_versions': {name: version(name) for name in
                                  ('jax', 'jaxlib', 'equinox', 'diffrax', 'optax', 'numpy')},
             'python_version': platform.python_version(),

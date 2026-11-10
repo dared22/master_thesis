@@ -35,6 +35,7 @@ class SDEGANConfig:
     adam_b1: float = 0.0
     adam_b2: float = 0.9
     gradient_penalty_weight: float = 10.0
+    temporal_penalty_weight: float = 0.0
     generator_steps: int = 2000
     critic_steps: int = 5
     validation_every: int = 100
@@ -65,6 +66,8 @@ class SDEGANConfig:
         for name in ('generator_lr', 'critic_lr', 'gradient_penalty_weight'):
             if not np.isfinite(getattr(self, name)) or getattr(self, name) <= 0:
                 raise ValueError(f'{name} must be positive and finite')
+        if not np.isfinite(self.temporal_penalty_weight) or self.temporal_penalty_weight < 0:
+            raise ValueError('temporal_penalty_weight must be nonnegative and finite')
         if not (0 <= self.adam_b1 < 1 and 0 <= self.adam_b2 < 1):
             raise ValueError('Adam moments must lie in [0, 1)')
         if isinstance(self.evaluation_seed, bool) or not isinstance(self.evaluation_seed, int):
@@ -145,12 +148,51 @@ def critic_loss(
     return loss, (penalty, input_norm)
 
 
+def temporal_autocorrelation(values: jax.Array) -> jax.Array:
+    """Pooled within-path Pearson correlations at lags 1–5, per stock.
+
+    Center over all valid pairs at each lag, never across path boundaries.
+    A variance floor in standardized units keeps constant batches and their
+    gradients finite; zero-variance channels have a stabilized value of zero.
+    """
+    correlations = []
+    for lag in range(1, 6):
+        left, right = values[:, :-lag], values[:, lag:]
+        left = left - left.mean(axis=(0, 1))
+        right = right - right.mean(axis=(0, 1))
+        denominator = jnp.sqrt(
+            jnp.maximum(jnp.mean(left ** 2, axis=(0, 1)), 1e-6)
+            * jnp.maximum(jnp.mean(right ** 2, axis=(0, 1)), 1e-6))
+        correlations.append(jnp.mean(left * right, axis=(0, 1)) / denominator)
+    return jnp.stack(correlations)
+
+
+def temporal_penalty(paths: jax.Array, target: jax.Array) -> jax.Array:
+    """Match a fixed training-only target, averaged over five lags and stocks."""
+    return jnp.mean((temporal_autocorrelation(paths) - jax.lax.stop_gradient(target)) ** 2)
+
+
+def _generator_objective(
+    generator: Generator, critic: Critic, keys: jax.Array, config: SDEGANConfig,
+    temporal_target: jax.Array | None,
+) -> tuple[jax.Array, tuple[jax.Array, jax.Array]]:
+    """Compute both generator terms from the same generated batch."""
+    paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
+    adversarial = -jax.vmap(lambda x: critic(x, config.critic_dt))(paths).mean()
+    penalty = jnp.array(0.0)
+    if config.temporal_penalty_weight > 0:
+        if temporal_target is None:
+            raise ValueError('A training temporal_target is required when the penalty is enabled')
+        penalty = temporal_penalty(paths, temporal_target)
+    return adversarial + config.temporal_penalty_weight * penalty, (adversarial, penalty)
+
+
 def generator_loss(
     generator: Generator, critic: Critic, keys: jax.Array, config: SDEGANConfig,
+    temporal_target: jax.Array | None = None,
 ) -> jax.Array:
-    """Differentiate the fixed critic through generated sampled observations."""
-    paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
-    return -jax.vmap(lambda x: critic(x, config.critic_dt))(paths).mean()
+    """Differentiate the fixed critic and optional temporal penalty through paths."""
+    return _generator_objective(generator, critic, keys, config, temporal_target)[0]
 
 
 def tree_finite(tree: Any) -> jax.Array:
@@ -159,7 +201,9 @@ def tree_finite(tree: Any) -> jax.Array:
     return jnp.all(jnp.stack([jnp.isfinite(x).all() for x in leaves]))
 
 
-def make_updates(config: SDEGANConfig) -> tuple[Any, Any, Any, Any]:
+def make_updates(
+    config: SDEGANConfig, temporal_target: jax.Array | None = None,
+) -> tuple[Any, Any, Any, Any]:
     """Build independent Adam transformations and compiled player updates."""
     g_optimizer = optax.adam(config.generator_lr, b1=config.adam_b1, b2=config.adam_b2)
     d_optimizer = optax.adam(config.critic_lr, b1=config.adam_b1, b2=config.adam_b2)
@@ -179,10 +223,12 @@ def make_updates(config: SDEGANConfig) -> tuple[Any, Any, Any, Any]:
     @eqx.filter_jit
     def generator_update(generator: Generator, state: Any, critic: Critic,
                          keys: jax.Array) -> tuple[Any, ...]:
-        loss, grads = eqx.filter_value_and_grad(generator_loss)(generator, critic, keys, config)
+        (loss, (adversarial, penalty)), grads = eqx.filter_value_and_grad(
+            _generator_objective, has_aux=True
+        )(generator, critic, keys, config, temporal_target)
         updates, state = g_optimizer.update(grads, state)
         generator = eqx.apply_updates(generator, updates)
-        metrics = jnp.array([loss, optax.tree.norm(grads)])
+        metrics = jnp.array([loss, optax.tree.norm(grads), adversarial, penalty])
         valid = tree_finite((metrics, grads, generator, state))
         return generator, state, metrics, valid
 
@@ -230,19 +276,23 @@ def train(
     indices = jr.choice(subset_key, len(validation),
                         (min(config.validation_size, len(validation)),), replace=False)
     fixed_validation = np.asarray(validation[indices])
-    g_opt, d_opt, g_update, d_update = make_updates(config)
+    temporal_target = (jax.lax.stop_gradient(temporal_autocorrelation(data))
+                       if config.temporal_penalty_weight > 0 else None)
+    validation_target = temporal_autocorrelation(jnp.asarray(fixed_validation))
+    g_opt, d_opt, g_update, d_update = make_updates(config, temporal_target)
     g_state = g_opt.init(eqx.filter(generator, eqx.is_inexact_array))
     d_state = d_opt.init(eqx.filter(critic, eqx.is_inexact_array))
     key = jr.fold_in(jr.PRNGKey(seed), 2)
 
-    def evaluate(model: Generator) -> float:
-        score = mmd_squared(fixed_validation, sample_paths(
-            model, config.evaluation_paths, evaluation_key, config), bandwidth)
-        if not np.isfinite(score):
-            raise FloatingPointError('Nonfinite validation MMD2')
-        return score
+    def evaluate(model: Generator) -> tuple[float, float]:
+        samples = sample_paths(model, config.evaluation_paths, evaluation_key, config)
+        score = mmd_squared(fixed_validation, samples, bandwidth)
+        temporal_error = float(temporal_penalty(jnp.asarray(samples), validation_target))
+        if not np.isfinite([score, temporal_error]).all():
+            raise FloatingPointError('Nonfinite validation MMD2 or temporal error')
+        return score, temporal_error
 
-    best_score = evaluate(generator)
+    best_score, temporal_error = evaluate(generator)
     best_generator, best_step = generator, 0
     history: History = [{
         'step': 0, 'generator_loss': None, 'critic_loss': None,
@@ -250,6 +300,8 @@ def train(
         'critic_grad_norm': None, 'input_grad_norm': None,
         'validation_mmd2': best_score, 'elapsed_seconds': perf_counter() - started,
         'cycle_seconds': None,
+        'generator_adversarial_loss': None, 'temporal_penalty': None,
+        'validation_temporal_error': temporal_error,
     }]
     for step in range(1, config.generator_steps + 1):
         cycle_started = perf_counter()
@@ -275,12 +327,13 @@ def train(
                 raise FloatingPointError('Nonfinite generator update')
         except Exception as error:
             raise RuntimeError(f'Generator update {step} failed') from error
-        g_loss, g_norm = map(float, metrics)
+        g_loss, g_norm, adversarial, g_temporal_penalty = map(float, metrics)
         cycle_seconds = perf_counter() - cycle_started
         d_loss, penalty, d_norm, input_norm = map(float, np.mean(critic_metrics, axis=0))
         score = None
+        temporal_error = None
         if step % config.validation_every == 0 or step == config.generator_steps:
-            score = evaluate(generator)
+            score, temporal_error = evaluate(generator)
             if score < best_score:
                 best_generator, best_score, best_step = generator, score, step
         history.append({
@@ -289,9 +342,13 @@ def train(
             'critic_grad_norm': d_norm, 'input_grad_norm': input_norm,
             'validation_mmd2': score, 'elapsed_seconds': perf_counter() - started,
             'cycle_seconds': cycle_seconds,
+            'generator_adversarial_loss': adversarial,
+            'temporal_penalty': g_temporal_penalty,
+            'validation_temporal_error': temporal_error,
         })
     return {
         'best_generator': best_generator, 'best_step': best_step,
         'validation_score': best_score, 'kernel_bandwidth': bandwidth,
         'final_generator': generator, 'final_critic': critic, 'history': history,
+        'temporal_target': None if temporal_target is None else np.asarray(temporal_target).tolist(),
     }
