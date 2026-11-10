@@ -1,0 +1,16 @@
+{
+  "fit_seed": 0,
+  "evaluation_seed": 100,
+  "selected_step": 1600,
+  "validation_score": 0.018549229137817758,
+  "kernel_bandwidth": 11.42571316816387,
+  "package_versions": {
+    "jax": "0.6.2",
+    "jaxlib": "0.6.2",
+    "equinox": "0.13.8",
+    "diffrax": "0.7.0",
+    "optax": "0.2.8",
+    "numpy": "2.2.6"
+  },
+  "python_version": "3.10.4"
+}
