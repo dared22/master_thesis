@@ -47,6 +47,9 @@ class SDEGAN:
             'fit_seed': seed, 'evaluation_seed': self.config.evaluation_seed,
             'selected_step': result['best_step'],
             'validation_score': result['validation_score'],
+            'validation_temporal_error': self.history[result['best_step']]['validation_temporal_error'],
+            'validation_volatility_error': self.history[result['best_step']]['validation_volatility_error'],
+            'selection_rule': 'lowest_validation_mmd2',
             'kernel_bandwidth': result['kernel_bandwidth'],
             'temporal_penalty': {
                 'weight': self.config.temporal_penalty_weight,
@@ -82,6 +85,28 @@ class SDEGAN:
             writer = csv.DictWriter(handle, fieldnames=list(self.history[0]))
             writer.writeheader()
             writer.writerows(self.history)
+        if self.training_result is not None and self.training_result['validation_checkpoints']:
+            index = []
+            for checkpoint in self.training_result['validation_checkpoints']:
+                step = checkpoint['step']
+                relative_path = f'checkpoints/step_{step:04d}'
+                snapshot = type(self)(self.config)
+                snapshot.generator = checkpoint['generator']
+                snapshot.history = self.history[:step + 1]
+                snapshot.run_metadata = {
+                    **self.run_metadata, 'selected_step': step,
+                    'validation_score': checkpoint['validation_mmd2'],
+                    'validation_temporal_error': checkpoint['validation_temporal_error'],
+                    'validation_volatility_error': checkpoint['validation_volatility_error'],
+                    'selection_rule': 'validation_snapshot',
+                }
+                snapshot.save(directory / relative_path)
+                index.append({key: value for key, value in checkpoint.items() if key != 'generator'})
+                index[-1]['path'] = relative_path
+            with (directory / 'validation_checkpoints.csv').open('w', newline='') as handle:
+                writer = csv.DictWriter(handle, fieldnames=list(index[0]))
+                writer.writeheader()
+                writer.writerows(index)
 
     @classmethod
     def load(cls, directory: str | Path) -> 'SDEGAN':

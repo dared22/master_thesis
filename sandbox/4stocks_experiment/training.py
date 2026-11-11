@@ -36,6 +36,7 @@ class SDEGANConfig:
     adam_b2: float = 0.9
     gradient_penalty_weight: float = 10.0
     temporal_penalty_weight: float = 0.0
+    retain_validation_checkpoints: bool = False
     generator_steps: int = 2000
     critic_steps: int = 5
     validation_every: int = 100
@@ -68,6 +69,8 @@ class SDEGANConfig:
                 raise ValueError(f'{name} must be positive and finite')
         if not np.isfinite(self.temporal_penalty_weight) or self.temporal_penalty_weight < 0:
             raise ValueError('temporal_penalty_weight must be nonnegative and finite')
+        if not isinstance(self.retain_validation_checkpoints, bool):
+            raise ValueError('retain_validation_checkpoints must be a boolean')
         if not (0 <= self.adam_b1 < 1 and 0 <= self.adam_b2 < 1):
             raise ValueError('Adam moments must lie in [0, 1)')
         if isinstance(self.evaluation_seed, bool) or not isinstance(self.evaluation_seed, int):
@@ -259,6 +262,17 @@ def mmd_squared(real: np.ndarray, fake: np.ndarray, bandwidth: float) -> float:
     return kernel_mean(real, real) + kernel_mean(fake, fake) - 2 * kernel_mean(real, fake)
 
 
+def volatility_error(real: np.ndarray, fake: np.ndarray) -> float:
+    """RMS relative error of pooled per-stock sample volatility, in log units.
+
+    Standardization cancels in this ratio. A 1e-6 denominator floor handles
+    constant validation channels without a division by zero.
+    """
+    real_std = np.asarray(real, dtype=np.float64).reshape(-1, 4).std(axis=0, ddof=1)
+    fake_std = np.asarray(fake, dtype=np.float64).reshape(-1, 4).std(axis=0, ddof=1)
+    return float(np.sqrt(np.mean(((fake_std - real_std) / np.maximum(real_std, 1e-6)) ** 2)))
+
+
 def train(
     generator: Generator, critic: Critic, train_windows: Any,
     validation_windows: Any, config: SDEGANConfig, seed: int,
@@ -284,15 +298,21 @@ def train(
     d_state = d_opt.init(eqx.filter(critic, eqx.is_inexact_array))
     key = jr.fold_in(jr.PRNGKey(seed), 2)
 
-    def evaluate(model: Generator) -> tuple[float, float]:
+    def evaluate(model: Generator) -> tuple[float, float, float]:
         samples = sample_paths(model, config.evaluation_paths, evaluation_key, config)
         score = mmd_squared(fixed_validation, samples, bandwidth)
         temporal_error = float(temporal_penalty(jnp.asarray(samples), validation_target))
-        if not np.isfinite([score, temporal_error]).all():
-            raise FloatingPointError('Nonfinite validation MMD2 or temporal error')
-        return score, temporal_error
+        vol_error = volatility_error(fixed_validation, samples)
+        if not np.isfinite([score, temporal_error, vol_error]).all():
+            raise FloatingPointError('Nonfinite validation MMD2, temporal error, or volatility error')
+        return score, temporal_error, vol_error
 
-    best_score, temporal_error = evaluate(generator)
+    best_score, temporal_error, vol_error = evaluate(generator)
+    checkpoints = []
+    if config.retain_validation_checkpoints:
+        checkpoints.append({'step': 0, 'generator': generator, 'validation_mmd2': best_score,
+                            'validation_temporal_error': temporal_error,
+                            'validation_volatility_error': vol_error})
     best_generator, best_step = generator, 0
     history: History = [{
         'step': 0, 'generator_loss': None, 'critic_loss': None,
@@ -302,6 +322,7 @@ def train(
         'cycle_seconds': None,
         'generator_adversarial_loss': None, 'temporal_penalty': None,
         'validation_temporal_error': temporal_error,
+        'validation_volatility_error': vol_error,
     }]
     for step in range(1, config.generator_steps + 1):
         cycle_started = perf_counter()
@@ -332,8 +353,13 @@ def train(
         d_loss, penalty, d_norm, input_norm = map(float, np.mean(critic_metrics, axis=0))
         score = None
         temporal_error = None
+        vol_error = None
         if step % config.validation_every == 0 or step == config.generator_steps:
-            score, temporal_error = evaluate(generator)
+            score, temporal_error, vol_error = evaluate(generator)
+            if config.retain_validation_checkpoints:
+                checkpoints.append({'step': step, 'generator': generator, 'validation_mmd2': score,
+                                    'validation_temporal_error': temporal_error,
+                                    'validation_volatility_error': vol_error})
             if score < best_score:
                 best_generator, best_score, best_step = generator, score, step
         history.append({
@@ -345,10 +371,12 @@ def train(
             'generator_adversarial_loss': adversarial,
             'temporal_penalty': g_temporal_penalty,
             'validation_temporal_error': temporal_error,
+            'validation_volatility_error': vol_error,
         })
     return {
         'best_generator': best_generator, 'best_step': best_step,
         'validation_score': best_score, 'kernel_bandwidth': bandwidth,
         'final_generator': generator, 'final_critic': critic, 'history': history,
         'temporal_target': None if temporal_target is None else np.asarray(temporal_target).tolist(),
+        'validation_checkpoints': checkpoints,
     }

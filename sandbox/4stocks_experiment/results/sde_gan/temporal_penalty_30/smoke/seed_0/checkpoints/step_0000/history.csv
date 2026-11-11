@@ -1,0 +1,2 @@
+step,generator_loss,critic_loss,gradient_penalty,generator_grad_norm,critic_grad_norm,input_grad_norm,validation_mmd2,elapsed_seconds,cycle_seconds,generator_adversarial_loss,temporal_penalty,validation_temporal_error,validation_volatility_error
+0,,,,,,,0.19217787822490173,5.422592416871339,,,,0.8639138340950012,0.4090209952336887

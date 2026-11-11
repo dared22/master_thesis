@@ -1,0 +1,12 @@
+{
+  "sample_seed": 100,
+  "n_paths": 1000,
+  "temporal_penalty_weight": 10.0,
+  "lags": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

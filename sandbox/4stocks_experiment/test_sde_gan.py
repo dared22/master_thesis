@@ -5,7 +5,9 @@ classes provide faster numerical, gradient, and API regression checks.
 """
 
 from dataclasses import replace
+import csv
 import json
+from pathlib import Path
 import resource
 import tempfile
 import unittest
@@ -17,6 +19,7 @@ import jax
 import jax.numpy as jnp
 import jax.random as jr
 import numpy as np
+import optax
 
 from architecture import solve_sde
 from sde_gan import SDEGAN, SDEGANConfig
@@ -25,6 +28,7 @@ from training import (
     kernel_bandwidth, make_updates, mmd_squared, sample_paths, train,
     tree_finite, validate_windows,
     temporal_autocorrelation, temporal_penalty,
+    volatility_error,
 )
 
 
@@ -253,6 +257,119 @@ class TestGradientsAndAPI(unittest.TestCase):
             self.assertIsNone(restored.training_result)
         model.fit(synthetic(5, 8), synthetic(6, 8), seed=0)
         np.testing.assert_array_equal(paths, model.sample(5, seed=12))
+
+
+class TestTemporalPenalty(unittest.TestCase):
+    def test_correlations_match_numpy_without_boundary_pairs(self) -> None:
+        data = synthetic(17, 32)
+        expected = np.array([
+            [np.corrcoef(data[:, :-lag, j].ravel(), data[:, lag:, j].ravel())[0, 1]
+             for j in range(4)] for lag in range(1, 6)
+        ])
+        np.testing.assert_allclose(temporal_autocorrelation(jnp.asarray(data)), expected, atol=1e-6)
+        np.testing.assert_allclose(temporal_autocorrelation(jnp.asarray(data * 2 + 3)), expected, atol=1e-6)
+        # Joining paths would add a spurious transition from -1 to +1.
+        constants = jnp.broadcast_to(jnp.array([-1., 1.])[:, None, None], (2, 20, 4))
+        np.testing.assert_allclose(temporal_autocorrelation(constants), 1, atol=1e-6)
+
+    def test_penalty_and_degenerate_batch_gradients(self) -> None:
+        data = jnp.asarray(synthetic(18, 128))
+        target = temporal_autocorrelation(data)
+        self.assertAlmostEqual(float(temporal_penalty(data, target)), 0)
+        persistent = jnp.broadcast_to(data[:, :1], data.shape)
+        self.assertGreater(float(temporal_penalty(persistent, target)), .5)
+        for values in (data, jnp.zeros_like(data), jnp.ones_like(data)):
+            loss, grads = jax.value_and_grad(temporal_penalty)(values, target)
+            self.assertTrue(bool(jnp.isfinite(loss)))
+            self.assertTrue(bool(jnp.isfinite(grads).all()))
+        with self.assertRaises(ValueError):
+            small_config(temporal_penalty_weight=-1)
+        with self.assertRaises(ValueError):
+            small_config(temporal_penalty_weight=np.inf)
+
+    def test_active_objective_gradient_and_fixed_critic(self) -> None:
+        config = small_config(temporal_penalty_weight=10)
+        generator, critic = initialize_models(config, 21)
+        keys = jr.split(jr.PRNGKey(22), config.batch_size)
+        target = temporal_autocorrelation(jnp.asarray(synthetic(23, 128)))
+        paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
+        baseline = generator_loss(generator, critic, keys, replace(config, temporal_penalty_weight=0))
+        active = generator_loss(generator, critic, keys, config, target)
+        np.testing.assert_allclose(active, baseline + 10 * temporal_penalty(paths, target), rtol=1e-5)
+        def penalty_only(g):
+            return temporal_penalty(generate_batch(g, keys, config.generator_dt, config.brownian_tol), target)
+        loss, grads = eqx.filter_jit(eqx.filter_value_and_grad(penalty_only))(generator)
+        self.assertTrue(bool(tree_finite((loss, grads))))
+        self.assertGreater(float(optax.tree.norm(grads)), 0)
+        # Moving in the penalty's negative gradient direction lowers that objective.
+        moved = eqx.apply_updates(generator, jax.tree.map(lambda x: -1e-4 * x, grads))
+        self.assertLess(float(penalty_only(moved)), float(loss))
+        g_opt, d_opt, update, _ = make_updates(config, target)
+        state = g_opt.init(eqx.filter(generator, eqx.is_inexact_array))
+        saved_critic = critic
+        _, _, metrics, valid = update(generator, state, critic, keys)
+        self.assertTrue(bool(valid))
+        self.assertEqual(metrics.shape, (4,))
+        assert_tree_equal(self, saved_critic, critic)
+
+    def test_training_target_and_serialization(self) -> None:
+        config = small_config(temporal_penalty_weight=10)
+        training = synthetic(24, 8)
+        model = SDEGAN(config)
+        history = model.fit(training, synthetic(25, 8), seed=0)
+        np.testing.assert_allclose(model.run_metadata['temporal_penalty']['training_target'],
+                                   temporal_autocorrelation(jnp.asarray(training)), atol=1e-6)
+        self.assertGreater(history[1]['temporal_penalty'], 0)
+        self.assertAlmostEqual(history[1]['generator_loss'],
+                               history[1]['generator_adversarial_loss']
+                               + 10 * history[1]['temporal_penalty'], places=5)
+        self.assertTrue(np.isfinite(history[1]['validation_temporal_error']))
+        with tempfile.TemporaryDirectory() as directory:
+            model.save(directory)
+            restored = SDEGAN.load(directory)
+            self.assertEqual(restored.config.temporal_penalty_weight, 10)
+            self.assertEqual(restored.run_metadata, model.run_metadata)
+            self.assertEqual(restored.history, model.history)
+            np.testing.assert_array_equal(model.sample(5, 26), restored.sample(5, 26))
+
+
+class TestValidationCheckpoints(unittest.TestCase):
+    def test_relative_volatility_error(self) -> None:
+        real = synthetic(30, 8)
+        self.assertAlmostEqual(volatility_error(real, real), 0)
+        self.assertAlmostEqual(volatility_error(real, 2 * real), 1)
+        self.assertAlmostEqual(volatility_error(real, .5 * real), .5)
+        self.assertEqual(volatility_error(np.zeros_like(real), np.zeros_like(real)), 0)
+        with self.assertRaises(ValueError):
+            small_config(retain_validation_checkpoints=1)
+
+    def test_every_validation_snapshot_restores(self) -> None:
+        config = small_config(generator_steps=3, validation_every=2,
+                              temporal_penalty_weight=30, retain_validation_checkpoints=True)
+        model = SDEGAN(config)
+        model.fit(synthetic(31, 8), synthetic(32, 8), seed=0)
+        snapshots = model.training_result['validation_checkpoints']
+        self.assertEqual([s['step'] for s in snapshots], [0, 2, 3])
+        scores = [s['validation_mmd2'] for s in snapshots]
+        self.assertEqual(model.run_metadata['selected_step'], snapshots[int(np.argmin(scores))]['step'])
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            model.save(folder)
+            with (folder / 'validation_checkpoints.csv').open() as handle:
+                index = list(csv.DictReader(handle))
+            self.assertEqual(len(index), 3)
+            for snapshot, row in zip(snapshots, index):
+                restored = SDEGAN.load(folder / row['path'])
+                self.assertEqual(restored.run_metadata['selected_step'], snapshot['step'])
+                self.assertEqual(len(restored.history), snapshot['step'] + 1)
+                self.assertEqual(restored.run_metadata['validation_score'], snapshot['validation_mmd2'])
+                self.assertTrue(np.isfinite(float(row['validation_volatility_error'])))
+                expected = sample_paths(snapshot['generator'], 5, jr.PRNGKey(33), config)
+                np.testing.assert_array_equal(restored.sample(5, 33), expected)
+                self.assertFalse((folder / row['path'] / 'validation_checkpoints.csv').exists())
+        baseline = SDEGAN(small_config())
+        baseline.fit(synthetic(31, 8), synthetic(32, 8), seed=0)
+        self.assertEqual(baseline.training_result['validation_checkpoints'], [])
 
 
 class TestSmokeRun(unittest.TestCase):
