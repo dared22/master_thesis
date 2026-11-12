@@ -224,6 +224,8 @@ __marimo__/
 # Local datasets
 /Data/
 
+sandbox/4stocks_experiment/data/
+sandbox/4stocks_experiment/results/*
 # Thesis compilation output
 /thesis/build/
 
