@@ -36,6 +36,7 @@ class SDEGANConfig:
     adam_b2: float = 0.9
     gradient_penalty_weight: float = 10.0
     temporal_penalty_weight: float = 0.0
+    signature_loss_weight: float = 0.0
     retain_validation_checkpoints: bool = False
     generator_steps: int = 2000
     critic_steps: int = 5
@@ -45,8 +46,11 @@ class SDEGANConfig:
     bandwidth_sample_size: int = 256
     evaluation_seed: int = 100
     sampling_batch_size: int = 8
+    generator_output: str = 'returns'
 
     def __post_init__(self) -> None:
+        if self.generator_output not in ('returns', 'increments'):
+            raise ValueError('generator_output must be returns or increments')
         for name in (
             'generator_hidden_size', 'initial_noise_size', 'brownian_size',
             'critic_hidden_size', 'mlp_width', 'mlp_depth', 'batch_size',
@@ -69,6 +73,10 @@ class SDEGANConfig:
                 raise ValueError(f'{name} must be positive and finite')
         if not np.isfinite(self.temporal_penalty_weight) or self.temporal_penalty_weight < 0:
             raise ValueError('temporal_penalty_weight must be nonnegative and finite')
+        if not np.isfinite(self.signature_loss_weight) or self.signature_loss_weight < 0:
+            raise ValueError('signature_loss_weight must be nonnegative and finite')
+        if self.signature_loss_weight > 0 and self.batch_size < 2:
+            raise ValueError('Signature loss requires batch_size >= 2')
         if not isinstance(self.retain_validation_checkpoints, bool):
             raise ValueError('retain_validation_checkpoints must be a boolean')
         if not (0 <= self.adam_b1 < 1 and 0 <= self.adam_b2 < 1):
@@ -97,7 +105,7 @@ def initialize_models(config: SDEGANConfig, seed: int) -> tuple[Generator, Criti
     generator = Generator(
         config.generator_hidden_size, config.initial_noise_size,
         config.brownian_size, config.mlp_width, config.mlp_depth,
-        key=jr.fold_in(key, 0),
+        key=jr.fold_in(key, 0), generator_output=config.generator_output,
     )
     critic = Critic(config.critic_hidden_size, config.mlp_width, config.mlp_depth,
                     key=jr.fold_in(key, 1))
@@ -175,11 +183,73 @@ def temporal_penalty(paths: jax.Array, target: jax.Array) -> jax.Array:
     return jnp.mean((temporal_autocorrelation(paths) - jax.lax.stop_gradient(target)) ** 2)
 
 
+@jax.jit
+def signature_features(paths: jax.Array) -> jax.Array:
+    """Depth-2 signature of cumulative standardized log returns, time and lead/lag.
+
+    Matches signature_diagnostics.ipynb: zero basepoint, 41 points, nine
+    channels, flattened tensor levels 1 and 2 (90 coordinates).
+    """
+    cumulative = jnp.concatenate((jnp.zeros_like(paths[:, :1]), jnp.cumsum(paths, axis=1)), axis=1)
+    repeated = jnp.repeat(cumulative, 2, axis=1)
+    lead, lag = repeated[:, 1:], repeated[:, :-1]
+    time = jnp.broadcast_to(jnp.linspace(0, 1, lead.shape[1])[None, :, None],
+                            (len(paths), lead.shape[1], 1))
+    augmented = jnp.concatenate((time, lead, lag), axis=2)
+    def step(state, increment):
+        first, second = state
+        second = second + (first[:, :, None] * increment[:, None, :]
+                           + increment[:, :, None] * increment[:, None, :] / 2)
+        return (first + increment, second), None
+    initial = (jnp.zeros((len(paths), 9), dtype=paths.dtype),
+               jnp.zeros((len(paths), 9, 9), dtype=paths.dtype))
+    (first, second), _ = jax.lax.scan(step, initial, jnp.diff(augmented, axis=1).swapaxes(0, 1))
+    return jnp.concatenate((first, second.reshape(len(paths), -1)), axis=1)
+
+
+def fit_signature_reference(data: jax.Array) -> tuple[jax.Array, jax.Array, jax.Array]:
+    """Fit feature means, scales, and constant-coordinate mask on training only."""
+    features = np.asarray(signature_features(data), dtype=np.float64)
+    mean, std = features.mean(axis=0), features.std(axis=0, ddof=1)
+    active = std > 1e-10
+    if not np.isfinite(features).all() or not active.any():
+        raise ValueError('Signature reference requires finite, nonconstant training features')
+    return tuple(jax.lax.stop_gradient(jnp.asarray(x, dtype=data.dtype))
+                 for x in (mean, np.where(active, std, 1.0), active))
+
+
+def signature_loss(
+    paths: jax.Array, reference: tuple[jax.Array, jax.Array, jax.Array],
+) -> jax.Array:
+    """Unbiased estimate of squared RMS mean-feature discrepancy.
+
+    Cross-path products remove the feature-variance / batch-size bias in the
+    squared batch mean. Independent generated paths are required; individual
+    estimates may be negative. Do not clip them to zero.
+    """
+    if len(paths) < 2:
+        raise ValueError('Signature loss requires at least two independent paths')
+    mean, scale, active = jax.tree.map(jax.lax.stop_gradient, reference)
+    residuals = (signature_features(paths) - mean) / scale * active
+    cross_sum = jnp.sum(residuals.sum(axis=0) ** 2 - jnp.sum(residuals ** 2, axis=0))
+    return cross_sum / (len(paths) * (len(paths) - 1) * active.sum())
+
+
+def signature_error(
+    paths: jax.Array, reference: tuple[jax.Array, jax.Array, jax.Array],
+) -> jax.Array:
+    """Nonnegative RMS feature-mean error for reporting, as in the diagnostic."""
+    mean, scale, active = reference
+    residual = (signature_features(paths).mean(axis=0) - mean) / scale * active
+    return jnp.sqrt(jnp.sum(residual ** 2) / active.sum())
+
+
 def _generator_objective(
     generator: Generator, critic: Critic, keys: jax.Array, config: SDEGANConfig,
     temporal_target: jax.Array | None,
-) -> tuple[jax.Array, tuple[jax.Array, jax.Array]]:
-    """Compute both generator terms from the same generated batch."""
+    signature_reference: tuple[jax.Array, jax.Array, jax.Array] | None = None,
+) -> tuple[jax.Array, tuple[jax.Array, jax.Array, jax.Array]]:
+    """Compute all generator terms from the same generated batch."""
     paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
     adversarial = -jax.vmap(lambda x: critic(x, config.critic_dt))(paths).mean()
     penalty = jnp.array(0.0)
@@ -187,15 +257,22 @@ def _generator_objective(
         if temporal_target is None:
             raise ValueError('A training temporal_target is required when the penalty is enabled')
         penalty = temporal_penalty(paths, temporal_target)
-    return adversarial + config.temporal_penalty_weight * penalty, (adversarial, penalty)
+    signature = jnp.array(0.0)
+    if config.signature_loss_weight > 0:
+        if signature_reference is None:
+            raise ValueError('A training signature_reference is required when signature loss is enabled')
+        signature = signature_loss(paths, signature_reference)
+    total = adversarial + config.temporal_penalty_weight * penalty + config.signature_loss_weight * signature
+    return total, (adversarial, penalty, signature)
 
 
 def generator_loss(
     generator: Generator, critic: Critic, keys: jax.Array, config: SDEGANConfig,
     temporal_target: jax.Array | None = None,
+    signature_reference: tuple[jax.Array, jax.Array, jax.Array] | None = None,
 ) -> jax.Array:
-    """Differentiate the fixed critic and optional temporal penalty through paths."""
-    return _generator_objective(generator, critic, keys, config, temporal_target)[0]
+    """Differentiate the fixed critic and optional moment losses through paths."""
+    return _generator_objective(generator, critic, keys, config, temporal_target, signature_reference)[0]
 
 
 def tree_finite(tree: Any) -> jax.Array:
@@ -206,6 +283,7 @@ def tree_finite(tree: Any) -> jax.Array:
 
 def make_updates(
     config: SDEGANConfig, temporal_target: jax.Array | None = None,
+    signature_reference: tuple[jax.Array, jax.Array, jax.Array] | None = None,
 ) -> tuple[Any, Any, Any, Any]:
     """Build independent Adam transformations and compiled player updates."""
     g_optimizer = optax.adam(config.generator_lr, b1=config.adam_b1, b2=config.adam_b2)
@@ -226,12 +304,12 @@ def make_updates(
     @eqx.filter_jit
     def generator_update(generator: Generator, state: Any, critic: Critic,
                          keys: jax.Array) -> tuple[Any, ...]:
-        (loss, (adversarial, penalty)), grads = eqx.filter_value_and_grad(
+        (loss, (adversarial, penalty, signature)), grads = eqx.filter_value_and_grad(
             _generator_objective, has_aux=True
-        )(generator, critic, keys, config, temporal_target)
+        )(generator, critic, keys, config, temporal_target, signature_reference)
         updates, state = g_optimizer.update(grads, state)
         generator = eqx.apply_updates(generator, updates)
-        metrics = jnp.array([loss, optax.tree.norm(grads), adversarial, penalty])
+        metrics = jnp.array([loss, optax.tree.norm(grads), adversarial, penalty, signature])
         valid = tree_finite((metrics, grads, generator, state))
         return generator, state, metrics, valid
 
@@ -293,26 +371,36 @@ def train(
     temporal_target = (jax.lax.stop_gradient(temporal_autocorrelation(data))
                        if config.temporal_penalty_weight > 0 else None)
     validation_target = temporal_autocorrelation(jnp.asarray(fixed_validation))
-    g_opt, d_opt, g_update, d_update = make_updates(config, temporal_target)
+    signature_reference = (fit_signature_reference(data) if config.signature_loss_weight > 0 else None)
+    validation_signature_reference = None
+    if signature_reference is not None:
+        _, scale, active = signature_reference
+        validation_signature_reference = (signature_features(jnp.asarray(fixed_validation)).mean(axis=0),
+                                           scale, active)
+    g_opt, d_opt, g_update, d_update = make_updates(config, temporal_target, signature_reference)
     g_state = g_opt.init(eqx.filter(generator, eqx.is_inexact_array))
     d_state = d_opt.init(eqx.filter(critic, eqx.is_inexact_array))
     key = jr.fold_in(jr.PRNGKey(seed), 2)
 
-    def evaluate(model: Generator) -> tuple[float, float, float]:
+    def evaluate(model: Generator) -> tuple[float, float, float, float | None]:
         samples = sample_paths(model, config.evaluation_paths, evaluation_key, config)
         score = mmd_squared(fixed_validation, samples, bandwidth)
         temporal_error = float(temporal_penalty(jnp.asarray(samples), validation_target))
         vol_error = volatility_error(fixed_validation, samples)
+        sig_error = (float(signature_error(jnp.asarray(samples), validation_signature_reference))
+                     if validation_signature_reference is not None else None)
         if not np.isfinite([score, temporal_error, vol_error]).all():
             raise FloatingPointError('Nonfinite validation MMD2, temporal error, or volatility error')
-        return score, temporal_error, vol_error
+        if sig_error is not None and not np.isfinite(sig_error):
+            raise FloatingPointError('Nonfinite validation signature error')
+        return score, temporal_error, vol_error, sig_error
 
-    best_score, temporal_error, vol_error = evaluate(generator)
+    best_score, temporal_error, vol_error, sig_error = evaluate(generator)
     checkpoints = []
     if config.retain_validation_checkpoints:
         checkpoints.append({'step': 0, 'generator': generator, 'validation_mmd2': best_score,
                             'validation_temporal_error': temporal_error,
-                            'validation_volatility_error': vol_error})
+                            'validation_volatility_error': vol_error, 'validation_signature_error': sig_error})
     best_generator, best_step = generator, 0
     history: History = [{
         'step': 0, 'generator_loss': None, 'critic_loss': None,
@@ -323,6 +411,7 @@ def train(
         'generator_adversarial_loss': None, 'temporal_penalty': None,
         'validation_temporal_error': temporal_error,
         'validation_volatility_error': vol_error,
+        'signature_loss': None, 'validation_signature_error': sig_error,
     }]
     for step in range(1, config.generator_steps + 1):
         cycle_started = perf_counter()
@@ -348,18 +437,19 @@ def train(
                 raise FloatingPointError('Nonfinite generator update')
         except Exception as error:
             raise RuntimeError(f'Generator update {step} failed') from error
-        g_loss, g_norm, adversarial, g_temporal_penalty = map(float, metrics)
+        g_loss, g_norm, adversarial, g_temporal_penalty, g_signature_loss = map(float, metrics)
         cycle_seconds = perf_counter() - cycle_started
         d_loss, penalty, d_norm, input_norm = map(float, np.mean(critic_metrics, axis=0))
         score = None
         temporal_error = None
         vol_error = None
+        sig_error = None
         if step % config.validation_every == 0 or step == config.generator_steps:
-            score, temporal_error, vol_error = evaluate(generator)
+            score, temporal_error, vol_error, sig_error = evaluate(generator)
             if config.retain_validation_checkpoints:
                 checkpoints.append({'step': step, 'generator': generator, 'validation_mmd2': score,
                                     'validation_temporal_error': temporal_error,
-                                    'validation_volatility_error': vol_error})
+                                    'validation_volatility_error': vol_error, 'validation_signature_error': sig_error})
             if score < best_score:
                 best_generator, best_score, best_step = generator, score, step
         history.append({
@@ -372,6 +462,7 @@ def train(
             'temporal_penalty': g_temporal_penalty,
             'validation_temporal_error': temporal_error,
             'validation_volatility_error': vol_error,
+            'signature_loss': g_signature_loss, 'validation_signature_error': sig_error,
         })
     return {
         'best_generator': best_generator, 'best_step': best_step,
@@ -379,4 +470,7 @@ def train(
         'final_generator': generator, 'final_critic': critic, 'history': history,
         'temporal_target': None if temporal_target is None else np.asarray(temporal_target).tolist(),
         'validation_checkpoints': checkpoints,
+        'signature_reference': (None if signature_reference is None else
+                                {name: np.asarray(value).tolist() for name, value in
+                                 zip(('mean', 'scale', 'active'), signature_reference)}),
     }

@@ -9,14 +9,14 @@ import jax.random as jr
 
 def solve_sde(
     drift: object, diffusion: object, y0: jax.Array, brownian: object,
-    dt: float = 0.25,
+    dt: float = 0.25, *, n_sessions: int = 19,
 ) -> jax.Array:
     """Solve a Stratonovich SDE on the session clock, saving observations only."""
     terms = dfx.MultiTerm(dfx.ODETerm(drift), dfx.ControlTerm(diffusion, brownian))
     solution = dfx.diffeqsolve(
-        terms, dfx.Heun(), t0=0.0, t1=19.0, dt0=dt, y0=y0,
-        saveat=dfx.SaveAt(ts=jnp.arange(20, dtype=jnp.float32)),
-        adjoint=dfx.DirectAdjoint(), max_steps=19 * round(1 / dt),
+        terms, dfx.Heun(), t0=0.0, t1=float(n_sessions), dt0=dt, y0=y0,
+        saveat=dfx.SaveAt(ts=jnp.arange(n_sessions + 1, dtype=jnp.float32)),
+        adjoint=dfx.DirectAdjoint(), max_steps=n_sessions * round(1 / dt),
     )
     return eqx.error_if(solution.ys, ~jnp.isfinite(solution.ys).all(),
                         "Nonfinite generator solver output")
@@ -32,15 +32,18 @@ class Generator(eqx.Module):
     initial_noise_size: int = eqx.field(static=True)
     hidden_size: int = eqx.field(static=True)
     brownian_size: int = eqx.field(static=True)
+    generator_output: str = eqx.field(static=True)
 
     def __init__(
         self, hidden_size: int, initial_noise_size: int, brownian_size: int,
         mlp_width: int, mlp_depth: int, *, key: jax.Array,
+        generator_output: str = "returns",
     ) -> None:
         keys = jr.split(key, 4)
         self.initial_noise_size = initial_noise_size
         self.hidden_size = hidden_size
         self.brownian_size = brownian_size
+        self.generator_output = generator_output
         self.initial = eqx.nn.MLP(initial_noise_size, hidden_size, mlp_width,
                                   mlp_depth, activation=jnp.tanh, key=keys[0])
         self.drift = eqx.nn.MLP(1 + hidden_size, hidden_size, mlp_width,
@@ -50,29 +53,34 @@ class Generator(eqx.Module):
             1 + hidden_size, hidden_size * brownian_size, mlp_width, mlp_depth,
             activation=jnp.tanh, final_activation=jnp.tanh, key=keys[2],
         )
-        self.readout = eqx.nn.Linear(hidden_size, 4, key=keys[3])
+        # A constant level cancels when taking differences, so omit its bias.
+        self.readout = eqx.nn.Linear(hidden_size, 4,
+                                     use_bias=generator_output == "returns", key=keys[3])
 
     def __call__(
         self, key: jax.Array, dt: float = 0.25, brownian_tol: float = 0.0625,
     ) -> jax.Array:
-        """Generate one (20, 4) window; time normalization affects features only."""
+        """Return 20 standardized log returns, directly or as cumulative differences."""
+        n_sessions = 20 if self.generator_output == "increments" else 19
         initial_key, brownian_key = jr.split(key)
         z0 = self.initial(jr.normal(initial_key, (self.initial_noise_size,)))
         brownian = dfx.VirtualBrownianTree(
-            0.0, 19.0, tol=brownian_tol, shape=(self.brownian_size,),
+            0.0, float(n_sessions), tol=brownian_tol, shape=(self.brownian_size,),
             key=brownian_key,
         )
 
         def drift(t: jax.Array, z: jax.Array, args: object) -> jax.Array:
-            return self.drift(jnp.concatenate((jnp.atleast_1d(t / 19), z)))
+            return self.drift(jnp.concatenate((jnp.atleast_1d(t / n_sessions), z)))
 
         def diffusion(t: jax.Array, z: jax.Array, args: object) -> jax.Array:
             return self.diffusion(
-                jnp.concatenate((jnp.atleast_1d(t / 19), z))
+                jnp.concatenate((jnp.atleast_1d(t / n_sessions), z))
             ).reshape(self.hidden_size, self.brownian_size)
 
-        states = solve_sde(drift, diffusion, z0, brownian, dt)
+        states = solve_sde(drift, diffusion, z0, brownian, dt, n_sessions=n_sessions)
         values = jax.vmap(self.readout)(states)
+        if self.generator_output == "increments":
+            values = jnp.diff(values, axis=0)
         return eqx.error_if(values, ~jnp.isfinite(values).all(),
                             "Nonfinite generator readout")
 

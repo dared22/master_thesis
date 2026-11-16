@@ -28,7 +28,7 @@ from training import (
     kernel_bandwidth, make_updates, mmd_squared, sample_paths, train,
     tree_finite, validate_windows,
     temporal_autocorrelation, temporal_penalty,
-    volatility_error,
+    volatility_error, signature_features, fit_signature_reference, signature_loss, signature_error,
 )
 
 
@@ -102,7 +102,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(4), jnp.array(True)
+            return model, state, jnp.ones(5), jnp.array(True)
         with patch('training.make_updates', return_value=(g_opt, d_opt, g_update, d_update)), \
              patch('training.generate_batch', return_value=jnp.zeros((2, 20, 4))), \
              patch('training.sample_paths', return_value=np.zeros((4, 20, 4))), \
@@ -118,7 +118,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(4), jnp.array(True)
+            return model, state, jnp.ones(5), jnp.array(True)
         def sample(model, n_paths, key, config):
             noise_keys.append(np.asarray(key))
             return np.zeros((n_paths, 20, 4))
@@ -177,6 +177,79 @@ class TestNumerics(unittest.TestCase):
         self.assertTrue(np.all(np.abs(endpoints.mean(0) - 19 * np.asarray(mu)) < 5 * mean_se))
         covariance_se = np.sqrt((covariance ** 2 + np.outer(np.diag(covariance), np.diag(covariance))) / (len(endpoints) - 1))
         self.assertTrue(np.all(np.abs(np.cov(endpoints.T) - covariance) < 5 * covariance_se))
+
+
+class TestIncrementGenerator(unittest.TestCase):
+    def test_additive_process_returns_daily_increments(self) -> None:
+        config = small_config(generator_output='increments', generator_hidden_size=4,
+                              brownian_size=4)
+        generator, _ = initialize_models(config, 0)
+        mu = jnp.array([.1, -.05, .02, 0.])
+        sigma = jnp.array([[.4, 0, 0, 0], [.2, .3, 0, 0],
+                           [0, 0, .2, 0], [0, 0, .1, .3]])
+
+        def constant(input_size, output_size, bias):
+            network = eqx.nn.Linear(input_size, output_size, key=jr.PRNGKey(1))
+            return eqx.tree_at(lambda n: (n.weight, n.bias), network,
+                               (jnp.zeros_like(network.weight), bias))
+
+        generator = eqx.tree_at(
+            lambda g: (g.initial, g.drift, g.diffusion, g.readout.weight), generator,
+            (constant(4, 4, jnp.zeros(4)), constant(5, 4, mu),
+             constant(5, 16, sigma.ravel()), jnp.eye(4)),
+        )
+        key = jr.PRNGKey(19)
+        brownian_key = jr.split(key)[1]
+        brownian = dfx.VirtualBrownianTree(0., 20., .0625, (4,), brownian_key)
+        levels = jax.vmap(lambda t: sigma @ brownian.evaluate(t))(
+            jnp.arange(21, dtype=jnp.float32))
+        expected = mu + jnp.diff(levels, axis=0)
+        actual = eqx.filter_jit(lambda g: g(key))(generator)
+        self.assertEqual(actual.shape, (20, 4))
+        self.assertIsNone(generator.readout.bias)
+        np.testing.assert_allclose(actual, expected, atol=5e-6)
+        np.testing.assert_allclose(generator(key, dt=.125), expected, atol=5e-6)
+
+    def test_training_gradients_sampling_and_restore(self) -> None:
+        config = small_config(generator_output='increments', retain_validation_checkpoints=True)
+        generator, critic = initialize_models(config, 4)
+        keys = jr.split(jr.PRNGKey(5), config.batch_size)
+        grads = eqx.filter_jit(eqx.filter_grad(generator_loss))(generator, critic, keys, config)
+        self.assertTrue(bool(tree_finite(grads)))
+        self.assertGreater(float(optax.tree.norm(grads.diffusion)), 0)
+        self.assertGreater(float(optax.tree.norm(grads.readout)), 0)
+        model = SDEGAN(config)
+        model.fit(synthetic(6, 8), synthetic(7, 8), seed=4)
+        paths = model.sample(5, 8)
+        self.assertEqual(paths.shape, (5, 20, 4))
+        self.assertTrue(np.isfinite(paths).all())
+        np.testing.assert_array_equal(paths, model.sample(5, 8))
+        alternate = sample_paths(model.generator, 5, jr.PRNGKey(8),
+                                 replace(config, sampling_batch_size=3))
+        np.testing.assert_array_equal(paths, alternate)
+        with tempfile.TemporaryDirectory() as directory:
+            model.save(directory)
+            restored = SDEGAN.load(directory)
+            self.assertEqual(restored.config.generator_output, 'increments')
+            np.testing.assert_array_equal(paths, restored.sample(5, 8))
+            snapshot = SDEGAN.load(Path(directory) / 'checkpoints/step_0001')
+            self.assertEqual(snapshot.config.generator_output, 'increments')
+            self.assertTrue(np.isfinite(snapshot.sample(2, 8)).all())
+
+    def test_legacy_config_defaults_to_direct_returns(self) -> None:
+        model = SDEGAN(small_config())
+        model.fit(synthetic(9, 8), synthetic(10, 8), seed=0)
+        with tempfile.TemporaryDirectory() as directory:
+            model.save(directory)
+            config_path = Path(directory) / 'config.json'
+            saved_config = json.loads(config_path.read_text())
+            del saved_config['generator_output']
+            config_path.write_text(json.dumps(saved_config))
+            restored = SDEGAN.load(directory)
+            self.assertEqual(restored.config.generator_output, 'returns')
+            np.testing.assert_array_equal(model.sample(2, 11), restored.sample(2, 11))
+        with self.assertRaises(ValueError):
+            small_config(generator_output='prices')
 
 
 class TestGradientsAndAPI(unittest.TestCase):
@@ -309,7 +382,7 @@ class TestTemporalPenalty(unittest.TestCase):
         saved_critic = critic
         _, _, metrics, valid = update(generator, state, critic, keys)
         self.assertTrue(bool(valid))
-        self.assertEqual(metrics.shape, (4,))
+        self.assertEqual(metrics.shape, (5,))
         assert_tree_equal(self, saved_critic, critic)
 
     def test_training_target_and_serialization(self) -> None:
@@ -370,6 +443,96 @@ class TestValidationCheckpoints(unittest.TestCase):
         baseline = SDEGAN(small_config())
         baseline.fit(synthetic(31, 8), synthetic(32, 8), seed=0)
         self.assertEqual(baseline.training_result['validation_checkpoints'], [])
+
+
+class TestSignatureLoss(unittest.TestCase):
+    def test_features_against_piecewise_linear_integrals(self) -> None:
+        data = synthetic(40, 5) * .2
+        cumulative = np.concatenate([np.zeros((5, 1, 4)), data.cumsum(axis=1)], axis=1)
+        repeated = np.repeat(cumulative, 2, axis=1)
+        time = np.broadcast_to(np.linspace(0, 1, 41)[None, :, None], (5, 41, 1))
+        path = np.concatenate([time, repeated[:, 1:], repeated[:, :-1]], axis=2)
+        increments = np.diff(path, axis=1)
+        midpoints = (path[:, :-1] + path[:, 1:]) / 2 - path[:, :1]
+        second = np.einsum('nti,ntj->nij', midpoints, increments)
+        expected = np.concatenate([path[:, -1] - path[:, 0], second.reshape(5, -1)], axis=1)
+        np.testing.assert_allclose(signature_features(jnp.asarray(data)), expected, rtol=1e-4, atol=2e-5)
+        reference = fit_signature_reference(jnp.asarray(data))
+        self.assertEqual(int(reference[2].sum()), 88)
+        self.assertEqual(float(reference[2][0]), 0)
+        self.assertEqual(float(reference[2][9]), 0)
+        self.assertAlmostEqual(float(signature_error(jnp.asarray(data), reference)), 0, places=5)
+
+    def test_unbiased_estimate_and_constant_path_gradients(self) -> None:
+        data = jnp.asarray(synthetic(41, 8) * .2)
+        reference = fit_signature_reference(jnp.asarray(synthetic(42, 32) * .2))
+        mean, scale, active = map(np.asarray, reference)
+        delta = (np.asarray(signature_features(data)) - mean) / scale * active
+        expected = np.mean([np.dot(delta[i], delta[j]) / active.sum()
+                            for i in range(8) for j in range(8) if i != j])
+        actual = float(signature_loss(data, reference))
+        np.testing.assert_allclose(actual, expected, rtol=1e-5)
+        naive = np.sum(delta.mean(axis=0) ** 2) / active.sum()
+        variance_bias = np.sum(delta.var(axis=0, ddof=1)) / (8 * active.sum())
+        np.testing.assert_allclose(naive - actual, variance_bias, rtol=1e-4, atol=1e-6)
+        pair = data[:2]
+        centered_reference = (signature_features(pair).mean(axis=0), reference[1], reference[2])
+        self.assertLess(float(signature_loss(pair, centered_reference)), 0)
+        for values in (data, jnp.zeros_like(data)):
+            value, gradient = jax.value_and_grad(signature_loss)(values, reference)
+            self.assertTrue(bool(jnp.isfinite(value) & jnp.isfinite(gradient).all()))
+        for kwargs in ({'signature_loss_weight': -1}, {'signature_loss_weight': np.nan},
+                       {'signature_loss_weight': 1, 'batch_size': 1}):
+            with self.assertRaises(ValueError):
+                small_config(**kwargs)
+
+    def test_signature_gradient_through_generator(self) -> None:
+        config = small_config(temporal_penalty_weight=10, signature_loss_weight=1)
+        generator, critic = initialize_models(config, 43)
+        keys = jr.split(jr.PRNGKey(44), 2)
+        data = jnp.asarray(synthetic(45, 32))
+        temporal = temporal_autocorrelation(data)
+        reference = fit_signature_reference(data)
+        baseline = generator_loss(generator, critic, keys, replace(config, signature_loss_weight=0), temporal)
+        active = generator_loss(generator, critic, keys, config, temporal, reference)
+        paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
+        np.testing.assert_allclose(active, baseline + signature_loss(paths, reference), rtol=1e-5)
+        def loss(g):
+            return signature_loss(generate_batch(g, keys, config.generator_dt, config.brownian_tol), reference)
+        value, grads = eqx.filter_jit(eqx.filter_value_and_grad(loss))(generator)
+        norm = optax.tree.norm(grads)
+        self.assertTrue(bool(tree_finite((value, grads))))
+        self.assertGreater(float(norm), 0)
+        moved = eqx.apply_updates(generator, jax.tree.map(lambda x: -1e-4 * x / norm, grads))
+        self.assertLess(float(loss(moved)), float(value))
+        g_opt, _, update, _ = make_updates(config, temporal, reference)
+        state = g_opt.init(eqx.filter(generator, eqx.is_inexact_array))
+        saved_critic = critic
+        _, _, metrics, valid = update(generator, state, critic, keys)
+        self.assertTrue(bool(valid))
+        self.assertEqual(metrics.shape, (5,))
+        assert_tree_equal(self, saved_critic, critic)
+
+    def test_reference_logging_and_checkpoint_roundtrip(self) -> None:
+        config = small_config(generator_steps=2, validation_every=1, temporal_penalty_weight=10,
+                              signature_loss_weight=1, retain_validation_checkpoints=True)
+        data = synthetic(46, 16)
+        model = SDEGAN(config)
+        history = model.fit(data, synthetic(47, 8), seed=0)
+        reference = model.run_metadata['signature_loss']['training_reference']
+        for key, expected in zip(('mean', 'scale', 'active'), fit_signature_reference(jnp.asarray(data))):
+            np.testing.assert_allclose(reference[key], expected)
+        self.assertTrue(all(np.isfinite(row['validation_signature_error']) for row in history))
+        self.assertAlmostEqual(history[1]['generator_loss'], history[1]['generator_adversarial_loss']
+                               + 10 * history[1]['temporal_penalty'] + history[1]['signature_loss'], places=5)
+        with tempfile.TemporaryDirectory() as directory:
+            model.save(directory)
+            for path in (Path(directory), Path(directory) / 'checkpoints/step_0002'):
+                restored = SDEGAN.load(path)
+                self.assertEqual(restored.config.signature_loss_weight, 1)
+                self.assertEqual(restored.run_metadata['signature_loss'], model.run_metadata['signature_loss'])
+                self.assertTrue(np.isfinite(restored.history[-1]['validation_signature_error']))
+            np.testing.assert_array_equal(model.sample(5, 48), SDEGAN.load(directory).sample(5, 48))
 
 
 class TestSmokeRun(unittest.TestCase):
