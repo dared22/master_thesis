@@ -36,10 +36,11 @@ class SDEGAN:
         self.training_result: dict[str, Any] | None = None
 
     def fit(self, train_windows: Any, validation_windows: Any,
-            seed: int = 0) -> History:
-        """Fit from scratch and retain the best fixed-MMD checkpoint in memory."""
+            seed: int = 0, absolute_return_offset: Any | None = None) -> History:
+        """Fit from scratch; absolute-return loss needs the saved training mean/std ratio."""
         generator, critic = initialize_models(self.config, seed)
-        result = train(generator, critic, train_windows, validation_windows, self.config, seed)
+        result = train(generator, critic, train_windows, validation_windows, self.config, seed,
+                       absolute_return_offset=absolute_return_offset)
         self.generator = result['best_generator']
         self.training_result = result
         self.history = result['history']
@@ -50,6 +51,7 @@ class SDEGAN:
             'validation_temporal_error': self.history[result['best_step']]['validation_temporal_error'],
             'validation_volatility_error': self.history[result['best_step']]['validation_volatility_error'],
             'validation_signature_error': self.history[result['best_step']]['validation_signature_error'],
+            'validation_absolute_temporal_error': self.history[result['best_step']]['validation_absolute_temporal_error'],
             'selection_rule': 'lowest_validation_mmd2',
             'kernel_bandwidth': result['kernel_bandwidth'],
             'temporal_penalty': {
@@ -63,6 +65,11 @@ class SDEGAN:
                 'embedding': 'cumulative standardized log returns, zero basepoint, lead-lag, normalized time',
                 'estimator': 'unbiased cross-path squared mean-feature error',
                 'training_reference': result['signature_reference'],
+            },
+            'absolute_temporal_penalty': {
+                'weight': self.config.absolute_temporal_penalty_weight,
+                'lags': [1, 2, 3, 4, 5], 'units': 'absolute log returns',
+                'training_reference': result['absolute_temporal_reference'],
             },
             'package_versions': {name: version(name) for name in
                                  ('jax', 'jaxlib', 'equinox', 'diffrax', 'optax', 'numpy')},
@@ -106,6 +113,7 @@ class SDEGAN:
                     'validation_temporal_error': checkpoint['validation_temporal_error'],
                     'validation_volatility_error': checkpoint['validation_volatility_error'],
                     'validation_signature_error': checkpoint['validation_signature_error'],
+                    'validation_absolute_temporal_error': checkpoint['validation_absolute_temporal_error'],
                     'selection_rule': 'validation_snapshot',
                 }
                 snapshot.save(directory / relative_path)

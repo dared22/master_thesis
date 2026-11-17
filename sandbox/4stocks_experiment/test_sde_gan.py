@@ -27,7 +27,7 @@ from training import (
     generate_batch, generator_loss, gradient_penalty, initialize_models,
     kernel_bandwidth, make_updates, mmd_squared, sample_paths, train,
     tree_finite, validate_windows,
-    temporal_autocorrelation, temporal_penalty,
+    temporal_autocorrelation, temporal_penalty, absolute_temporal_penalty,
     volatility_error, signature_features, fit_signature_reference, signature_loss, signature_error,
 )
 
@@ -102,7 +102,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(5), jnp.array(True)
+            return model, state, jnp.ones(6), jnp.array(True)
         with patch('training.make_updates', return_value=(g_opt, d_opt, g_update, d_update)), \
              patch('training.generate_batch', return_value=jnp.zeros((2, 20, 4))), \
              patch('training.sample_paths', return_value=np.zeros((4, 20, 4))), \
@@ -118,7 +118,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(5), jnp.array(True)
+            return model, state, jnp.ones(6), jnp.array(True)
         def sample(model, n_paths, key, config):
             noise_keys.append(np.asarray(key))
             return np.zeros((n_paths, 20, 4))
@@ -382,7 +382,7 @@ class TestTemporalPenalty(unittest.TestCase):
         saved_critic = critic
         _, _, metrics, valid = update(generator, state, critic, keys)
         self.assertTrue(bool(valid))
-        self.assertEqual(metrics.shape, (5,))
+        self.assertEqual(metrics.shape, (6,))
         assert_tree_equal(self, saved_critic, critic)
 
     def test_training_target_and_serialization(self) -> None:
@@ -404,6 +404,87 @@ class TestTemporalPenalty(unittest.TestCase):
             self.assertEqual(restored.run_metadata, model.run_metadata)
             self.assertEqual(restored.history, model.history)
             np.testing.assert_array_equal(model.sample(5, 26), restored.sample(5, 26))
+
+
+class TestAbsoluteTemporalPenalty(unittest.TestCase):
+    def test_original_log_units_and_constant_gradients(self) -> None:
+        data = synthetic(60, 128)
+        mean = np.array([.01, -.02, .005, .03], dtype=np.float32)
+        std = np.array([.02, .04, .015, .03], dtype=np.float32)
+        raw = data * std + mean
+        expected = np.array([
+            [np.corrcoef(np.abs(raw[:, :-lag, j]).ravel(),
+                         np.abs(raw[:, lag:, j]).ravel())[0, 1]
+             for j in range(4)] for lag in range(1, 6)
+        ])
+        target = temporal_autocorrelation(jnp.abs(jnp.asarray(data) + mean / std))
+        np.testing.assert_allclose(target, expected, atol=1e-6)
+        reference = (target, jnp.asarray(mean / std))
+        self.assertAlmostEqual(float(absolute_temporal_penalty(jnp.asarray(data), reference)), 0)
+        for values in (data, np.zeros_like(data), np.ones_like(data)):
+            value, grads = jax.value_and_grad(absolute_temporal_penalty)(jnp.asarray(values), reference)
+            self.assertTrue(bool(jnp.isfinite(value) & jnp.isfinite(grads).all()))
+        for weight in (-1, np.inf, np.nan):
+            with self.assertRaises(ValueError):
+                small_config(absolute_temporal_penalty_weight=weight)
+
+    def test_generator_objective_and_update(self) -> None:
+        config = small_config(generator_output='increments', absolute_temporal_penalty_weight=1)
+        generator, critic = initialize_models(config, 61)
+        keys = jr.split(jr.PRNGKey(62), config.batch_size)
+        offset = jnp.array([.1, -.2, .05, .3])
+        target = temporal_autocorrelation(jnp.abs(synthetic(63, 32) + offset))
+        reference = (target, offset)
+        baseline = generator_loss(generator, critic, keys, replace(config, absolute_temporal_penalty_weight=0))
+        active = generator_loss(generator, critic, keys, config, absolute_temporal_reference=reference)
+        paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
+        np.testing.assert_allclose(active, baseline + absolute_temporal_penalty(paths, reference), rtol=1e-5)
+
+        def penalty(g):
+            return absolute_temporal_penalty(
+                generate_batch(g, keys, config.generator_dt, config.brownian_tol), reference)
+
+        value, grads = eqx.filter_jit(eqx.filter_value_and_grad(penalty))(generator)
+        self.assertTrue(bool(tree_finite((value, grads))))
+        norm = optax.tree.norm(grads)
+        self.assertGreater(float(norm), 0)
+        moved = eqx.apply_updates(generator, jax.tree.map(lambda x: -1e-5 * x / norm, grads))
+        self.assertLess(float(penalty(moved)), float(value))
+        g_opt, _, update, _ = make_updates(config, absolute_temporal_reference=reference)
+        state = g_opt.init(eqx.filter(generator, eqx.is_inexact_array))
+        _, _, metrics, valid = update(generator, state, critic, keys)
+        self.assertTrue(bool(valid))
+        self.assertEqual(metrics.shape, (6,))
+        np.testing.assert_allclose(metrics[-1], absolute_temporal_penalty(paths, reference), rtol=1e-5)
+
+    def test_training_reference_logging_and_restore(self) -> None:
+        config = small_config(generator_output='increments', absolute_temporal_penalty_weight=1,
+                              retain_validation_checkpoints=True, generator_steps=2, validation_every=1)
+        data = synthetic(64, 16)
+        offset = np.array([.03, -.02, .01, .04], dtype=np.float32)
+        model = SDEGAN(config)
+        model.fit(data, synthetic(65, 8), seed=0, absolute_return_offset=offset)
+        reference = model.run_metadata['absolute_temporal_penalty']['training_reference']
+        np.testing.assert_allclose(reference['training_target'],
+                                   temporal_autocorrelation(jnp.abs(data + offset)), atol=1e-6)
+        np.testing.assert_array_equal(reference['return_offset'], offset)
+        self.assertTrue(all(np.isfinite(row['validation_absolute_temporal_error']) for row in model.history))
+        row = model.history[1]
+        self.assertAlmostEqual(row['generator_loss'], row['generator_adversarial_loss']
+                               + row['absolute_temporal_penalty'], places=5)
+        with tempfile.TemporaryDirectory() as directory:
+            model.save(directory)
+            restored = SDEGAN.load(directory)
+            self.assertEqual(restored.run_metadata, model.run_metadata)
+            self.assertEqual(restored.config, model.config)
+            np.testing.assert_array_equal(restored.sample(5, 66), model.sample(5, 66))
+            snapshot = SDEGAN.load(Path(directory) / 'checkpoints/step_0002')
+            self.assertTrue(np.isfinite(snapshot.run_metadata['validation_absolute_temporal_error']))
+        with self.assertRaisesRegex(ValueError, 'absolute_return_offset'):
+            SDEGAN(config).fit(data, synthetic(65, 8))
+        for bad in ([0., 1.], [0., 0., np.nan, 0.]):
+            with self.assertRaisesRegex(ValueError, 'absolute_return_offset'):
+                SDEGAN(config).fit(data, synthetic(65, 8), absolute_return_offset=bad)
 
 
 class TestValidationCheckpoints(unittest.TestCase):
@@ -510,7 +591,7 @@ class TestSignatureLoss(unittest.TestCase):
         saved_critic = critic
         _, _, metrics, valid = update(generator, state, critic, keys)
         self.assertTrue(bool(valid))
-        self.assertEqual(metrics.shape, (5,))
+        self.assertEqual(metrics.shape, (6,))
         assert_tree_equal(self, saved_critic, critic)
 
     def test_reference_logging_and_checkpoint_roundtrip(self) -> None:
