@@ -1,0 +1,2 @@
+n_training_paths,n_validation_paths,initial_validation_loss,final_validation_loss,effective_A,sigma_estimate,amplitude_error_percent,diffusion_error_percent
+40,60,0.6563194990158081,0.6020050048828125,1.052512526512146,1.0922528505325317,5.2512526512146,0.7042863152243954
