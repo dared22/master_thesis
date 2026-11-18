@@ -1,4 +1,4 @@
-"""Run with sandbox/.venv/bin/python -m unittest from this directory.
+"""Run uv run python -m unittest from this directory.
 
 TestSmokeRun performs the full 50-cycle CPU acceptance run. The remaining
 classes provide faster numerical, gradient, and API regression checks.

@@ -1,4 +1,4 @@
-"""Run from the repository root: sandbox/.venv/bin/python -m unittest benchmarks.test_historical."""
+"""Run uv run python -m unittest benchmarks.test_historical from the repository root."""
 
 from dataclasses import replace
 from datetime import date
@@ -311,7 +311,7 @@ class TestChronology(unittest.TestCase):
 
 class TestExistingCSVs(unittest.TestCase):
     def test_independent_window_counts_and_fixed_validation(self) -> None:
-        directory = Path(__file__).resolve().parents[1] / 'sandbox/4stocks_experiment/data'
+        directory = Path(__file__).resolve().parents[1] / 'experiments/4stocks/data'
         expected = {'train': (3811, 3208, 1679), 'validation': (817, 802, 709),
                     'test': (817, 817, 798)}
         for split, (n_rows, h1, h20) in expected.items():
