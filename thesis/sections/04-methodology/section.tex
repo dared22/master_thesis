@@ -7,10 +7,15 @@
 The equity data were obtained from TITLON, a financial database for Norwegian
 academic institutions containing Oslo Stock Exchange histories, adjusted prices,
 and sector classifications \parencite{TITLON}. The downloaded export contains
-1,876,617 records for 1,133 ISINs, spanning 2 January 1980 to 8 September 2026.
-The exploratory analysis covers 8 September 2021 to 8 September 2026,
-providing a common five-year period rather than comparing each stock's entire
-available history.
+1,876,617 records for 1,133 ISINs\footnote{An ISIN (International Securities
+Identification Number) is a unique 12-character code used to identify a
+financial security, such as a specific share class.}, spanning 2 January 1980 to
+8 September 2026.
+The dataset includes each stock's full available history.
+
+\textcolor{red}{TODO: The analysis below currently uses only the last five years
+of data (8 September 2021 to 8 September 2026). Decide whether to use the full
+dataset or a shorter period.}
 
 After the preparation below, the sample contains 195 stock histories over 1,257
 exchange sessions. Prices and turnover are recorded in NOK. Adjusted prices
@@ -45,124 +50,147 @@ not fixed by this exploratory sample.
 \subsection{Data preparation}
 \label{sec:data-preparation}
 
-Historical ISINs are linked when stable company and security identifiers support
-continuity and their recorded date spans do not overlap. Explicit mappings also
-join the Kongsberg, Frontline, and Tomra histories. These mappings use the
-identifier and company-name evidence documented in the notebooks; they are not
-independent issuer verification. Simultaneous share classes remain separate.
-Stocks must have valid adjusted prices at both endpoints and on at least 95\%
-of the expected Oslo exchange sessions, using the XOSL calendar. Among qualifying
-classes of an identified company, the class with the highest five-year NOK
-turnover is selected. Histories without a company identifier remain distinct.
+Stock histories with different ISINs are joined when the company and security
+identifiers show that they belong together and their dates do not overlap.
+Different share classes traded at the same time are kept separate at this stage.
 
-Identical repeated prices are counted once. Conflicting stock/session prices
-and nonpositive or nonfinite prices are unavailable. Prices are used with their
-supplied adjustments: the export satisfies
+A stock is included if it has valid adjusted prices at the start and end of the
+period and on at least 95\% of trading days. Trading days follow the Oslo Stock
+Exchange calendar (XOSL). If several share classes of the same company qualify,
+the one with the highest total turnover in NOK over the five years is selected.
+Stocks without a company identifier are kept separate.
+
+Duplicate prices for the same stock and day are counted once. If these prices
+disagree, the price is treated as missing. Zero, negative, and nonfinite prices
+are also treated as missing. The adjusted prices supplied in the dataset follow
 \(P^{*}=\texttt{Price}\times\texttt{CorpAdj}\times\texttt{DividendAdj}\).
-This numerical identity does not establish the provider's precise adjustment
-timing or reinvestment conventions. No additional adjustment is applied.
-Daily log returns are
+This formula alone does not show when adjustments take effect or how dividends
+are reinvested. No further adjustments are made.
+
+Daily log returns are calculated as
 \begin{equation}
     r_{i,t}=\log P^{*}_{i,t}-\log P^{*}_{i,t-1},
     \label{eq:eda-log-return}
 \end{equation}
-where \(t-1\) is the preceding exchange session, including 7 September 2021 for
-the first return. A missing price makes both adjacent returns unavailable;
-gaps are neither filled nor bridged. Genuine zero returns and extreme values
-are retained, with extremes flagged for inspection.
+where \(t-1\) is the previous trading day. The first return uses the price from
+7 September 2021. A missing price leaves the returns for that day and the next
+trading day missing. Missing prices are not filled in, and returns are not
+calculated across gaps. Genuine zero returns and extreme values are kept.
+Extreme values are flagged for review.
 
-The selected panel has 506 unavailable prices and 862 unavailable returns.
-Requiring returns for every stock leaves 871 sessions, removing 30.7\% of the
-session grid. Pairwise analyses retain each pair's overlapping observations;
-common-date comparisons use the same 871 dates for all stocks.
+The selected sample has 506 missing prices and 862 missing returns. Keeping only
+days with returns for every stock leaves 871 trading days, excluding 30.7\% of
+the days in the sample. Analyses of stock pairs use all days with returns for
+both stocks. Comparisons that require data for every stock use the same 871 days.
 
 \subsection{Exploratory analysis}
 \label{sec:exploratory-analysis}
 
-Figure~\ref{fig:eda-return-behaviour} summarizes marginal return behaviour across
-the selected stocks. Standardizing each stock separately avoids attributing
-departures from a normal distribution merely to differences in volatility
-between stocks. The median Q--Q curve departs from the normal reference in the
-tails, and the median stock's sample excess kurtosis is 6.39. These are
-descriptive features of the recorded returns, not a fitted tail law. Extreme
-observations can strongly influence moment estimates: the largest positive log
-return, for 2020 Bulkers on 29 April 2026, is approximately 4.06 and remains an
-unresolved inspection flag. It coincides with both adjustment factors resetting
-to one and should not be interpreted as a verified market movement solely
-because it appears in the adjusted-price series.
+The five-year sample shows three broad patterns: large daily price changes,
+changing volatility, and stronger links between stocks in the same sector.
+
+Figure~\ref{fig:eda-return-behaviour}a compares the returns with a normal
+distribution. Returns are scaled separately for each stock so that stocks with
+different levels of volatility can be compared. Overall, extreme returns are
+more common than a normal distribution would suggest. Some extreme values
+still need to be checked for possible data or price-adjustment issues.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/data/return-behaviour.pdf}
-    \caption{Observed-only five-year return behaviour. (a) Each stock's log
-    returns are centred and scaled by its own sample mean and standard
-    deviation; the curve and band show the median and interquartile range of
-    stock quantiles on a common probability grid. (b) Cross-stock median and
-    interquartile range of 60-session sample standard deviations, annualised
-    by \(\sqrt{252}\). Each estimate requires 60 observed returns, with 169--195
-    stocks contributing after the initial window. The bands describe stock
-    dispersion, not confidence intervals.}
+    \caption{Returns and volatility over the five-year sample, using observed
+    returns only. (a) Comparison with a normal distribution after subtracting
+    each stock's mean return and dividing by its standard deviation. The curve
+    shows the median across stocks; the band covers the middle 50\%.
+    (b) Volatility measured over 60 trading days and converted to an annual
+    scale using \(\sqrt{252}\). Each estimate requires 60 observed returns.
+    The line shows the median across stocks; the band covers the middle 50\%.
+    These bands show differences between stocks, not uncertainty intervals.}
     \label{fig:eda-return-behaviour}
 \end{figure}
 
-Rolling volatility varies through time and differs across stocks
-(Figure~\ref{fig:eda-return-behaviour}b). Annualisation is a reporting convention,
-not a volatility forecast. These rolling estimates describe changing volatility;
-they do not by themselves establish persistence in absolute returns. The
-prevalence of zero returns also differs across stocks, which may reflect
-limited trading or stale recorded prices as well as unchanged prices.
+Volatility measures how much returns vary. Figure~\ref{fig:eda-return-behaviour}b
+shows that the sample moves between calmer and more volatile periods.
+Volatility also differs across stocks.
 
-Sector peers are more correlated on average in this sample. Using pairwise
-overlap, mean Pearson correlation is 0.112 within sectors and 0.059 across
-sectors. Spearman correlations give the same ordering (0.124 and 0.067).
-On common dates, the Pearson gap is 0.050; giving sectors equal weight reduces
-it to 0.016, showing the influence of sector sizes. Thus the pooled difference
-does not imply that every sector has stronger internal dependence.
-Figure~\ref{fig:eda-dependence}a shows variation in trailing correlations.
-Changes in contributing pairs can also affect these averages; a peak is not
-evidence that a particular event caused a change in dependence.
+Stocks in the same sector tend to move together more than stocks in different
+sectors. Average correlation is 0.112 within sectors and 0.059 across sectors.
+This is an overall pattern and does not hold equally for every sector. The gap
+becomes smaller when each sector is given equal weight, so larger sectors
+influence the result. Figure~\ref{fig:eda-dependence}a shows that average
+correlations also change over time. The stock pairs with enough data to be
+included change over time too, which can affect these averages.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/data/dependence-and-losses.pdf}
-    \caption{Dependence in the selected sample. (a) Mean within/across-sector
-    Pearson correlations over 63 consecutive exchange sessions. Each pair needs
-    all 63 returns; the lower strip shows the fraction of eligible pairs used.
-    (b) Mean conditional co-loss frequencies, averaging both directions per
-    pair. Lower-tail events have average rank divided by \(n+1\) at most 0.05
-    within the pair-aligned sample. Black markers give independence references
-    from observed marginal event frequencies, accounting for ties. Bars are
-    descriptive averages, without uncertainty intervals.}
+    \caption{Links between stock returns in the selected sample.
+    (a) Average Pearson correlations within and across sectors, measured over
+    63 trading days. Each stock pair needs returns for all 63 days. The lower
+    strip shows the share of eligible pairs included.
+    (b) Average chance that a stock has one of its worst 5\% of returns when
+    another stock does, using their shared dates and averaging both directions.
+    Black markers show the reference values for independent returns, allowing
+    for tied values. The bars show averages, without uncertainty intervals.}
     \label{fig:eda-dependence}
 \end{figure}
 
-When one stock is in its lower tail, its partner is also in its lower tail on
-average 13.0\% of the time within sectors and 9.6\% across sectors
-(Figure~\ref{fig:eda-dependence}b). Estimates require at least 1,000 paired
-returns and 20 conditioning events, supporting 2,329 within-sector and 16,586
-cross-sector pairs. The 871-session common panel cannot meet this requirement.
-These conditional frequencies concern a finite 5\% threshold, not asymptotic
-tail dependence; the reported averages do not constitute a hypothesis test of
-the sector difference.
+Large losses also occur together more often within sectors. When one stock has
+one of its worst 5\% of returns, another stock does too on average 13.0\% of the
+time within sectors, compared with 9.6\% across sectors
+(Figure~\ref{fig:eda-dependence}b). These figures describe the observed sample;
+they do not establish that the difference is statistically significant or show
+how stocks behave in even rarer losses.
 
-\subsection{Implications for modelling}
+\subsection{Correlation spikes during market stress}
 \label{sec:eda-implications}
 
-The observed tails, changing volatility, sector structure, and shared losses
-define properties to check in generated joint return scenarios. They motivate
-evaluating marginal distributions and temporal behaviour alongside cross-stock
-dependence and portfolio VaR, rather than assessing scenarios by average
-correlation alone. They do not establish that a neural SDE will outperform
-historical simulation or Gaussian and Student's \emph{t}-copula benchmarks.
+A five-year average can hide sharp increases in correlation. In the two examples
+below, correlations rise both within and across sectors around days when many
+stocks fall together. Figure~\ref{fig:eda-correlation-shocks} shows correlations
+over the previous 20 trading days, alongside the median daily stock return.
 
-Interpretation is limited by endpoint and coverage selection, retrospective
-sector labels, uncertain history links, missing observations, and unresolved
-price extremes. Pairwise estimates use different dates and their correlation
-matrix need not be positive semidefinite; it is not directly a fitted copula
-matrix. Missingness also changes the common-date sample. Cubic interpolation of
-internal price gaps of up to five sessions changes the available-pair Pearson
-sector gap from 0.05347 to 0.05351. This is a retrospective sensitivity check:
-the spline uses later prices and does not add observed returns.
-Finally, five years provide limited evidence about rare losses. This
-retrospective EDA has inspected the full period; it does not establish an
-untouched test set for subsequent modelling.
+The first example is January 2022, when concerns about higher interest rates and
+tensions between Russia and Ukraine weighed on equity markets
+\parencite{FOMCJanuary2022}. Around the large loss on 24 January, average
+correlation rises sharply. It later reaches about 0.35 within sectors and 0.30
+across sectors, compared with roughly 0.14 and 0.08 before the jump.
+
+The second example is the global sell-off in early August 2024
+\parencite{AquilinaEtAl2024}. Around the losses on 2 and 5 August, average
+correlation rises from about 0.05 to above 0.30 within sectors, and from about
+0.02 to 0.25 across sectors. Both examples show that stocks in different sectors
+can move together more strongly during market stress.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/data/correlation-shocks.pdf}
+    \caption{Correlation jumps in January 2022 and August 2024. The upper panels
+    show average Pearson correlations over the previous 20 trading days, using
+    stocks with returns on every day in the window. The lower panels show the
+    median daily stock return. Red dashed lines mark the highlighted loss days;
+    grey dotted lines mark when those days leave the 20-day window.}
+    \label{fig:eda-correlation-shocks}
+\end{figure}
+
+The length of the window also matters. A large shared loss affects the
+correlation estimate while it remains in the 20-day window. Correlations can
+then fall sharply when that day leaves the window, as the grey lines show.
+The plots therefore show how sensitive short-term correlations are to a few
+large market moves. They do not prove that a particular event caused the jump
+or that every market shock has the same effect. For modelling, this suggests
+checking whether generated returns capture these temporary increases in
+correlation, rather than matching only the full-period average.
+These jumps motivate copula modelling, which models the links between stock
+returns separately from each stock's return distribution. They also raise the
+question of whether a fixed copula is sufficient or whether dependence needs
+to change over time.
+
+Cubic interpolation of internal price gaps of up to five sessions changes the
+available-pair Pearson sector gap from 0.05347 to 0.05351. This is a retrospective
+sensitivity check: the spline uses later prices and does not add observed
+returns.
+
+\textcolor{red}{TODO: Decide whether to use interpolation to fill short gaps in
+prices or keep the missing values. Update the data preparation and analysis to
+match this choice.}
