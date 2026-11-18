@@ -1,0 +1,18 @@
+{
+  "sample_seed": 100,
+  "n_paths": 1000,
+  "portfolio_weights": [
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "downside_training_thresholds": [
+    -0.0264150943396288,
+    -0.0542168674698763,
+    -0.0279329608938455,
+    -0.0272277227722609
+  ],
+  "var_confidence": 0.95,
+  "rebalancing": "each session"
+}

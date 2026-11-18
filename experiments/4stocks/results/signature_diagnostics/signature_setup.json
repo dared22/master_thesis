@@ -1,0 +1,168 @@
+{
+  "sample_seed": 100,
+  "n_generated": 1000,
+  "batch_seed": 2026,
+  "batch_size": 256,
+  "batch_repeats": 100,
+  "depths": [
+    2,
+    3
+  ],
+  "signature_channels": 9,
+  "feature_std_min": 1e-10,
+  "embedding": "cumulative training-standardized log returns, zero basepoint, joint lead-lag, normalized time",
+  "score": "RMS difference of mean signature coordinates scaled by training feature std",
+  "constant_features": "ignored",
+  "controls": {
+    "real": "Real batches",
+    "half_volatility": "Half volatility",
+    "sorted_0": "Sorted by KONGSBERG GRUPPEN",
+    "sorted_1": "Sorted by FRONTLINE",
+    "sorted_2": "Sorted by WILH Wilhelmsen B",
+    "sorted_3": "Sorted by TOMRA SYSTEMS",
+    "baseline_seed_0": "baseline seed 0",
+    "baseline_seed_1": "baseline seed 1",
+    "baseline_seed_2": "baseline seed 2",
+    "weight10_seed_0": "weight10 seed 0",
+    "weight10_seed_1": "weight10 seed 1",
+    "weight10_seed_2": "weight10 seed 2",
+    "weight30_seed_0": "weight30 seed 0"
+  },
+  "reference": "all retained training windows; conditional empirical-batch calibration",
+  "preprocessing": {
+    "stock_order": [
+      "KONGSBERG GRUPPEN",
+      "FRONTLINE",
+      "WILH Wilhelmsen B",
+      "TOMRA SYSTEMS"
+    ],
+    "transform": "log1p",
+    "ddof": 1,
+    "training_count": [
+      3734,
+      3810,
+      3246,
+      3810
+    ],
+    "training_mean": [
+      0.0007097211184480659,
+      -0.0006929571212180756,
+      0.0005904917208495446,
+      0.000661496604162083
+    ],
+    "training_std": [
+      0.019227351196946265,
+      0.03814822536123386,
+      0.01950779956101827,
+      0.021849883996401784
+    ],
+    "window_length": 20,
+    "stride": 1,
+    "observation_times": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "time_unit": "market session",
+    "calendar": "Observed source calendar corrected in adjusted_price_histories.ipynb",
+    "splits": {
+      "train": {
+        "source": "train_returns.csv",
+        "first_date": "2005-01-03",
+        "last_date": "2020-03-05",
+        "rows": 3811,
+        "candidates": 3792,
+        "retained": 1679,
+        "rejected": 2113
+      },
+      "validation": {
+        "source": "validation_returns.csv",
+        "first_date": "2020-03-06",
+        "last_date": "2023-06-07",
+        "rows": 817,
+        "candidates": 798,
+        "retained": 709,
+        "rejected": 89
+      },
+      "test": {
+        "source": "test_returns.csv",
+        "first_date": "2023-06-08",
+        "last_date": "2026-09-08",
+        "rows": 817,
+        "candidates": 798,
+        "retained": 798,
+        "rejected": 0
+      }
+    }
+  },
+  "models": [
+    {
+      "dataset": "baseline_seed_0",
+      "checkpoint": "results/sde_gan/seed_0",
+      "selected_step": 1600,
+      "weight": 0.0,
+      "solver_step": 0.25
+    },
+    {
+      "dataset": "baseline_seed_1",
+      "checkpoint": "results/sde_gan/seed_1",
+      "selected_step": 2000,
+      "weight": 0.0,
+      "solver_step": 0.25
+    },
+    {
+      "dataset": "baseline_seed_2",
+      "checkpoint": "results/sde_gan/seed_2",
+      "selected_step": 2000,
+      "weight": 0.0,
+      "solver_step": 0.25
+    },
+    {
+      "dataset": "weight10_seed_0",
+      "checkpoint": "results/sde_gan/temporal_penalty/seed_0",
+      "selected_step": 1600,
+      "weight": 10.0,
+      "solver_step": 0.25
+    },
+    {
+      "dataset": "weight10_seed_1",
+      "checkpoint": "results/sde_gan/temporal_penalty/seed_1",
+      "selected_step": 1400,
+      "weight": 10.0,
+      "solver_step": 0.25
+    },
+    {
+      "dataset": "weight10_seed_2",
+      "checkpoint": "results/sde_gan/temporal_penalty/seed_2",
+      "selected_step": 1600,
+      "weight": 10.0,
+      "solver_step": 0.25
+    },
+    {
+      "dataset": "weight30_seed_0",
+      "checkpoint": "results/sde_gan/temporal_penalty_30/seed_0",
+      "selected_step": 200,
+      "weight": 30.0,
+      "solver_step": 0.25
+    }
+  ],
+  "numpy_version": "2.2.6",
+  "jax_version": "0.6.2"
+}

@@ -1,0 +1,2601 @@
+depth,dataset,label,repeat,signature_score
+2,real,Real batches,0,0.06487762065171641
+2,real,Real batches,1,0.054259608401385176
+2,real,Real batches,2,0.05238072958477016
+2,real,Real batches,3,0.038659661037753104
+2,real,Real batches,4,0.06191544302420181
+2,real,Real batches,5,0.04794029518690718
+2,real,Real batches,6,0.0536062865707028
+2,real,Real batches,7,0.04770221181957822
+2,real,Real batches,8,0.06230705596273665
+2,real,Real batches,9,0.12436763120674926
+2,real,Real batches,10,0.08058420863938098
+2,real,Real batches,11,0.06602833604072308
+2,real,Real batches,12,0.06376206978926992
+2,real,Real batches,13,0.05513560424769134
+2,real,Real batches,14,0.04378395167305435
+2,real,Real batches,15,0.039469269328727456
+2,real,Real batches,16,0.048003909722411885
+2,real,Real batches,17,0.05429150603961477
+2,real,Real batches,18,0.07464179979699151
+2,real,Real batches,19,0.05478814117837951
+2,real,Real batches,20,0.06021122744204739
+2,real,Real batches,21,0.061573294681854046
+2,real,Real batches,22,0.044275431852484545
+2,real,Real batches,23,0.06058207015512698
+2,real,Real batches,24,0.07082413606535932
+2,real,Real batches,25,0.06658818724305832
+2,real,Real batches,26,0.0736876115060104
+2,real,Real batches,27,0.05011359168235959
+2,real,Real batches,28,0.0762069211735443
+2,real,Real batches,29,0.07033903228598828
+2,real,Real batches,30,0.061403082724499604
+2,real,Real batches,31,0.05134741543400661
+2,real,Real batches,32,0.059948867462702414
+2,real,Real batches,33,0.0535193319257091
+2,real,Real batches,34,0.0481649342643962
+2,real,Real batches,35,0.05447590925556021
+2,real,Real batches,36,0.058192023192329606
+2,real,Real batches,37,0.046063464201955284
+2,real,Real batches,38,0.047521100241592874
+2,real,Real batches,39,0.0516113490000126
+2,real,Real batches,40,0.06197622314009594
+2,real,Real batches,41,0.05688671514391622
+2,real,Real batches,42,0.06329399515003069
+2,real,Real batches,43,0.05183901725544822
+2,real,Real batches,44,0.05871844915497455
+2,real,Real batches,45,0.07147908240484874
+2,real,Real batches,46,0.05159617463063524
+2,real,Real batches,47,0.05525888209696601
+2,real,Real batches,48,0.05406272648393071
+2,real,Real batches,49,0.04492935903753004
+2,real,Real batches,50,0.05271717652897742
+2,real,Real batches,51,0.06616670142734365
+2,real,Real batches,52,0.06301759695336871
+2,real,Real batches,53,0.059351965893534225
+2,real,Real batches,54,0.06253191915035308
+2,real,Real batches,55,0.06485719827449825
+2,real,Real batches,56,0.06079014148009842
+2,real,Real batches,57,0.08033235382691445
+2,real,Real batches,58,0.05280833826130779
+2,real,Real batches,59,0.07079109148055437
+2,real,Real batches,60,0.06586631584828705
+2,real,Real batches,61,0.06365408889009262
+2,real,Real batches,62,0.05676113479716954
+2,real,Real batches,63,0.07558305472321171
+2,real,Real batches,64,0.07012140880230104
+2,real,Real batches,65,0.0852755129822087
+2,real,Real batches,66,0.06794527777117243
+2,real,Real batches,67,0.058897372775583164
+2,real,Real batches,68,0.038097878392954046
+2,real,Real batches,69,0.052730226424882704
+2,real,Real batches,70,0.07660132789516529
+2,real,Real batches,71,0.08591926533730056
+2,real,Real batches,72,0.05894280361932116
+2,real,Real batches,73,0.06814701514650716
+2,real,Real batches,74,0.04830097339547987
+2,real,Real batches,75,0.060228857684245095
+2,real,Real batches,76,0.06814647725181044
+2,real,Real batches,77,0.05020391808746885
+2,real,Real batches,78,0.0610463478418481
+2,real,Real batches,79,0.050019603090227266
+2,real,Real batches,80,0.04510468933269838
+2,real,Real batches,81,0.07330059199576038
+2,real,Real batches,82,0.06355893536348582
+2,real,Real batches,83,0.06257617552949159
+2,real,Real batches,84,0.05252279717304638
+2,real,Real batches,85,0.045060487178561544
+2,real,Real batches,86,0.0733339870888013
+2,real,Real batches,87,0.050777577553048174
+2,real,Real batches,88,0.05479716345272753
+2,real,Real batches,89,0.07815993508104267
+2,real,Real batches,90,0.04380742287787234
+2,real,Real batches,91,0.07725869156252028
+2,real,Real batches,92,0.050011220749904245
+2,real,Real batches,93,0.05372475826144456
+2,real,Real batches,94,0.04794761790715121
+2,real,Real batches,95,0.08047274115814546
+2,real,Real batches,96,0.04513506930898536
+2,real,Real batches,97,0.049410557336248544
+2,real,Real batches,98,0.053979175182402674
+2,real,Real batches,99,0.07017733136394641
+2,half_volatility,Half volatility,0,0.22782903112089833
+2,half_volatility,Half volatility,1,0.23253150590706093
+2,half_volatility,Half volatility,2,0.22698979044631062
+2,half_volatility,Half volatility,3,0.2269981311620626
+2,half_volatility,Half volatility,4,0.23412632058109706
+2,half_volatility,Half volatility,5,0.22969036611105595
+2,half_volatility,Half volatility,6,0.2331331423796949
+2,half_volatility,Half volatility,7,0.22870240615696477
+2,half_volatility,Half volatility,8,0.2372451518552534
+2,half_volatility,Half volatility,9,0.21927618801759333
+2,half_volatility,Half volatility,10,0.2390142472830271
+2,half_volatility,Half volatility,11,0.22113693073401872
+2,half_volatility,Half volatility,12,0.22829627576791275
+2,half_volatility,Half volatility,13,0.2305473660140615
+2,half_volatility,Half volatility,14,0.22684410397658586
+2,half_volatility,Half volatility,15,0.2302612969396587
+2,half_volatility,Half volatility,16,0.22383292089036855
+2,half_volatility,Half volatility,17,0.2293549165771895
+2,half_volatility,Half volatility,18,0.2362862053225975
+2,half_volatility,Half volatility,19,0.23291290181205235
+2,half_volatility,Half volatility,20,0.23394601748252
+2,half_volatility,Half volatility,21,0.22333155158857787
+2,half_volatility,Half volatility,22,0.22795659156621867
+2,half_volatility,Half volatility,23,0.22795165536996892
+2,half_volatility,Half volatility,24,0.23674482719234613
+2,half_volatility,Half volatility,25,0.22535722360800753
+2,half_volatility,Half volatility,26,0.23757250613558928
+2,half_volatility,Half volatility,27,0.23342543667018115
+2,half_volatility,Half volatility,28,0.22200162443927282
+2,half_volatility,Half volatility,29,0.2273100828202674
+2,half_volatility,Half volatility,30,0.22880521381819724
+2,half_volatility,Half volatility,31,0.2318009174553976
+2,half_volatility,Half volatility,32,0.23206410597480842
+2,half_volatility,Half volatility,33,0.22975222797861006
+2,half_volatility,Half volatility,34,0.22822973152573794
+2,half_volatility,Half volatility,35,0.22854802361184373
+2,half_volatility,Half volatility,36,0.22575032961965327
+2,half_volatility,Half volatility,37,0.22948240099668735
+2,half_volatility,Half volatility,38,0.2293522151288876
+2,half_volatility,Half volatility,39,0.22462612964167594
+2,half_volatility,Half volatility,40,0.23715045792670308
+2,half_volatility,Half volatility,41,0.2241867881387872
+2,half_volatility,Half volatility,42,0.22962028346472732
+2,half_volatility,Half volatility,43,0.23145355034881757
+2,half_volatility,Half volatility,44,0.23137858740822076
+2,half_volatility,Half volatility,45,0.2263248620284321
+2,half_volatility,Half volatility,46,0.2230213602063645
+2,half_volatility,Half volatility,47,0.23231650402696216
+2,half_volatility,Half volatility,48,0.2277532916143038
+2,half_volatility,Half volatility,49,0.22839593291690996
+2,half_volatility,Half volatility,50,0.2334113231415423
+2,half_volatility,Half volatility,51,0.23260205529682937
+2,half_volatility,Half volatility,52,0.23349603512250763
+2,half_volatility,Half volatility,53,0.2329104334406386
+2,half_volatility,Half volatility,54,0.22577507602090913
+2,half_volatility,Half volatility,55,0.2229371472202569
+2,half_volatility,Half volatility,56,0.23406941877411266
+2,half_volatility,Half volatility,57,0.2284070674462951
+2,half_volatility,Half volatility,58,0.23622244435525258
+2,half_volatility,Half volatility,59,0.2220690381484057
+2,half_volatility,Half volatility,60,0.2188447091519496
+2,half_volatility,Half volatility,61,0.2317154001568115
+2,half_volatility,Half volatility,62,0.22696307366940277
+2,half_volatility,Half volatility,63,0.2204985002737839
+2,half_volatility,Half volatility,64,0.229444229444859
+2,half_volatility,Half volatility,65,0.23807418301306807
+2,half_volatility,Half volatility,66,0.23396572336549487
+2,half_volatility,Half volatility,67,0.23344547134132757
+2,half_volatility,Half volatility,68,0.23105558818560692
+2,half_volatility,Half volatility,69,0.23168356225320524
+2,half_volatility,Half volatility,70,0.23011608385728072
+2,half_volatility,Half volatility,71,0.22574791244487205
+2,half_volatility,Half volatility,72,0.2258083177004537
+2,half_volatility,Half volatility,73,0.23318198670228532
+2,half_volatility,Half volatility,74,0.23033449501166478
+2,half_volatility,Half volatility,75,0.2241716421189901
+2,half_volatility,Half volatility,76,0.2265562525790288
+2,half_volatility,Half volatility,77,0.23314662368920294
+2,half_volatility,Half volatility,78,0.22581272281678136
+2,half_volatility,Half volatility,79,0.2314125945417439
+2,half_volatility,Half volatility,80,0.2267723400184177
+2,half_volatility,Half volatility,81,0.23162529114819272
+2,half_volatility,Half volatility,82,0.22609515432469343
+2,half_volatility,Half volatility,83,0.23258076223358307
+2,half_volatility,Half volatility,84,0.22872591781064616
+2,half_volatility,Half volatility,85,0.22945097680700968
+2,half_volatility,Half volatility,86,0.2295488148226164
+2,half_volatility,Half volatility,87,0.22765839900877957
+2,half_volatility,Half volatility,88,0.23359824111629376
+2,half_volatility,Half volatility,89,0.2281627138310482
+2,half_volatility,Half volatility,90,0.22708449791005775
+2,half_volatility,Half volatility,91,0.21945529887137738
+2,half_volatility,Half volatility,92,0.22411232335557624
+2,half_volatility,Half volatility,93,0.23050263847588695
+2,half_volatility,Half volatility,94,0.22715688832305495
+2,half_volatility,Half volatility,95,0.21643106787546246
+2,half_volatility,Half volatility,96,0.234292799603591
+2,half_volatility,Half volatility,97,0.23025479438723317
+2,half_volatility,Half volatility,98,0.22715053987298364
+2,half_volatility,Half volatility,99,0.22310205303046082
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,0,0.47762168947187694
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,1,0.47449927053409297
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,2,0.5007868079624357
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,3,0.4868266959797541
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,4,0.46721977054007235
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,5,0.47468326275910355
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,6,0.4846455277884172
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,7,0.4799189280682706
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,8,0.4816528438550118
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,9,0.5230090657748293
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,10,0.46805559802463015
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,11,0.5066145409084757
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,12,0.4939880830650319
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,13,0.4811172660278785
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,14,0.47638262668772635
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,15,0.4948120035876419
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,16,0.498800146474712
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,17,0.4896184702410912
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,18,0.48260846076435715
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,19,0.47469570304393355
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,20,0.44704291793549106
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,21,0.486554316229584
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,22,0.4759286212462306
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,23,0.502052791318979
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,24,0.4805914664889308
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,25,0.5243359132465529
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,26,0.48611731192851365
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,27,0.4911121580779713
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,28,0.5039970518955187
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,29,0.5180110842972269
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,30,0.5092299253581518
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,31,0.4727657019090423
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,32,0.5035910996847243
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,33,0.47823536338122263
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,34,0.45876406952922516
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,35,0.4938318836192416
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,36,0.4963645909107381
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,37,0.4883604080459535
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,38,0.5008849965352145
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,39,0.4864333266119571
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,40,0.46959155326026114
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,41,0.4994141486872405
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,42,0.49682463986056924
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,43,0.4835813068671731
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,44,0.48653721039862335
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,45,0.49349465058820896
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,46,0.4974066965067476
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,47,0.4778052648640895
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,48,0.4954582027624835
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,49,0.48749695627652867
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,50,0.48178351081949833
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,51,0.5082551341660048
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,52,0.49514834609473357
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,53,0.47441781669191374
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,54,0.49024396558003575
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,55,0.49900801148064416
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,56,0.47946851835542886
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,57,0.4990846298463849
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,58,0.47719241255693295
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,59,0.5078835561021905
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,60,0.5012709540509791
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,61,0.49665120820105635
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,62,0.47481904559041904
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,63,0.5181168576508443
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,64,0.5036787936846977
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,65,0.4707921981835611
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,66,0.4917497673752334
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,67,0.46802204651138835
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,68,0.47320732613331096
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,69,0.48335337989436883
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,70,0.49426259610651374
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,71,0.5235184110512017
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,72,0.4946492184841116
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,73,0.4843679812249604
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,74,0.48738649259897604
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,75,0.5083984645013138
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,76,0.5234171037062602
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,77,0.4771553671670163
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,78,0.5154810431917828
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,79,0.46637681364767813
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,80,0.49387341118213907
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,81,0.49446006961426625
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,82,0.5232098271478418
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,83,0.46566172888768276
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,84,0.5030999932698247
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,85,0.4553595380439354
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,86,0.5035895868135234
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,87,0.5045293759073073
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,88,0.4781668090380071
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,89,0.5267404249751036
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,90,0.4943064908891192
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,91,0.5210239325356057
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,92,0.49205027201956236
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,93,0.501647318232567
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,94,0.4945007571938132
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,95,0.5363983601559211
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,96,0.4641637913233934
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,97,0.48920208771052753
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,98,0.49673392406101324
+2,sorted_0,Sorted by KONGSBERG GRUPPEN,99,0.49320609177704267
+2,sorted_1,Sorted by FRONTLINE,0,0.4037565776407284
+2,sorted_1,Sorted by FRONTLINE,1,0.4051906028018895
+2,sorted_1,Sorted by FRONTLINE,2,0.42035801704566256
+2,sorted_1,Sorted by FRONTLINE,3,0.4212488397873883
+2,sorted_1,Sorted by FRONTLINE,4,0.3965419224773736
+2,sorted_1,Sorted by FRONTLINE,5,0.39120300314960477
+2,sorted_1,Sorted by FRONTLINE,6,0.4039240580299928
+2,sorted_1,Sorted by FRONTLINE,7,0.39526741927998776
+2,sorted_1,Sorted by FRONTLINE,8,0.3846347201430404
+2,sorted_1,Sorted by FRONTLINE,9,0.4367569857597414
+2,sorted_1,Sorted by FRONTLINE,10,0.4059134517802397
+2,sorted_1,Sorted by FRONTLINE,11,0.414040612011386
+2,sorted_1,Sorted by FRONTLINE,12,0.422125034431695
+2,sorted_1,Sorted by FRONTLINE,13,0.38371385045712186
+2,sorted_1,Sorted by FRONTLINE,14,0.40042273300826314
+2,sorted_1,Sorted by FRONTLINE,15,0.40865556672303116
+2,sorted_1,Sorted by FRONTLINE,16,0.4087168403640736
+2,sorted_1,Sorted by FRONTLINE,17,0.43144034484621135
+2,sorted_1,Sorted by FRONTLINE,18,0.39683578471197556
+2,sorted_1,Sorted by FRONTLINE,19,0.39914979648822946
+2,sorted_1,Sorted by FRONTLINE,20,0.4218887813801904
+2,sorted_1,Sorted by FRONTLINE,21,0.42679471195138413
+2,sorted_1,Sorted by FRONTLINE,22,0.40995112063976213
+2,sorted_1,Sorted by FRONTLINE,23,0.431611055724112
+2,sorted_1,Sorted by FRONTLINE,24,0.4076557890857008
+2,sorted_1,Sorted by FRONTLINE,25,0.41281290108043744
+2,sorted_1,Sorted by FRONTLINE,26,0.40625266131907745
+2,sorted_1,Sorted by FRONTLINE,27,0.3910545048144992
+2,sorted_1,Sorted by FRONTLINE,28,0.4154165705826746
+2,sorted_1,Sorted by FRONTLINE,29,0.39284923701896096
+2,sorted_1,Sorted by FRONTLINE,30,0.3873973648368482
+2,sorted_1,Sorted by FRONTLINE,31,0.40267948069337745
+2,sorted_1,Sorted by FRONTLINE,32,0.41501062580034154
+2,sorted_1,Sorted by FRONTLINE,33,0.38164107885161336
+2,sorted_1,Sorted by FRONTLINE,34,0.3860698417423062
+2,sorted_1,Sorted by FRONTLINE,35,0.39943200474922397
+2,sorted_1,Sorted by FRONTLINE,36,0.4086638701371809
+2,sorted_1,Sorted by FRONTLINE,37,0.38703777398430667
+2,sorted_1,Sorted by FRONTLINE,38,0.41791478585808556
+2,sorted_1,Sorted by FRONTLINE,39,0.40377512195164067
+2,sorted_1,Sorted by FRONTLINE,40,0.38676511107490613
+2,sorted_1,Sorted by FRONTLINE,41,0.4323029295133127
+2,sorted_1,Sorted by FRONTLINE,42,0.3931729718475155
+2,sorted_1,Sorted by FRONTLINE,43,0.3995776742404577
+2,sorted_1,Sorted by FRONTLINE,44,0.39438509974796826
+2,sorted_1,Sorted by FRONTLINE,45,0.3975854724750533
+2,sorted_1,Sorted by FRONTLINE,46,0.41318615180687224
+2,sorted_1,Sorted by FRONTLINE,47,0.39184923942987226
+2,sorted_1,Sorted by FRONTLINE,48,0.38244543362563416
+2,sorted_1,Sorted by FRONTLINE,49,0.41013864402959876
+2,sorted_1,Sorted by FRONTLINE,50,0.4020813637773129
+2,sorted_1,Sorted by FRONTLINE,51,0.39771407857300173
+2,sorted_1,Sorted by FRONTLINE,52,0.4053358727956472
+2,sorted_1,Sorted by FRONTLINE,53,0.39719282191401073
+2,sorted_1,Sorted by FRONTLINE,54,0.3761604048087938
+2,sorted_1,Sorted by FRONTLINE,55,0.41881086958851277
+2,sorted_1,Sorted by FRONTLINE,56,0.3795671234219986
+2,sorted_1,Sorted by FRONTLINE,57,0.40295989862505494
+2,sorted_1,Sorted by FRONTLINE,58,0.39978025261221467
+2,sorted_1,Sorted by FRONTLINE,59,0.4157899866574826
+2,sorted_1,Sorted by FRONTLINE,60,0.4090798490020166
+2,sorted_1,Sorted by FRONTLINE,61,0.4093625180882522
+2,sorted_1,Sorted by FRONTLINE,62,0.39498689000791715
+2,sorted_1,Sorted by FRONTLINE,63,0.42504980073826154
+2,sorted_1,Sorted by FRONTLINE,64,0.39643779295558457
+2,sorted_1,Sorted by FRONTLINE,65,0.3923440281139819
+2,sorted_1,Sorted by FRONTLINE,66,0.4047733087420411
+2,sorted_1,Sorted by FRONTLINE,67,0.37047932373212455
+2,sorted_1,Sorted by FRONTLINE,68,0.38846059017010853
+2,sorted_1,Sorted by FRONTLINE,69,0.4040143636086047
+2,sorted_1,Sorted by FRONTLINE,70,0.4154097269557168
+2,sorted_1,Sorted by FRONTLINE,71,0.4216782997710492
+2,sorted_1,Sorted by FRONTLINE,72,0.4152069479263584
+2,sorted_1,Sorted by FRONTLINE,73,0.4119599703509768
+2,sorted_1,Sorted by FRONTLINE,74,0.4034613773836227
+2,sorted_1,Sorted by FRONTLINE,75,0.4279806593384933
+2,sorted_1,Sorted by FRONTLINE,76,0.41706820803862166
+2,sorted_1,Sorted by FRONTLINE,77,0.40019661053192757
+2,sorted_1,Sorted by FRONTLINE,78,0.4206720451846854
+2,sorted_1,Sorted by FRONTLINE,79,0.39960012839975534
+2,sorted_1,Sorted by FRONTLINE,80,0.3957294757052763
+2,sorted_1,Sorted by FRONTLINE,81,0.3996494616943548
+2,sorted_1,Sorted by FRONTLINE,82,0.4361871389771487
+2,sorted_1,Sorted by FRONTLINE,83,0.3897139736348317
+2,sorted_1,Sorted by FRONTLINE,84,0.39931890611281545
+2,sorted_1,Sorted by FRONTLINE,85,0.4009462384188871
+2,sorted_1,Sorted by FRONTLINE,86,0.39430094026550766
+2,sorted_1,Sorted by FRONTLINE,87,0.4301485308080293
+2,sorted_1,Sorted by FRONTLINE,88,0.3889885203189653
+2,sorted_1,Sorted by FRONTLINE,89,0.4103147441054323
+2,sorted_1,Sorted by FRONTLINE,90,0.39331147582246084
+2,sorted_1,Sorted by FRONTLINE,91,0.41329272754228297
+2,sorted_1,Sorted by FRONTLINE,92,0.4297352081660071
+2,sorted_1,Sorted by FRONTLINE,93,0.3990734417481405
+2,sorted_1,Sorted by FRONTLINE,94,0.3988515639772987
+2,sorted_1,Sorted by FRONTLINE,95,0.43278435627222583
+2,sorted_1,Sorted by FRONTLINE,96,0.3845684907707117
+2,sorted_1,Sorted by FRONTLINE,97,0.39628928115026596
+2,sorted_1,Sorted by FRONTLINE,98,0.4065491127904648
+2,sorted_1,Sorted by FRONTLINE,99,0.4085750820228812
+2,sorted_2,Sorted by WILH Wilhelmsen B,0,0.48524704401662
+2,sorted_2,Sorted by WILH Wilhelmsen B,1,0.4791338512651664
+2,sorted_2,Sorted by WILH Wilhelmsen B,2,0.5046788117148163
+2,sorted_2,Sorted by WILH Wilhelmsen B,3,0.47904408517162567
+2,sorted_2,Sorted by WILH Wilhelmsen B,4,0.49168958070906016
+2,sorted_2,Sorted by WILH Wilhelmsen B,5,0.5026080756790076
+2,sorted_2,Sorted by WILH Wilhelmsen B,6,0.5018267887209734
+2,sorted_2,Sorted by WILH Wilhelmsen B,7,0.4920278923373265
+2,sorted_2,Sorted by WILH Wilhelmsen B,8,0.4845441801165243
+2,sorted_2,Sorted by WILH Wilhelmsen B,9,0.5231008802551219
+2,sorted_2,Sorted by WILH Wilhelmsen B,10,0.4942168916820597
+2,sorted_2,Sorted by WILH Wilhelmsen B,11,0.5080890724666288
+2,sorted_2,Sorted by WILH Wilhelmsen B,12,0.48056249333065054
+2,sorted_2,Sorted by WILH Wilhelmsen B,13,0.4917239125733464
+2,sorted_2,Sorted by WILH Wilhelmsen B,14,0.496472587448863
+2,sorted_2,Sorted by WILH Wilhelmsen B,15,0.4895607696964357
+2,sorted_2,Sorted by WILH Wilhelmsen B,16,0.49156697082448164
+2,sorted_2,Sorted by WILH Wilhelmsen B,17,0.49395393643900837
+2,sorted_2,Sorted by WILH Wilhelmsen B,18,0.5086197384269663
+2,sorted_2,Sorted by WILH Wilhelmsen B,19,0.47142150115929304
+2,sorted_2,Sorted by WILH Wilhelmsen B,20,0.49541315823101795
+2,sorted_2,Sorted by WILH Wilhelmsen B,21,0.5141418829888107
+2,sorted_2,Sorted by WILH Wilhelmsen B,22,0.48753552030355685
+2,sorted_2,Sorted by WILH Wilhelmsen B,23,0.4936968929951735
+2,sorted_2,Sorted by WILH Wilhelmsen B,24,0.49128585993416396
+2,sorted_2,Sorted by WILH Wilhelmsen B,25,0.5002098494752479
+2,sorted_2,Sorted by WILH Wilhelmsen B,26,0.4816987952111745
+2,sorted_2,Sorted by WILH Wilhelmsen B,27,0.49425119340627677
+2,sorted_2,Sorted by WILH Wilhelmsen B,28,0.5072742798082254
+2,sorted_2,Sorted by WILH Wilhelmsen B,29,0.4924785285822875
+2,sorted_2,Sorted by WILH Wilhelmsen B,30,0.47660858798580163
+2,sorted_2,Sorted by WILH Wilhelmsen B,31,0.47350599409483163
+2,sorted_2,Sorted by WILH Wilhelmsen B,32,0.5104013380301944
+2,sorted_2,Sorted by WILH Wilhelmsen B,33,0.48812082131834583
+2,sorted_2,Sorted by WILH Wilhelmsen B,34,0.4837262534149661
+2,sorted_2,Sorted by WILH Wilhelmsen B,35,0.4840691856410038
+2,sorted_2,Sorted by WILH Wilhelmsen B,36,0.49968938111761635
+2,sorted_2,Sorted by WILH Wilhelmsen B,37,0.47586735904834937
+2,sorted_2,Sorted by WILH Wilhelmsen B,38,0.4862014578719892
+2,sorted_2,Sorted by WILH Wilhelmsen B,39,0.4908882833291763
+2,sorted_2,Sorted by WILH Wilhelmsen B,40,0.47826119813301216
+2,sorted_2,Sorted by WILH Wilhelmsen B,41,0.49835819080502197
+2,sorted_2,Sorted by WILH Wilhelmsen B,42,0.49138344055775357
+2,sorted_2,Sorted by WILH Wilhelmsen B,43,0.48645238801339896
+2,sorted_2,Sorted by WILH Wilhelmsen B,44,0.49876801093546963
+2,sorted_2,Sorted by WILH Wilhelmsen B,45,0.4758581485704671
+2,sorted_2,Sorted by WILH Wilhelmsen B,46,0.520038247951041
+2,sorted_2,Sorted by WILH Wilhelmsen B,47,0.49415040692291656
+2,sorted_2,Sorted by WILH Wilhelmsen B,48,0.49033855235276896
+2,sorted_2,Sorted by WILH Wilhelmsen B,49,0.47995013101437517
+2,sorted_2,Sorted by WILH Wilhelmsen B,50,0.4868946021606775
+2,sorted_2,Sorted by WILH Wilhelmsen B,51,0.5092067922603944
+2,sorted_2,Sorted by WILH Wilhelmsen B,52,0.4957124399396842
+2,sorted_2,Sorted by WILH Wilhelmsen B,53,0.4809315874526656
+2,sorted_2,Sorted by WILH Wilhelmsen B,54,0.4790858455249317
+2,sorted_2,Sorted by WILH Wilhelmsen B,55,0.4980222824600951
+2,sorted_2,Sorted by WILH Wilhelmsen B,56,0.4818849137464282
+2,sorted_2,Sorted by WILH Wilhelmsen B,57,0.4925971098279313
+2,sorted_2,Sorted by WILH Wilhelmsen B,58,0.4735583686853339
+2,sorted_2,Sorted by WILH Wilhelmsen B,59,0.5012074079468172
+2,sorted_2,Sorted by WILH Wilhelmsen B,60,0.5240297272345769
+2,sorted_2,Sorted by WILH Wilhelmsen B,61,0.4969002947877012
+2,sorted_2,Sorted by WILH Wilhelmsen B,62,0.5014822996032209
+2,sorted_2,Sorted by WILH Wilhelmsen B,63,0.5123943955800794
+2,sorted_2,Sorted by WILH Wilhelmsen B,64,0.5122031101968341
+2,sorted_2,Sorted by WILH Wilhelmsen B,65,0.508104974072135
+2,sorted_2,Sorted by WILH Wilhelmsen B,66,0.5030480548415582
+2,sorted_2,Sorted by WILH Wilhelmsen B,67,0.477717231412614
+2,sorted_2,Sorted by WILH Wilhelmsen B,68,0.47644010723079855
+2,sorted_2,Sorted by WILH Wilhelmsen B,69,0.4693054306791247
+2,sorted_2,Sorted by WILH Wilhelmsen B,70,0.5136583630643232
+2,sorted_2,Sorted by WILH Wilhelmsen B,71,0.5081526328544359
+2,sorted_2,Sorted by WILH Wilhelmsen B,72,0.5283538604020418
+2,sorted_2,Sorted by WILH Wilhelmsen B,73,0.4795354256504632
+2,sorted_2,Sorted by WILH Wilhelmsen B,74,0.4777358268583352
+2,sorted_2,Sorted by WILH Wilhelmsen B,75,0.49174262915814526
+2,sorted_2,Sorted by WILH Wilhelmsen B,76,0.515531355868006
+2,sorted_2,Sorted by WILH Wilhelmsen B,77,0.4747799879848485
+2,sorted_2,Sorted by WILH Wilhelmsen B,78,0.5219608165156114
+2,sorted_2,Sorted by WILH Wilhelmsen B,79,0.4940954142398189
+2,sorted_2,Sorted by WILH Wilhelmsen B,80,0.48435864080639207
+2,sorted_2,Sorted by WILH Wilhelmsen B,81,0.500254310636213
+2,sorted_2,Sorted by WILH Wilhelmsen B,82,0.49526175894432534
+2,sorted_2,Sorted by WILH Wilhelmsen B,83,0.5020789244763948
+2,sorted_2,Sorted by WILH Wilhelmsen B,84,0.5099977507101072
+2,sorted_2,Sorted by WILH Wilhelmsen B,85,0.4757101606119035
+2,sorted_2,Sorted by WILH Wilhelmsen B,86,0.49143364005539886
+2,sorted_2,Sorted by WILH Wilhelmsen B,87,0.5101260793945005
+2,sorted_2,Sorted by WILH Wilhelmsen B,88,0.474738390914814
+2,sorted_2,Sorted by WILH Wilhelmsen B,89,0.49483493095434383
+2,sorted_2,Sorted by WILH Wilhelmsen B,90,0.49587200155517785
+2,sorted_2,Sorted by WILH Wilhelmsen B,91,0.4932951326203201
+2,sorted_2,Sorted by WILH Wilhelmsen B,92,0.504489303694596
+2,sorted_2,Sorted by WILH Wilhelmsen B,93,0.4800735526952089
+2,sorted_2,Sorted by WILH Wilhelmsen B,94,0.4887480282859319
+2,sorted_2,Sorted by WILH Wilhelmsen B,95,0.5167601591431638
+2,sorted_2,Sorted by WILH Wilhelmsen B,96,0.5012976649207164
+2,sorted_2,Sorted by WILH Wilhelmsen B,97,0.5051682383206183
+2,sorted_2,Sorted by WILH Wilhelmsen B,98,0.4730787434109608
+2,sorted_2,Sorted by WILH Wilhelmsen B,99,0.49590121297557394
+2,sorted_3,Sorted by TOMRA SYSTEMS,0,0.4919781065199081
+2,sorted_3,Sorted by TOMRA SYSTEMS,1,0.5025407919309061
+2,sorted_3,Sorted by TOMRA SYSTEMS,2,0.5153979594870696
+2,sorted_3,Sorted by TOMRA SYSTEMS,3,0.49957157023261994
+2,sorted_3,Sorted by TOMRA SYSTEMS,4,0.500665042860219
+2,sorted_3,Sorted by TOMRA SYSTEMS,5,0.5059337585175904
+2,sorted_3,Sorted by TOMRA SYSTEMS,6,0.5185539746066725
+2,sorted_3,Sorted by TOMRA SYSTEMS,7,0.5029658607196974
+2,sorted_3,Sorted by TOMRA SYSTEMS,8,0.49468514078598863
+2,sorted_3,Sorted by TOMRA SYSTEMS,9,0.548208400309972
+2,sorted_3,Sorted by TOMRA SYSTEMS,10,0.5088795147110865
+2,sorted_3,Sorted by TOMRA SYSTEMS,11,0.5162539457368348
+2,sorted_3,Sorted by TOMRA SYSTEMS,12,0.5009356622277458
+2,sorted_3,Sorted by TOMRA SYSTEMS,13,0.5000972034338853
+2,sorted_3,Sorted by TOMRA SYSTEMS,14,0.5159954785724853
+2,sorted_3,Sorted by TOMRA SYSTEMS,15,0.4907726774219749
+2,sorted_3,Sorted by TOMRA SYSTEMS,16,0.5125036700251102
+2,sorted_3,Sorted by TOMRA SYSTEMS,17,0.5092850394855413
+2,sorted_3,Sorted by TOMRA SYSTEMS,18,0.4886771915702358
+2,sorted_3,Sorted by TOMRA SYSTEMS,19,0.4998772241061159
+2,sorted_3,Sorted by TOMRA SYSTEMS,20,0.5009101998674579
+2,sorted_3,Sorted by TOMRA SYSTEMS,21,0.5030623933394425
+2,sorted_3,Sorted by TOMRA SYSTEMS,22,0.49783455189620884
+2,sorted_3,Sorted by TOMRA SYSTEMS,23,0.5115118029070993
+2,sorted_3,Sorted by TOMRA SYSTEMS,24,0.4914741562843518
+2,sorted_3,Sorted by TOMRA SYSTEMS,25,0.5345606860226042
+2,sorted_3,Sorted by TOMRA SYSTEMS,26,0.4914245385354949
+2,sorted_3,Sorted by TOMRA SYSTEMS,27,0.4895137654474588
+2,sorted_3,Sorted by TOMRA SYSTEMS,28,0.5327036122987314
+2,sorted_3,Sorted by TOMRA SYSTEMS,29,0.5137786432867427
+2,sorted_3,Sorted by TOMRA SYSTEMS,30,0.5103056000733729
+2,sorted_3,Sorted by TOMRA SYSTEMS,31,0.48445652915509585
+2,sorted_3,Sorted by TOMRA SYSTEMS,32,0.49687630340005406
+2,sorted_3,Sorted by TOMRA SYSTEMS,33,0.5092955353886234
+2,sorted_3,Sorted by TOMRA SYSTEMS,34,0.48735887243048737
+2,sorted_3,Sorted by TOMRA SYSTEMS,35,0.5068897749599702
+2,sorted_3,Sorted by TOMRA SYSTEMS,36,0.5169859639655139
+2,sorted_3,Sorted by TOMRA SYSTEMS,37,0.48550137584831854
+2,sorted_3,Sorted by TOMRA SYSTEMS,38,0.5087257662037709
+2,sorted_3,Sorted by TOMRA SYSTEMS,39,0.5036143749821941
+2,sorted_3,Sorted by TOMRA SYSTEMS,40,0.4938073235018542
+2,sorted_3,Sorted by TOMRA SYSTEMS,41,0.5246898319971044
+2,sorted_3,Sorted by TOMRA SYSTEMS,42,0.5033211189148262
+2,sorted_3,Sorted by TOMRA SYSTEMS,43,0.5024657419442933
+2,sorted_3,Sorted by TOMRA SYSTEMS,44,0.5050862508352767
+2,sorted_3,Sorted by TOMRA SYSTEMS,45,0.5138801276614394
+2,sorted_3,Sorted by TOMRA SYSTEMS,46,0.5128952594570937
+2,sorted_3,Sorted by TOMRA SYSTEMS,47,0.49596680608819876
+2,sorted_3,Sorted by TOMRA SYSTEMS,48,0.5002879466784121
+2,sorted_3,Sorted by TOMRA SYSTEMS,49,0.5033743994413642
+2,sorted_3,Sorted by TOMRA SYSTEMS,50,0.5042703676464337
+2,sorted_3,Sorted by TOMRA SYSTEMS,51,0.5019869422196551
+2,sorted_3,Sorted by TOMRA SYSTEMS,52,0.5073202845654383
+2,sorted_3,Sorted by TOMRA SYSTEMS,53,0.4972948289793033
+2,sorted_3,Sorted by TOMRA SYSTEMS,54,0.47386305860349526
+2,sorted_3,Sorted by TOMRA SYSTEMS,55,0.5042989392078785
+2,sorted_3,Sorted by TOMRA SYSTEMS,56,0.4808043404765333
+2,sorted_3,Sorted by TOMRA SYSTEMS,57,0.5136837849475362
+2,sorted_3,Sorted by TOMRA SYSTEMS,58,0.4986839613550338
+2,sorted_3,Sorted by TOMRA SYSTEMS,59,0.5242103671990885
+2,sorted_3,Sorted by TOMRA SYSTEMS,60,0.5144446839497285
+2,sorted_3,Sorted by TOMRA SYSTEMS,61,0.5078602606052318
+2,sorted_3,Sorted by TOMRA SYSTEMS,62,0.5061931759525296
+2,sorted_3,Sorted by TOMRA SYSTEMS,63,0.5409039637415333
+2,sorted_3,Sorted by TOMRA SYSTEMS,64,0.49548955555004254
+2,sorted_3,Sorted by TOMRA SYSTEMS,65,0.49856910970266144
+2,sorted_3,Sorted by TOMRA SYSTEMS,66,0.499541705327849
+2,sorted_3,Sorted by TOMRA SYSTEMS,67,0.476654687270411
+2,sorted_3,Sorted by TOMRA SYSTEMS,68,0.4829252316560248
+2,sorted_3,Sorted by TOMRA SYSTEMS,69,0.5006289383443564
+2,sorted_3,Sorted by TOMRA SYSTEMS,70,0.5037391289733337
+2,sorted_3,Sorted by TOMRA SYSTEMS,71,0.5090254078589249
+2,sorted_3,Sorted by TOMRA SYSTEMS,72,0.5200180254134757
+2,sorted_3,Sorted by TOMRA SYSTEMS,73,0.4972144262711484
+2,sorted_3,Sorted by TOMRA SYSTEMS,74,0.4991610252348743
+2,sorted_3,Sorted by TOMRA SYSTEMS,75,0.5180967968195261
+2,sorted_3,Sorted by TOMRA SYSTEMS,76,0.5469241704594235
+2,sorted_3,Sorted by TOMRA SYSTEMS,77,0.5080329587433652
+2,sorted_3,Sorted by TOMRA SYSTEMS,78,0.5187418359807547
+2,sorted_3,Sorted by TOMRA SYSTEMS,79,0.4847469771929169
+2,sorted_3,Sorted by TOMRA SYSTEMS,80,0.4994015579337972
+2,sorted_3,Sorted by TOMRA SYSTEMS,81,0.5182034931644964
+2,sorted_3,Sorted by TOMRA SYSTEMS,82,0.5263496024787233
+2,sorted_3,Sorted by TOMRA SYSTEMS,83,0.5101020119873696
+2,sorted_3,Sorted by TOMRA SYSTEMS,84,0.5009616652144775
+2,sorted_3,Sorted by TOMRA SYSTEMS,85,0.4727911569649018
+2,sorted_3,Sorted by TOMRA SYSTEMS,86,0.5186781014222199
+2,sorted_3,Sorted by TOMRA SYSTEMS,87,0.5132376606969344
+2,sorted_3,Sorted by TOMRA SYSTEMS,88,0.4939038489999075
+2,sorted_3,Sorted by TOMRA SYSTEMS,89,0.5191052918578231
+2,sorted_3,Sorted by TOMRA SYSTEMS,90,0.5028376563351613
+2,sorted_3,Sorted by TOMRA SYSTEMS,91,0.5462598115610358
+2,sorted_3,Sorted by TOMRA SYSTEMS,92,0.49876183035629057
+2,sorted_3,Sorted by TOMRA SYSTEMS,93,0.49755393164358674
+2,sorted_3,Sorted by TOMRA SYSTEMS,94,0.504101140871464
+2,sorted_3,Sorted by TOMRA SYSTEMS,95,0.5255088360173794
+2,sorted_3,Sorted by TOMRA SYSTEMS,96,0.49194661615293317
+2,sorted_3,Sorted by TOMRA SYSTEMS,97,0.4901178414946341
+2,sorted_3,Sorted by TOMRA SYSTEMS,98,0.5102050367447186
+2,sorted_3,Sorted by TOMRA SYSTEMS,99,0.5295527946811721
+2,baseline_seed_0,baseline seed 0,0,2.1596354001035913
+2,baseline_seed_0,baseline seed 0,1,2.5328814959817696
+2,baseline_seed_0,baseline seed 0,2,2.0930782726560397
+2,baseline_seed_0,baseline seed 0,3,2.4600876810036545
+2,baseline_seed_0,baseline seed 0,4,1.9969338197351778
+2,baseline_seed_0,baseline seed 0,5,2.022871012118902
+2,baseline_seed_0,baseline seed 0,6,2.2811608511246084
+2,baseline_seed_0,baseline seed 0,7,1.8312741896257707
+2,baseline_seed_0,baseline seed 0,8,2.820327383594948
+2,baseline_seed_0,baseline seed 0,9,2.412269396034694
+2,baseline_seed_0,baseline seed 0,10,2.1653634084067654
+2,baseline_seed_0,baseline seed 0,11,2.3699778719025004
+2,baseline_seed_0,baseline seed 0,12,2.584944024338186
+2,baseline_seed_0,baseline seed 0,13,1.7445283451978963
+2,baseline_seed_0,baseline seed 0,14,2.3482836728156515
+2,baseline_seed_0,baseline seed 0,15,2.443652690698155
+2,baseline_seed_0,baseline seed 0,16,2.1286817319919837
+2,baseline_seed_0,baseline seed 0,17,1.937377511877132
+2,baseline_seed_0,baseline seed 0,18,2.059490064436963
+2,baseline_seed_0,baseline seed 0,19,1.8303474547629235
+2,baseline_seed_0,baseline seed 0,20,1.8589085660794888
+2,baseline_seed_0,baseline seed 0,21,2.431675419049935
+2,baseline_seed_0,baseline seed 0,22,1.8351441871633964
+2,baseline_seed_0,baseline seed 0,23,2.3761553282132275
+2,baseline_seed_0,baseline seed 0,24,2.0404176078325458
+2,baseline_seed_0,baseline seed 0,25,2.330780119195508
+2,baseline_seed_0,baseline seed 0,26,1.8507556342841232
+2,baseline_seed_0,baseline seed 0,27,2.0560450090763664
+2,baseline_seed_0,baseline seed 0,28,2.1299079462382875
+2,baseline_seed_0,baseline seed 0,29,2.1536138721430294
+2,baseline_seed_0,baseline seed 0,30,2.2179710454986536
+2,baseline_seed_0,baseline seed 0,31,2.0072433968340193
+2,baseline_seed_0,baseline seed 0,32,2.365803796256328
+2,baseline_seed_0,baseline seed 0,33,1.9497408210931908
+2,baseline_seed_0,baseline seed 0,34,2.376866368451249
+2,baseline_seed_0,baseline seed 0,35,2.0569833467923777
+2,baseline_seed_0,baseline seed 0,36,2.0657207815177023
+2,baseline_seed_0,baseline seed 0,37,2.048603305612417
+2,baseline_seed_0,baseline seed 0,38,2.4557434761837698
+2,baseline_seed_0,baseline seed 0,39,1.9196817870213914
+2,baseline_seed_0,baseline seed 0,40,2.56450633437678
+2,baseline_seed_0,baseline seed 0,41,2.4604734282677496
+2,baseline_seed_0,baseline seed 0,42,2.425858332352862
+2,baseline_seed_0,baseline seed 0,43,2.531086524065911
+2,baseline_seed_0,baseline seed 0,44,2.384035348094954
+2,baseline_seed_0,baseline seed 0,45,2.316689088635101
+2,baseline_seed_0,baseline seed 0,46,1.8367981177202526
+2,baseline_seed_0,baseline seed 0,47,2.086922892569987
+2,baseline_seed_0,baseline seed 0,48,2.27847271033686
+2,baseline_seed_0,baseline seed 0,49,1.989281667502627
+2,baseline_seed_0,baseline seed 0,50,2.0545730883709363
+2,baseline_seed_0,baseline seed 0,51,2.1475266234547363
+2,baseline_seed_0,baseline seed 0,52,2.317542098709103
+2,baseline_seed_0,baseline seed 0,53,2.2005581782479866
+2,baseline_seed_0,baseline seed 0,54,2.3178136275060717
+2,baseline_seed_0,baseline seed 0,55,2.673719039941964
+2,baseline_seed_0,baseline seed 0,56,1.994061773588508
+2,baseline_seed_0,baseline seed 0,57,2.0749960746234475
+2,baseline_seed_0,baseline seed 0,58,1.8713321163876013
+2,baseline_seed_0,baseline seed 0,59,2.2594632239316232
+2,baseline_seed_0,baseline seed 0,60,1.941297445220143
+2,baseline_seed_0,baseline seed 0,61,2.4346615706906984
+2,baseline_seed_0,baseline seed 0,62,1.8649963235779454
+2,baseline_seed_0,baseline seed 0,63,2.5246140209825567
+2,baseline_seed_0,baseline seed 0,64,2.1190289873432775
+2,baseline_seed_0,baseline seed 0,65,2.778546597325633
+2,baseline_seed_0,baseline seed 0,66,2.3971931077687896
+2,baseline_seed_0,baseline seed 0,67,1.897525560453422
+2,baseline_seed_0,baseline seed 0,68,2.191051355129137
+2,baseline_seed_0,baseline seed 0,69,1.9328336248876046
+2,baseline_seed_0,baseline seed 0,70,2.4534711653984047
+2,baseline_seed_0,baseline seed 0,71,2.003359798612595
+2,baseline_seed_0,baseline seed 0,72,2.1182781307404905
+2,baseline_seed_0,baseline seed 0,73,1.8252026830497272
+2,baseline_seed_0,baseline seed 0,74,2.34173137402287
+2,baseline_seed_0,baseline seed 0,75,2.1232030049644997
+2,baseline_seed_0,baseline seed 0,76,2.124863991388638
+2,baseline_seed_0,baseline seed 0,77,2.4943103594244818
+2,baseline_seed_0,baseline seed 0,78,2.5396370420880037
+2,baseline_seed_0,baseline seed 0,79,2.20596315816872
+2,baseline_seed_0,baseline seed 0,80,2.2376028352895885
+2,baseline_seed_0,baseline seed 0,81,2.387784589207068
+2,baseline_seed_0,baseline seed 0,82,2.0160419476994136
+2,baseline_seed_0,baseline seed 0,83,2.0458495485618324
+2,baseline_seed_0,baseline seed 0,84,2.10550281010996
+2,baseline_seed_0,baseline seed 0,85,2.3514405767265405
+2,baseline_seed_0,baseline seed 0,86,2.44891735573801
+2,baseline_seed_0,baseline seed 0,87,2.397617076059456
+2,baseline_seed_0,baseline seed 0,88,2.265435536495188
+2,baseline_seed_0,baseline seed 0,89,2.4018785415533475
+2,baseline_seed_0,baseline seed 0,90,2.148598190936056
+2,baseline_seed_0,baseline seed 0,91,2.134865453354839
+2,baseline_seed_0,baseline seed 0,92,2.245919938935527
+2,baseline_seed_0,baseline seed 0,93,1.985340523445913
+2,baseline_seed_0,baseline seed 0,94,2.2776919014470485
+2,baseline_seed_0,baseline seed 0,95,1.842697825769365
+2,baseline_seed_0,baseline seed 0,96,2.2064881933401317
+2,baseline_seed_0,baseline seed 0,97,2.1848505538744942
+2,baseline_seed_0,baseline seed 0,98,1.7844982851441016
+2,baseline_seed_0,baseline seed 0,99,1.696959049919832
+2,baseline_seed_1,baseline seed 1,0,2.182738670823575
+2,baseline_seed_1,baseline seed 1,1,2.8098266691101306
+2,baseline_seed_1,baseline seed 1,2,2.567523348718072
+2,baseline_seed_1,baseline seed 1,3,2.5315070484407207
+2,baseline_seed_1,baseline seed 1,4,2.590454611861857
+2,baseline_seed_1,baseline seed 1,5,2.3169892919234814
+2,baseline_seed_1,baseline seed 1,6,2.43967093034142
+2,baseline_seed_1,baseline seed 1,7,2.3205882325557146
+2,baseline_seed_1,baseline seed 1,8,2.189533985897814
+2,baseline_seed_1,baseline seed 1,9,2.436970363836866
+2,baseline_seed_1,baseline seed 1,10,2.4376372633422703
+2,baseline_seed_1,baseline seed 1,11,2.3267353492331835
+2,baseline_seed_1,baseline seed 1,12,2.3499760989739378
+2,baseline_seed_1,baseline seed 1,13,2.244588676993026
+2,baseline_seed_1,baseline seed 1,14,2.2930080520839775
+2,baseline_seed_1,baseline seed 1,15,2.3970178723774866
+2,baseline_seed_1,baseline seed 1,16,2.5145550303623825
+2,baseline_seed_1,baseline seed 1,17,2.497422279119531
+2,baseline_seed_1,baseline seed 1,18,2.519793838088684
+2,baseline_seed_1,baseline seed 1,19,2.251947178763318
+2,baseline_seed_1,baseline seed 1,20,2.2186508520500348
+2,baseline_seed_1,baseline seed 1,21,2.665222991898148
+2,baseline_seed_1,baseline seed 1,22,2.2264466204002433
+2,baseline_seed_1,baseline seed 1,23,2.820294788096748
+2,baseline_seed_1,baseline seed 1,24,2.2267357406595747
+2,baseline_seed_1,baseline seed 1,25,2.227060427369866
+2,baseline_seed_1,baseline seed 1,26,2.0407986607928503
+2,baseline_seed_1,baseline seed 1,27,2.7752560989990096
+2,baseline_seed_1,baseline seed 1,28,2.382326962972824
+2,baseline_seed_1,baseline seed 1,29,2.3816188874090214
+2,baseline_seed_1,baseline seed 1,30,2.314950170165444
+2,baseline_seed_1,baseline seed 1,31,2.4077479144094336
+2,baseline_seed_1,baseline seed 1,32,2.1907293631277276
+2,baseline_seed_1,baseline seed 1,33,2.728077034818282
+2,baseline_seed_1,baseline seed 1,34,2.810066602664368
+2,baseline_seed_1,baseline seed 1,35,2.7305938390450715
+2,baseline_seed_1,baseline seed 1,36,2.3790875419051827
+2,baseline_seed_1,baseline seed 1,37,2.2014862117892084
+2,baseline_seed_1,baseline seed 1,38,2.316190815638286
+2,baseline_seed_1,baseline seed 1,39,2.7749167794669143
+2,baseline_seed_1,baseline seed 1,40,2.2203498843026686
+2,baseline_seed_1,baseline seed 1,41,2.488123203385943
+2,baseline_seed_1,baseline seed 1,42,2.3162871266756606
+2,baseline_seed_1,baseline seed 1,43,2.6379737386961364
+2,baseline_seed_1,baseline seed 1,44,3.12855309045098
+2,baseline_seed_1,baseline seed 1,45,2.4237973328861875
+2,baseline_seed_1,baseline seed 1,46,2.2689121095335834
+2,baseline_seed_1,baseline seed 1,47,2.8826578903812523
+2,baseline_seed_1,baseline seed 1,48,2.389714237873112
+2,baseline_seed_1,baseline seed 1,49,2.2393994427627995
+2,baseline_seed_1,baseline seed 1,50,2.5378505628804624
+2,baseline_seed_1,baseline seed 1,51,2.593071987498477
+2,baseline_seed_1,baseline seed 1,52,2.7867883697240314
+2,baseline_seed_1,baseline seed 1,53,2.2848949313673232
+2,baseline_seed_1,baseline seed 1,54,2.4963921807863816
+2,baseline_seed_1,baseline seed 1,55,2.9635867932043465
+2,baseline_seed_1,baseline seed 1,56,2.737894448300024
+2,baseline_seed_1,baseline seed 1,57,2.6682879946130362
+2,baseline_seed_1,baseline seed 1,58,2.3413781934637323
+2,baseline_seed_1,baseline seed 1,59,2.2435135741025753
+2,baseline_seed_1,baseline seed 1,60,2.614364462401584
+2,baseline_seed_1,baseline seed 1,61,2.5854897142736726
+2,baseline_seed_1,baseline seed 1,62,2.5222360812466436
+2,baseline_seed_1,baseline seed 1,63,2.597662133699504
+2,baseline_seed_1,baseline seed 1,64,2.422691036813627
+2,baseline_seed_1,baseline seed 1,65,2.2365814869914398
+2,baseline_seed_1,baseline seed 1,66,2.30830181462279
+2,baseline_seed_1,baseline seed 1,67,2.6264046113677244
+2,baseline_seed_1,baseline seed 1,68,2.7042128799436993
+2,baseline_seed_1,baseline seed 1,69,2.1646265985176067
+2,baseline_seed_1,baseline seed 1,70,2.3294649932467366
+2,baseline_seed_1,baseline seed 1,71,2.4733003779045832
+2,baseline_seed_1,baseline seed 1,72,2.9938644731243067
+2,baseline_seed_1,baseline seed 1,73,2.2102648254143173
+2,baseline_seed_1,baseline seed 1,74,2.2837813224097165
+2,baseline_seed_1,baseline seed 1,75,2.7334924671959353
+2,baseline_seed_1,baseline seed 1,76,2.690499471868022
+2,baseline_seed_1,baseline seed 1,77,2.343052496072508
+2,baseline_seed_1,baseline seed 1,78,3.115531548733438
+2,baseline_seed_1,baseline seed 1,79,2.487360022283373
+2,baseline_seed_1,baseline seed 1,80,2.3143205049095985
+2,baseline_seed_1,baseline seed 1,81,2.5574080560435934
+2,baseline_seed_1,baseline seed 1,82,2.5976288525803906
+2,baseline_seed_1,baseline seed 1,83,2.4691237485896584
+2,baseline_seed_1,baseline seed 1,84,2.098043171457995
+2,baseline_seed_1,baseline seed 1,85,2.235722055972212
+2,baseline_seed_1,baseline seed 1,86,2.5458891156177184
+2,baseline_seed_1,baseline seed 1,87,2.2062690204176336
+2,baseline_seed_1,baseline seed 1,88,2.711528860892445
+2,baseline_seed_1,baseline seed 1,89,2.8137218482767934
+2,baseline_seed_1,baseline seed 1,90,2.426733560075902
+2,baseline_seed_1,baseline seed 1,91,2.8499349016224387
+2,baseline_seed_1,baseline seed 1,92,2.1375873947712667
+2,baseline_seed_1,baseline seed 1,93,2.3956021328566406
+2,baseline_seed_1,baseline seed 1,94,2.4776251818760615
+2,baseline_seed_1,baseline seed 1,95,3.0563170429643103
+2,baseline_seed_1,baseline seed 1,96,2.8046056220999587
+2,baseline_seed_1,baseline seed 1,97,2.3770401425621235
+2,baseline_seed_1,baseline seed 1,98,2.4065828558886717
+2,baseline_seed_1,baseline seed 1,99,2.454305056978062
+2,baseline_seed_2,baseline seed 2,0,2.6386458944177367
+2,baseline_seed_2,baseline seed 2,1,2.541585488162682
+2,baseline_seed_2,baseline seed 2,2,2.3663132504809132
+2,baseline_seed_2,baseline seed 2,3,2.4199302367258335
+2,baseline_seed_2,baseline seed 2,4,2.329197559279469
+2,baseline_seed_2,baseline seed 2,5,2.6158388416326543
+2,baseline_seed_2,baseline seed 2,6,2.4261607973861343
+2,baseline_seed_2,baseline seed 2,7,2.7415552120566233
+2,baseline_seed_2,baseline seed 2,8,2.747762487569785
+2,baseline_seed_2,baseline seed 2,9,2.3666985031044763
+2,baseline_seed_2,baseline seed 2,10,2.732835858874181
+2,baseline_seed_2,baseline seed 2,11,2.6920064091878766
+2,baseline_seed_2,baseline seed 2,12,2.4180731424711714
+2,baseline_seed_2,baseline seed 2,13,2.3381213927763618
+2,baseline_seed_2,baseline seed 2,14,2.4376622998883355
+2,baseline_seed_2,baseline seed 2,15,2.6788707279551023
+2,baseline_seed_2,baseline seed 2,16,2.565266225898944
+2,baseline_seed_2,baseline seed 2,17,2.4888488510233584
+2,baseline_seed_2,baseline seed 2,18,2.9340652428962333
+2,baseline_seed_2,baseline seed 2,19,2.337931424322714
+2,baseline_seed_2,baseline seed 2,20,2.1857166073543692
+2,baseline_seed_2,baseline seed 2,21,2.521811481720429
+2,baseline_seed_2,baseline seed 2,22,2.333398205557012
+2,baseline_seed_2,baseline seed 2,23,2.830346410730636
+2,baseline_seed_2,baseline seed 2,24,2.469330052352844
+2,baseline_seed_2,baseline seed 2,25,2.5710675559668514
+2,baseline_seed_2,baseline seed 2,26,2.261445744301693
+2,baseline_seed_2,baseline seed 2,27,2.219435755660866
+2,baseline_seed_2,baseline seed 2,28,2.534470939321129
+2,baseline_seed_2,baseline seed 2,29,2.4385373597945943
+2,baseline_seed_2,baseline seed 2,30,2.4938850602640965
+2,baseline_seed_2,baseline seed 2,31,2.551563284137728
+2,baseline_seed_2,baseline seed 2,32,2.535565898507113
+2,baseline_seed_2,baseline seed 2,33,2.4546257597557775
+2,baseline_seed_2,baseline seed 2,34,2.4027608195121064
+2,baseline_seed_2,baseline seed 2,35,2.594756489019215
+2,baseline_seed_2,baseline seed 2,36,2.3589607094176146
+2,baseline_seed_2,baseline seed 2,37,2.6658286195449654
+2,baseline_seed_2,baseline seed 2,38,2.340582194132324
+2,baseline_seed_2,baseline seed 2,39,2.3865602248223188
+2,baseline_seed_2,baseline seed 2,40,2.6733597319051077
+2,baseline_seed_2,baseline seed 2,41,2.702612276836491
+2,baseline_seed_2,baseline seed 2,42,2.151850158933986
+2,baseline_seed_2,baseline seed 2,43,2.512609645158768
+2,baseline_seed_2,baseline seed 2,44,2.6457609145357237
+2,baseline_seed_2,baseline seed 2,45,2.4542336713423034
+2,baseline_seed_2,baseline seed 2,46,2.847420149386293
+2,baseline_seed_2,baseline seed 2,47,2.7418977657183037
+2,baseline_seed_2,baseline seed 2,48,2.6155695350096315
+2,baseline_seed_2,baseline seed 2,49,2.138785780639578
+2,baseline_seed_2,baseline seed 2,50,2.2659593578548587
+2,baseline_seed_2,baseline seed 2,51,2.327428925823701
+2,baseline_seed_2,baseline seed 2,52,2.5279940437171295
+2,baseline_seed_2,baseline seed 2,53,2.5426507718498264
+2,baseline_seed_2,baseline seed 2,54,2.4137621133458316
+2,baseline_seed_2,baseline seed 2,55,2.491766488455784
+2,baseline_seed_2,baseline seed 2,56,2.374602784491367
+2,baseline_seed_2,baseline seed 2,57,2.7341298703520778
+2,baseline_seed_2,baseline seed 2,58,2.694028672438169
+2,baseline_seed_2,baseline seed 2,59,2.677726722743805
+2,baseline_seed_2,baseline seed 2,60,2.400946148190454
+2,baseline_seed_2,baseline seed 2,61,2.2264573548799524
+2,baseline_seed_2,baseline seed 2,62,2.4697410202407015
+2,baseline_seed_2,baseline seed 2,63,2.67052117387154
+2,baseline_seed_2,baseline seed 2,64,2.807031923860135
+2,baseline_seed_2,baseline seed 2,65,2.4645770943661693
+2,baseline_seed_2,baseline seed 2,66,2.6998555027622424
+2,baseline_seed_2,baseline seed 2,67,2.2311043628466067
+2,baseline_seed_2,baseline seed 2,68,2.2546876133007667
+2,baseline_seed_2,baseline seed 2,69,2.268150819911151
+2,baseline_seed_2,baseline seed 2,70,2.371302562509584
+2,baseline_seed_2,baseline seed 2,71,2.43112948411751
+2,baseline_seed_2,baseline seed 2,72,2.412271100481549
+2,baseline_seed_2,baseline seed 2,73,2.557265516070692
+2,baseline_seed_2,baseline seed 2,74,2.2780563652101193
+2,baseline_seed_2,baseline seed 2,75,2.2655591768214163
+2,baseline_seed_2,baseline seed 2,76,2.246554682986969
+2,baseline_seed_2,baseline seed 2,77,2.5875179387006484
+2,baseline_seed_2,baseline seed 2,78,2.657583131411943
+2,baseline_seed_2,baseline seed 2,79,2.447729074897097
+2,baseline_seed_2,baseline seed 2,80,2.33309676117168
+2,baseline_seed_2,baseline seed 2,81,2.2654943839853945
+2,baseline_seed_2,baseline seed 2,82,2.4107827140943425
+2,baseline_seed_2,baseline seed 2,83,2.350248300412251
+2,baseline_seed_2,baseline seed 2,84,2.6480273537271484
+2,baseline_seed_2,baseline seed 2,85,2.6054472664266117
+2,baseline_seed_2,baseline seed 2,86,2.3775166227447846
+2,baseline_seed_2,baseline seed 2,87,2.662022738217923
+2,baseline_seed_2,baseline seed 2,88,2.590146987386258
+2,baseline_seed_2,baseline seed 2,89,2.5154095165493833
+2,baseline_seed_2,baseline seed 2,90,2.4267336183166686
+2,baseline_seed_2,baseline seed 2,91,2.6515031150612383
+2,baseline_seed_2,baseline seed 2,92,2.25617798057771
+2,baseline_seed_2,baseline seed 2,93,2.502505187829145
+2,baseline_seed_2,baseline seed 2,94,2.740906128564982
+2,baseline_seed_2,baseline seed 2,95,2.3497246204378635
+2,baseline_seed_2,baseline seed 2,96,2.5340574839833123
+2,baseline_seed_2,baseline seed 2,97,2.83522499640752
+2,baseline_seed_2,baseline seed 2,98,2.456094746228954
+2,baseline_seed_2,baseline seed 2,99,2.4681737567771833
+2,weight10_seed_0,weight10 seed 0,0,0.6654237157374063
+2,weight10_seed_0,weight10 seed 0,1,0.7598260355928931
+2,weight10_seed_0,weight10 seed 0,2,0.9663439723645011
+2,weight10_seed_0,weight10 seed 0,3,0.9018509200353998
+2,weight10_seed_0,weight10 seed 0,4,0.7784207748873727
+2,weight10_seed_0,weight10 seed 0,5,0.8025084728358922
+2,weight10_seed_0,weight10 seed 0,6,0.7850837536779209
+2,weight10_seed_0,weight10 seed 0,7,0.8348088235621962
+2,weight10_seed_0,weight10 seed 0,8,0.8378926360913596
+2,weight10_seed_0,weight10 seed 0,9,0.6919959486411068
+2,weight10_seed_0,weight10 seed 0,10,0.7936560344834436
+2,weight10_seed_0,weight10 seed 0,11,0.7944077976331949
+2,weight10_seed_0,weight10 seed 0,12,0.8649498025646909
+2,weight10_seed_0,weight10 seed 0,13,0.744782222848541
+2,weight10_seed_0,weight10 seed 0,14,0.9207396660470816
+2,weight10_seed_0,weight10 seed 0,15,0.7995258443684895
+2,weight10_seed_0,weight10 seed 0,16,0.7842350102149864
+2,weight10_seed_0,weight10 seed 0,17,0.6572456349632992
+2,weight10_seed_0,weight10 seed 0,18,0.8694836460631312
+2,weight10_seed_0,weight10 seed 0,19,0.759807140079383
+2,weight10_seed_0,weight10 seed 0,20,0.8096528574688217
+2,weight10_seed_0,weight10 seed 0,21,0.8883616751064373
+2,weight10_seed_0,weight10 seed 0,22,0.7707888378636739
+2,weight10_seed_0,weight10 seed 0,23,0.9051770886595816
+2,weight10_seed_0,weight10 seed 0,24,0.8177292096248016
+2,weight10_seed_0,weight10 seed 0,25,0.9316362887015153
+2,weight10_seed_0,weight10 seed 0,26,0.7956818919867067
+2,weight10_seed_0,weight10 seed 0,27,0.8245099336294495
+2,weight10_seed_0,weight10 seed 0,28,0.8242930603795051
+2,weight10_seed_0,weight10 seed 0,29,0.7474153573972038
+2,weight10_seed_0,weight10 seed 0,30,0.8125096215645456
+2,weight10_seed_0,weight10 seed 0,31,0.8075414782656744
+2,weight10_seed_0,weight10 seed 0,32,0.8952856980207071
+2,weight10_seed_0,weight10 seed 0,33,0.7388072267278885
+2,weight10_seed_0,weight10 seed 0,34,0.8403610739521297
+2,weight10_seed_0,weight10 seed 0,35,0.8571792238586652
+2,weight10_seed_0,weight10 seed 0,36,0.8150933876260454
+2,weight10_seed_0,weight10 seed 0,37,0.8889780491726439
+2,weight10_seed_0,weight10 seed 0,38,0.8591879053435223
+2,weight10_seed_0,weight10 seed 0,39,0.8281330560327892
+2,weight10_seed_0,weight10 seed 0,40,0.8234426806998512
+2,weight10_seed_0,weight10 seed 0,41,0.8046485783064773
+2,weight10_seed_0,weight10 seed 0,42,0.8283447000137111
+2,weight10_seed_0,weight10 seed 0,43,0.7752973941022976
+2,weight10_seed_0,weight10 seed 0,44,0.7879705186552909
+2,weight10_seed_0,weight10 seed 0,45,0.8808963269070633
+2,weight10_seed_0,weight10 seed 0,46,0.8876277460805747
+2,weight10_seed_0,weight10 seed 0,47,0.8450388054264654
+2,weight10_seed_0,weight10 seed 0,48,0.8324598888768605
+2,weight10_seed_0,weight10 seed 0,49,0.7315156862127074
+2,weight10_seed_0,weight10 seed 0,50,0.9319731417996167
+2,weight10_seed_0,weight10 seed 0,51,0.7471747552768802
+2,weight10_seed_0,weight10 seed 0,52,0.8113465828137754
+2,weight10_seed_0,weight10 seed 0,53,0.7697612059993917
+2,weight10_seed_0,weight10 seed 0,54,0.9115935302295892
+2,weight10_seed_0,weight10 seed 0,55,0.8111335641915258
+2,weight10_seed_0,weight10 seed 0,56,0.7944994000309348
+2,weight10_seed_0,weight10 seed 0,57,0.749946091785665
+2,weight10_seed_0,weight10 seed 0,58,0.8527886671683628
+2,weight10_seed_0,weight10 seed 0,59,0.758206465579393
+2,weight10_seed_0,weight10 seed 0,60,0.7795120140951494
+2,weight10_seed_0,weight10 seed 0,61,0.6298677219527115
+2,weight10_seed_0,weight10 seed 0,62,0.8526636133861648
+2,weight10_seed_0,weight10 seed 0,63,0.760294348710128
+2,weight10_seed_0,weight10 seed 0,64,0.8873837661631279
+2,weight10_seed_0,weight10 seed 0,65,0.8207692934823961
+2,weight10_seed_0,weight10 seed 0,66,0.7394864103216122
+2,weight10_seed_0,weight10 seed 0,67,0.9625279917436985
+2,weight10_seed_0,weight10 seed 0,68,0.7566583870690481
+2,weight10_seed_0,weight10 seed 0,69,0.844296317208559
+2,weight10_seed_0,weight10 seed 0,70,0.7723631703489177
+2,weight10_seed_0,weight10 seed 0,71,0.9055025352420769
+2,weight10_seed_0,weight10 seed 0,72,0.6970368731993325
+2,weight10_seed_0,weight10 seed 0,73,0.8300865712233623
+2,weight10_seed_0,weight10 seed 0,74,0.8140247516313819
+2,weight10_seed_0,weight10 seed 0,75,0.6987481425053363
+2,weight10_seed_0,weight10 seed 0,76,0.7815983881313014
+2,weight10_seed_0,weight10 seed 0,77,0.7908461317209584
+2,weight10_seed_0,weight10 seed 0,78,0.7983338644827813
+2,weight10_seed_0,weight10 seed 0,79,0.8255081803637841
+2,weight10_seed_0,weight10 seed 0,80,0.9268175271709465
+2,weight10_seed_0,weight10 seed 0,81,0.786044030002924
+2,weight10_seed_0,weight10 seed 0,82,0.7823062033413805
+2,weight10_seed_0,weight10 seed 0,83,0.707142984725192
+2,weight10_seed_0,weight10 seed 0,84,0.8351291158079321
+2,weight10_seed_0,weight10 seed 0,85,0.918806536753418
+2,weight10_seed_0,weight10 seed 0,86,0.7726656013925832
+2,weight10_seed_0,weight10 seed 0,87,0.8315685520758089
+2,weight10_seed_0,weight10 seed 0,88,0.9042101599494244
+2,weight10_seed_0,weight10 seed 0,89,0.7282569514542175
+2,weight10_seed_0,weight10 seed 0,90,0.7738856797897459
+2,weight10_seed_0,weight10 seed 0,91,0.8192050634760902
+2,weight10_seed_0,weight10 seed 0,92,0.8760803405542813
+2,weight10_seed_0,weight10 seed 0,93,0.7149250153718025
+2,weight10_seed_0,weight10 seed 0,94,0.7380228441961609
+2,weight10_seed_0,weight10 seed 0,95,0.6923742711855524
+2,weight10_seed_0,weight10 seed 0,96,0.9146219728093723
+2,weight10_seed_0,weight10 seed 0,97,0.8201474620741839
+2,weight10_seed_0,weight10 seed 0,98,0.8453417725414172
+2,weight10_seed_0,weight10 seed 0,99,0.8670466560050285
+2,weight10_seed_1,weight10 seed 1,0,0.5913652416201909
+2,weight10_seed_1,weight10 seed 1,1,0.5002112542541638
+2,weight10_seed_1,weight10 seed 1,2,0.6435215748630471
+2,weight10_seed_1,weight10 seed 1,3,0.5189475094063953
+2,weight10_seed_1,weight10 seed 1,4,0.6221862073001305
+2,weight10_seed_1,weight10 seed 1,5,0.5568306920137202
+2,weight10_seed_1,weight10 seed 1,6,0.5808875627844817
+2,weight10_seed_1,weight10 seed 1,7,0.5219428115271545
+2,weight10_seed_1,weight10 seed 1,8,0.5178648225567101
+2,weight10_seed_1,weight10 seed 1,9,0.5401527152243505
+2,weight10_seed_1,weight10 seed 1,10,0.668120023373738
+2,weight10_seed_1,weight10 seed 1,11,0.61789133599277
+2,weight10_seed_1,weight10 seed 1,12,0.6825075868231129
+2,weight10_seed_1,weight10 seed 1,13,0.5780612503504842
+2,weight10_seed_1,weight10 seed 1,14,0.6350298354865879
+2,weight10_seed_1,weight10 seed 1,15,0.6139007582318621
+2,weight10_seed_1,weight10 seed 1,16,0.49549021921952296
+2,weight10_seed_1,weight10 seed 1,17,0.5314886609192007
+2,weight10_seed_1,weight10 seed 1,18,0.5379716298103806
+2,weight10_seed_1,weight10 seed 1,19,0.5646012336250683
+2,weight10_seed_1,weight10 seed 1,20,0.5903398257278029
+2,weight10_seed_1,weight10 seed 1,21,0.5901468010189848
+2,weight10_seed_1,weight10 seed 1,22,0.6261326600148016
+2,weight10_seed_1,weight10 seed 1,23,0.561111135015612
+2,weight10_seed_1,weight10 seed 1,24,0.5422815776592596
+2,weight10_seed_1,weight10 seed 1,25,0.606544618995124
+2,weight10_seed_1,weight10 seed 1,26,0.5644180093178505
+2,weight10_seed_1,weight10 seed 1,27,0.6526132859456892
+2,weight10_seed_1,weight10 seed 1,28,0.5668300678628335
+2,weight10_seed_1,weight10 seed 1,29,0.5344380844406429
+2,weight10_seed_1,weight10 seed 1,30,0.5444355020211797
+2,weight10_seed_1,weight10 seed 1,31,0.5401726287772092
+2,weight10_seed_1,weight10 seed 1,32,0.6822151182850315
+2,weight10_seed_1,weight10 seed 1,33,0.5336334710279815
+2,weight10_seed_1,weight10 seed 1,34,0.543654068100801
+2,weight10_seed_1,weight10 seed 1,35,0.48289037039179633
+2,weight10_seed_1,weight10 seed 1,36,0.5131989352419273
+2,weight10_seed_1,weight10 seed 1,37,0.5995910794272414
+2,weight10_seed_1,weight10 seed 1,38,0.5619551811002995
+2,weight10_seed_1,weight10 seed 1,39,0.502955141254419
+2,weight10_seed_1,weight10 seed 1,40,0.5855020822178788
+2,weight10_seed_1,weight10 seed 1,41,0.5489273025593733
+2,weight10_seed_1,weight10 seed 1,42,0.5989510671557137
+2,weight10_seed_1,weight10 seed 1,43,0.544975784481378
+2,weight10_seed_1,weight10 seed 1,44,0.5956010883570414
+2,weight10_seed_1,weight10 seed 1,45,0.6308151352523417
+2,weight10_seed_1,weight10 seed 1,46,0.5355095397799163
+2,weight10_seed_1,weight10 seed 1,47,0.6312587068084355
+2,weight10_seed_1,weight10 seed 1,48,0.6655966817080324
+2,weight10_seed_1,weight10 seed 1,49,0.6477868702169981
+2,weight10_seed_1,weight10 seed 1,50,0.5052371983430829
+2,weight10_seed_1,weight10 seed 1,51,0.507424312045833
+2,weight10_seed_1,weight10 seed 1,52,0.5701286594709424
+2,weight10_seed_1,weight10 seed 1,53,0.5795443347769352
+2,weight10_seed_1,weight10 seed 1,54,0.5260413920340231
+2,weight10_seed_1,weight10 seed 1,55,0.6550849699263062
+2,weight10_seed_1,weight10 seed 1,56,0.5410712588144679
+2,weight10_seed_1,weight10 seed 1,57,0.608834192782404
+2,weight10_seed_1,weight10 seed 1,58,0.5636639846217587
+2,weight10_seed_1,weight10 seed 1,59,0.49385511399841325
+2,weight10_seed_1,weight10 seed 1,60,0.5117282097413492
+2,weight10_seed_1,weight10 seed 1,61,0.5944823752935146
+2,weight10_seed_1,weight10 seed 1,62,0.4663445571150193
+2,weight10_seed_1,weight10 seed 1,63,0.5124243787613387
+2,weight10_seed_1,weight10 seed 1,64,0.5875700671997339
+2,weight10_seed_1,weight10 seed 1,65,0.4967832962774411
+2,weight10_seed_1,weight10 seed 1,66,0.5188300921252396
+2,weight10_seed_1,weight10 seed 1,67,0.5407630028501523
+2,weight10_seed_1,weight10 seed 1,68,0.5745696145967971
+2,weight10_seed_1,weight10 seed 1,69,0.5628611874468574
+2,weight10_seed_1,weight10 seed 1,70,0.621797100863658
+2,weight10_seed_1,weight10 seed 1,71,0.5766362642210361
+2,weight10_seed_1,weight10 seed 1,72,0.5509769414546761
+2,weight10_seed_1,weight10 seed 1,73,0.5687107181848503
+2,weight10_seed_1,weight10 seed 1,74,0.5595476840022148
+2,weight10_seed_1,weight10 seed 1,75,0.5745720805440928
+2,weight10_seed_1,weight10 seed 1,76,0.6230140735126019
+2,weight10_seed_1,weight10 seed 1,77,0.5665300587276929
+2,weight10_seed_1,weight10 seed 1,78,0.6817717597450605
+2,weight10_seed_1,weight10 seed 1,79,0.5006049148748881
+2,weight10_seed_1,weight10 seed 1,80,0.4897406811894754
+2,weight10_seed_1,weight10 seed 1,81,0.5503235638534747
+2,weight10_seed_1,weight10 seed 1,82,0.6356303108683442
+2,weight10_seed_1,weight10 seed 1,83,0.59214576068022
+2,weight10_seed_1,weight10 seed 1,84,0.5493983207621861
+2,weight10_seed_1,weight10 seed 1,85,0.6344498150916058
+2,weight10_seed_1,weight10 seed 1,86,0.490171698623392
+2,weight10_seed_1,weight10 seed 1,87,0.5176281531721104
+2,weight10_seed_1,weight10 seed 1,88,0.5419149860699355
+2,weight10_seed_1,weight10 seed 1,89,0.5341308379209236
+2,weight10_seed_1,weight10 seed 1,90,0.6558205005495015
+2,weight10_seed_1,weight10 seed 1,91,0.530448611139054
+2,weight10_seed_1,weight10 seed 1,92,0.4978362241922387
+2,weight10_seed_1,weight10 seed 1,93,0.5442508581499768
+2,weight10_seed_1,weight10 seed 1,94,0.6575547381572464
+2,weight10_seed_1,weight10 seed 1,95,0.6238817907928467
+2,weight10_seed_1,weight10 seed 1,96,0.49654011220598265
+2,weight10_seed_1,weight10 seed 1,97,0.5452484228664267
+2,weight10_seed_1,weight10 seed 1,98,0.6481784124985791
+2,weight10_seed_1,weight10 seed 1,99,0.5892250663272349
+2,weight10_seed_2,weight10 seed 2,0,1.1152485659642855
+2,weight10_seed_2,weight10 seed 2,1,1.4093531040010618
+2,weight10_seed_2,weight10 seed 2,2,1.1082897233197242
+2,weight10_seed_2,weight10 seed 2,3,1.2577489304760794
+2,weight10_seed_2,weight10 seed 2,4,1.1942419088651326
+2,weight10_seed_2,weight10 seed 2,5,1.1425783970671501
+2,weight10_seed_2,weight10 seed 2,6,1.2580304685851698
+2,weight10_seed_2,weight10 seed 2,7,1.1619877461491712
+2,weight10_seed_2,weight10 seed 2,8,1.566035839350764
+2,weight10_seed_2,weight10 seed 2,9,1.026835281791985
+2,weight10_seed_2,weight10 seed 2,10,1.146613970308561
+2,weight10_seed_2,weight10 seed 2,11,1.2747801803952525
+2,weight10_seed_2,weight10 seed 2,12,1.1667815614673975
+2,weight10_seed_2,weight10 seed 2,13,1.2510272107775158
+2,weight10_seed_2,weight10 seed 2,14,1.2077980538764388
+2,weight10_seed_2,weight10 seed 2,15,1.3088055122189248
+2,weight10_seed_2,weight10 seed 2,16,0.943488483186684
+2,weight10_seed_2,weight10 seed 2,17,1.10164158541394
+2,weight10_seed_2,weight10 seed 2,18,1.0879969758977197
+2,weight10_seed_2,weight10 seed 2,19,1.0234060726055243
+2,weight10_seed_2,weight10 seed 2,20,1.4323797523959692
+2,weight10_seed_2,weight10 seed 2,21,1.534393228077102
+2,weight10_seed_2,weight10 seed 2,22,1.225792843088491
+2,weight10_seed_2,weight10 seed 2,23,1.1704746940875588
+2,weight10_seed_2,weight10 seed 2,24,1.3721548588550208
+2,weight10_seed_2,weight10 seed 2,25,1.1812127145148796
+2,weight10_seed_2,weight10 seed 2,26,1.5178093017295002
+2,weight10_seed_2,weight10 seed 2,27,1.0430399171534122
+2,weight10_seed_2,weight10 seed 2,28,1.3739341471871382
+2,weight10_seed_2,weight10 seed 2,29,1.2635026426189
+2,weight10_seed_2,weight10 seed 2,30,1.1449155661595267
+2,weight10_seed_2,weight10 seed 2,31,1.326955261887833
+2,weight10_seed_2,weight10 seed 2,32,1.235420134914399
+2,weight10_seed_2,weight10 seed 2,33,1.8376023499484853
+2,weight10_seed_2,weight10 seed 2,34,0.9542363665032912
+2,weight10_seed_2,weight10 seed 2,35,1.306244125258548
+2,weight10_seed_2,weight10 seed 2,36,1.0200143523720844
+2,weight10_seed_2,weight10 seed 2,37,1.3661776379480068
+2,weight10_seed_2,weight10 seed 2,38,0.950479110041686
+2,weight10_seed_2,weight10 seed 2,39,1.4267996306142428
+2,weight10_seed_2,weight10 seed 2,40,1.3115620922316986
+2,weight10_seed_2,weight10 seed 2,41,1.0554507873254315
+2,weight10_seed_2,weight10 seed 2,42,1.427667698977975
+2,weight10_seed_2,weight10 seed 2,43,1.1067695528426258
+2,weight10_seed_2,weight10 seed 2,44,1.2124363157100246
+2,weight10_seed_2,weight10 seed 2,45,1.3631184367550362
+2,weight10_seed_2,weight10 seed 2,46,0.9871338336815519
+2,weight10_seed_2,weight10 seed 2,47,1.2994229986231636
+2,weight10_seed_2,weight10 seed 2,48,1.0788932399687072
+2,weight10_seed_2,weight10 seed 2,49,1.2921288628791712
+2,weight10_seed_2,weight10 seed 2,50,1.318475897311229
+2,weight10_seed_2,weight10 seed 2,51,1.2216404405292791
+2,weight10_seed_2,weight10 seed 2,52,1.3449181116237003
+2,weight10_seed_2,weight10 seed 2,53,1.1385663289569046
+2,weight10_seed_2,weight10 seed 2,54,1.1096972209354958
+2,weight10_seed_2,weight10 seed 2,55,1.1908015570269967
+2,weight10_seed_2,weight10 seed 2,56,1.2357734768792643
+2,weight10_seed_2,weight10 seed 2,57,1.2507977564982748
+2,weight10_seed_2,weight10 seed 2,58,0.9575069493199917
+2,weight10_seed_2,weight10 seed 2,59,1.119020559344284
+2,weight10_seed_2,weight10 seed 2,60,1.2641251604912345
+2,weight10_seed_2,weight10 seed 2,61,1.2331609763226536
+2,weight10_seed_2,weight10 seed 2,62,1.2013214084715393
+2,weight10_seed_2,weight10 seed 2,63,1.574982179503713
+2,weight10_seed_2,weight10 seed 2,64,1.3131215538221188
+2,weight10_seed_2,weight10 seed 2,65,1.2011989496675703
+2,weight10_seed_2,weight10 seed 2,66,1.4726052739542297
+2,weight10_seed_2,weight10 seed 2,67,1.6407761849316649
+2,weight10_seed_2,weight10 seed 2,68,1.4947089577424395
+2,weight10_seed_2,weight10 seed 2,69,1.1752173072789514
+2,weight10_seed_2,weight10 seed 2,70,1.2030674155599692
+2,weight10_seed_2,weight10 seed 2,71,1.4190637708960827
+2,weight10_seed_2,weight10 seed 2,72,1.3943978001072803
+2,weight10_seed_2,weight10 seed 2,73,0.9702900149364646
+2,weight10_seed_2,weight10 seed 2,74,0.9447636658338365
+2,weight10_seed_2,weight10 seed 2,75,1.0949991899805274
+2,weight10_seed_2,weight10 seed 2,76,1.0561430416923148
+2,weight10_seed_2,weight10 seed 2,77,1.2048977596955677
+2,weight10_seed_2,weight10 seed 2,78,1.3177691974219163
+2,weight10_seed_2,weight10 seed 2,79,1.1406133629262334
+2,weight10_seed_2,weight10 seed 2,80,1.2873007463821848
+2,weight10_seed_2,weight10 seed 2,81,1.2402369215606839
+2,weight10_seed_2,weight10 seed 2,82,1.6446685315577962
+2,weight10_seed_2,weight10 seed 2,83,0.9007812639148386
+2,weight10_seed_2,weight10 seed 2,84,1.073977219637239
+2,weight10_seed_2,weight10 seed 2,85,1.0436352888772886
+2,weight10_seed_2,weight10 seed 2,86,1.276200373988741
+2,weight10_seed_2,weight10 seed 2,87,1.147408978360977
+2,weight10_seed_2,weight10 seed 2,88,1.1254546830866419
+2,weight10_seed_2,weight10 seed 2,89,0.9380342741284715
+2,weight10_seed_2,weight10 seed 2,90,1.3707269955418706
+2,weight10_seed_2,weight10 seed 2,91,1.1979615879664283
+2,weight10_seed_2,weight10 seed 2,92,1.3305419737769397
+2,weight10_seed_2,weight10 seed 2,93,1.2432070038168872
+2,weight10_seed_2,weight10 seed 2,94,1.0394842987422945
+2,weight10_seed_2,weight10 seed 2,95,1.2876935604972872
+2,weight10_seed_2,weight10 seed 2,96,1.2661038933310407
+2,weight10_seed_2,weight10 seed 2,97,1.2328157822503318
+2,weight10_seed_2,weight10 seed 2,98,1.463305550339075
+2,weight10_seed_2,weight10 seed 2,99,1.1838764127135497
+2,weight30_seed_0,weight30 seed 0,0,1.0128679376682177
+2,weight30_seed_0,weight30 seed 0,1,0.8613726172882021
+2,weight30_seed_0,weight30 seed 0,2,0.8541164308980226
+2,weight30_seed_0,weight30 seed 0,3,0.8478591003812473
+2,weight30_seed_0,weight30 seed 0,4,1.011323649643334
+2,weight30_seed_0,weight30 seed 0,5,0.9087064326607862
+2,weight30_seed_0,weight30 seed 0,6,0.9787120188585945
+2,weight30_seed_0,weight30 seed 0,7,0.8885209151827647
+2,weight30_seed_0,weight30 seed 0,8,1.008556554052207
+2,weight30_seed_0,weight30 seed 0,9,0.8407367441985883
+2,weight30_seed_0,weight30 seed 0,10,0.7955178494887098
+2,weight30_seed_0,weight30 seed 0,11,0.9742052744076942
+2,weight30_seed_0,weight30 seed 0,12,0.9051846917830572
+2,weight30_seed_0,weight30 seed 0,13,0.8145329961733012
+2,weight30_seed_0,weight30 seed 0,14,1.0044884405555363
+2,weight30_seed_0,weight30 seed 0,15,0.9216731236274376
+2,weight30_seed_0,weight30 seed 0,16,0.9763447131713707
+2,weight30_seed_0,weight30 seed 0,17,0.8378372834701687
+2,weight30_seed_0,weight30 seed 0,18,0.8636520855175077
+2,weight30_seed_0,weight30 seed 0,19,0.9949436662809018
+2,weight30_seed_0,weight30 seed 0,20,0.8683558373334687
+2,weight30_seed_0,weight30 seed 0,21,0.8714626135622903
+2,weight30_seed_0,weight30 seed 0,22,1.0326762445452489
+2,weight30_seed_0,weight30 seed 0,23,0.9391505617784743
+2,weight30_seed_0,weight30 seed 0,24,0.9511286592683764
+2,weight30_seed_0,weight30 seed 0,25,0.8265952621740195
+2,weight30_seed_0,weight30 seed 0,26,0.8187563793918226
+2,weight30_seed_0,weight30 seed 0,27,0.9537322149378267
+2,weight30_seed_0,weight30 seed 0,28,0.9591729461782074
+2,weight30_seed_0,weight30 seed 0,29,0.8175129048969687
+2,weight30_seed_0,weight30 seed 0,30,0.8927596883982454
+2,weight30_seed_0,weight30 seed 0,31,0.7641266446933559
+2,weight30_seed_0,weight30 seed 0,32,0.9119940332728531
+2,weight30_seed_0,weight30 seed 0,33,0.8626815531783119
+2,weight30_seed_0,weight30 seed 0,34,0.7512897827733335
+2,weight30_seed_0,weight30 seed 0,35,0.9712662289107525
+2,weight30_seed_0,weight30 seed 0,36,0.8730991899083489
+2,weight30_seed_0,weight30 seed 0,37,0.8938380244017481
+2,weight30_seed_0,weight30 seed 0,38,0.9001959429940344
+2,weight30_seed_0,weight30 seed 0,39,1.0005682745516393
+2,weight30_seed_0,weight30 seed 0,40,0.9490003911938104
+2,weight30_seed_0,weight30 seed 0,41,0.8474671893291439
+2,weight30_seed_0,weight30 seed 0,42,0.841140178367149
+2,weight30_seed_0,weight30 seed 0,43,1.0821819849347525
+2,weight30_seed_0,weight30 seed 0,44,0.7676036269023143
+2,weight30_seed_0,weight30 seed 0,45,0.9224491680173109
+2,weight30_seed_0,weight30 seed 0,46,0.847414484748592
+2,weight30_seed_0,weight30 seed 0,47,0.8210312566474041
+2,weight30_seed_0,weight30 seed 0,48,0.8170164904265039
+2,weight30_seed_0,weight30 seed 0,49,0.8870822712016615
+2,weight30_seed_0,weight30 seed 0,50,0.751633409551254
+2,weight30_seed_0,weight30 seed 0,51,0.8429626107783511
+2,weight30_seed_0,weight30 seed 0,52,1.0218125264568847
+2,weight30_seed_0,weight30 seed 0,53,0.9174024610784917
+2,weight30_seed_0,weight30 seed 0,54,0.9710174422036167
+2,weight30_seed_0,weight30 seed 0,55,0.8479968022539287
+2,weight30_seed_0,weight30 seed 0,56,0.8070837383734384
+2,weight30_seed_0,weight30 seed 0,57,1.047671327674628
+2,weight30_seed_0,weight30 seed 0,58,1.054445399986319
+2,weight30_seed_0,weight30 seed 0,59,0.9209035823676733
+2,weight30_seed_0,weight30 seed 0,60,0.8124939983039273
+2,weight30_seed_0,weight30 seed 0,61,0.8912193596885738
+2,weight30_seed_0,weight30 seed 0,62,0.9444178610682469
+2,weight30_seed_0,weight30 seed 0,63,0.837752222001127
+2,weight30_seed_0,weight30 seed 0,64,0.9755681252978808
+2,weight30_seed_0,weight30 seed 0,65,0.9328004465413812
+2,weight30_seed_0,weight30 seed 0,66,0.97851807987711
+2,weight30_seed_0,weight30 seed 0,67,1.0473730768320577
+2,weight30_seed_0,weight30 seed 0,68,0.9564831001044249
+2,weight30_seed_0,weight30 seed 0,69,0.9146163504339072
+2,weight30_seed_0,weight30 seed 0,70,0.8276241231981706
+2,weight30_seed_0,weight30 seed 0,71,0.9180671402568235
+2,weight30_seed_0,weight30 seed 0,72,0.9154286478693481
+2,weight30_seed_0,weight30 seed 0,73,0.8433111676023307
+2,weight30_seed_0,weight30 seed 0,74,0.9254461565254455
+2,weight30_seed_0,weight30 seed 0,75,0.8813006683489657
+2,weight30_seed_0,weight30 seed 0,76,0.9761630751969507
+2,weight30_seed_0,weight30 seed 0,77,0.9121757308168106
+2,weight30_seed_0,weight30 seed 0,78,0.8122106468691533
+2,weight30_seed_0,weight30 seed 0,79,0.9124481791426605
+2,weight30_seed_0,weight30 seed 0,80,0.9349851815050093
+2,weight30_seed_0,weight30 seed 0,81,0.8339231509508277
+2,weight30_seed_0,weight30 seed 0,82,0.758109011395384
+2,weight30_seed_0,weight30 seed 0,83,0.916412117345277
+2,weight30_seed_0,weight30 seed 0,84,0.7330663772485665
+2,weight30_seed_0,weight30 seed 0,85,0.9631179445242104
+2,weight30_seed_0,weight30 seed 0,86,0.9472842134933968
+2,weight30_seed_0,weight30 seed 0,87,0.9337337299876423
+2,weight30_seed_0,weight30 seed 0,88,0.9600639129994226
+2,weight30_seed_0,weight30 seed 0,89,0.7782973761559914
+2,weight30_seed_0,weight30 seed 0,90,0.7251126410301504
+2,weight30_seed_0,weight30 seed 0,91,0.9047620084327737
+2,weight30_seed_0,weight30 seed 0,92,0.8717237234673639
+2,weight30_seed_0,weight30 seed 0,93,0.8200623523835204
+2,weight30_seed_0,weight30 seed 0,94,0.7765171122985558
+2,weight30_seed_0,weight30 seed 0,95,0.7850126914070276
+2,weight30_seed_0,weight30 seed 0,96,0.8937077957145769
+2,weight30_seed_0,weight30 seed 0,97,0.842022987963602
+2,weight30_seed_0,weight30 seed 0,98,0.8184276575270313
+2,weight30_seed_0,weight30 seed 0,99,0.9491251178772917
+3,real,Real batches,0,0.0643353792172542
+3,real,Real batches,1,0.047928739167113266
+3,real,Real batches,2,0.05419044362275687
+3,real,Real batches,3,0.05080869042667037
+3,real,Real batches,4,0.052264755665472916
+3,real,Real batches,5,0.0522434049676409
+3,real,Real batches,6,0.05798855841833903
+3,real,Real batches,7,0.0543214092681924
+3,real,Real batches,8,0.05916740196575801
+3,real,Real batches,9,0.1353806370986484
+3,real,Real batches,10,0.06590641057682298
+3,real,Real batches,11,0.05798593596325474
+3,real,Real batches,12,0.060950165133258655
+3,real,Real batches,13,0.05052851065760475
+3,real,Real batches,14,0.04961003982828886
+3,real,Real batches,15,0.04724065605240932
+3,real,Real batches,16,0.05069638717379057
+3,real,Real batches,17,0.050214347871091206
+3,real,Real batches,18,0.06357495465031227
+3,real,Real batches,19,0.051658170402987
+3,real,Real batches,20,0.05375864175856385
+3,real,Real batches,21,0.07236549762819043
+3,real,Real batches,22,0.051827465171677016
+3,real,Real batches,23,0.08029630791380996
+3,real,Real batches,24,0.05820796044296233
+3,real,Real batches,25,0.06459040567456316
+3,real,Real batches,26,0.06350025751506906
+3,real,Real batches,27,0.05924536504480896
+3,real,Real batches,28,0.0734021634702034
+3,real,Real batches,29,0.0584462293474621
+3,real,Real batches,30,0.06568209242066538
+3,real,Real batches,31,0.06051406190863229
+3,real,Real batches,32,0.053437453099892014
+3,real,Real batches,33,0.05134587091559772
+3,real,Real batches,34,0.049773827150187265
+3,real,Real batches,35,0.053013629289520345
+3,real,Real batches,36,0.057038268071447566
+3,real,Real batches,37,0.05069893428855114
+3,real,Real batches,38,0.06834144257595011
+3,real,Real batches,39,0.057956717471844894
+3,real,Real batches,40,0.05055879222543501
+3,real,Real batches,41,0.06213348527251449
+3,real,Real batches,42,0.06612926446944936
+3,real,Real batches,43,0.05469645860908534
+3,real,Real batches,44,0.05756259742728311
+3,real,Real batches,45,0.06371492865575727
+3,real,Real batches,46,0.057967787385145735
+3,real,Real batches,47,0.054775452701862945
+3,real,Real batches,48,0.06718845518750852
+3,real,Real batches,49,0.0555116353067461
+3,real,Real batches,50,0.058122489539558106
+3,real,Real batches,51,0.0597174747813359
+3,real,Real batches,52,0.05962370083108942
+3,real,Real batches,53,0.06465963177587936
+3,real,Real batches,54,0.056044174381400365
+3,real,Real batches,55,0.06983747486500642
+3,real,Real batches,56,0.06279383729961817
+3,real,Real batches,57,0.07959147839429717
+3,real,Real batches,58,0.050756285641564564
+3,real,Real batches,59,0.06065512078056105
+3,real,Real batches,60,0.07771226684945973
+3,real,Real batches,61,0.06810459373216216
+3,real,Real batches,62,0.0572204291625909
+3,real,Real batches,63,0.07149254138026499
+3,real,Real batches,64,0.059391862062841916
+3,real,Real batches,65,0.07118566039193941
+3,real,Real batches,66,0.06548505126787539
+3,real,Real batches,67,0.05244410176119766
+3,real,Real batches,68,0.04331522520958002
+3,real,Real batches,69,0.05434046422737483
+3,real,Real batches,70,0.08843827563709905
+3,real,Real batches,71,0.07889227681598726
+3,real,Real batches,72,0.058550592422202355
+3,real,Real batches,73,0.05497508859336465
+3,real,Real batches,74,0.049775308793984806
+3,real,Real batches,75,0.08012741818356295
+3,real,Real batches,76,0.0773037517371929
+3,real,Real batches,77,0.054826108111384116
+3,real,Real batches,78,0.06159136335598259
+3,real,Real batches,79,0.05265568592751429
+3,real,Real batches,80,0.04707660188876319
+3,real,Real batches,81,0.0692581488468704
+3,real,Real batches,82,0.06489416419246402
+3,real,Real batches,83,0.0641324323273707
+3,real,Real batches,84,0.04969835713282278
+3,real,Real batches,85,0.049722225320351095
+3,real,Real batches,86,0.07234908006994162
+3,real,Real batches,87,0.05781382550117828
+3,real,Real batches,88,0.05228494038204917
+3,real,Real batches,89,0.07328126227489776
+3,real,Real batches,90,0.058756991460949454
+3,real,Real batches,91,0.07196124493583521
+3,real,Real batches,92,0.05679385401264299
+3,real,Real batches,93,0.06439236754121581
+3,real,Real batches,94,0.047752959304655215
+3,real,Real batches,95,0.07033471207979822
+3,real,Real batches,96,0.05529239192116356
+3,real,Real batches,97,0.055209863919400505
+3,real,Real batches,98,0.049988413598600304
+3,real,Real batches,99,0.07438796454826156
+3,half_volatility,Half volatility,0,0.1443475870919907
+3,half_volatility,Half volatility,1,0.14846653897634604
+3,half_volatility,Half volatility,2,0.14496116369016226
+3,half_volatility,Half volatility,3,0.14544280786008668
+3,half_volatility,Half volatility,4,0.14824034430987204
+3,half_volatility,Half volatility,5,0.14662401893454682
+3,half_volatility,Half volatility,6,0.1473764539775478
+3,half_volatility,Half volatility,7,0.14554374532375772
+3,half_volatility,Half volatility,8,0.1503949756184841
+3,half_volatility,Half volatility,9,0.1378302585594913
+3,half_volatility,Half volatility,10,0.15132355831071378
+3,half_volatility,Half volatility,11,0.14051739960617282
+3,half_volatility,Half volatility,12,0.14437268803839728
+3,half_volatility,Half volatility,13,0.1459874963865616
+3,half_volatility,Half volatility,14,0.1449760751749624
+3,half_volatility,Half volatility,15,0.14638496743094612
+3,half_volatility,Half volatility,16,0.14271663800755527
+3,half_volatility,Half volatility,17,0.14613080417829596
+3,half_volatility,Half volatility,18,0.1485125243560089
+3,half_volatility,Half volatility,19,0.1484778466666902
+3,half_volatility,Half volatility,20,0.14914054969241136
+3,half_volatility,Half volatility,21,0.14304602387511664
+3,half_volatility,Half volatility,22,0.14431594551052404
+3,half_volatility,Half volatility,23,0.14458217831216746
+3,half_volatility,Half volatility,24,0.1502140798421653
+3,half_volatility,Half volatility,25,0.1433160045769468
+3,half_volatility,Half volatility,26,0.15063975017985026
+3,half_volatility,Half volatility,27,0.14937280495656227
+3,half_volatility,Half volatility,28,0.1419574607423356
+3,half_volatility,Half volatility,29,0.14515949617674978
+3,half_volatility,Half volatility,30,0.1431704040304758
+3,half_volatility,Half volatility,31,0.1477353252682068
+3,half_volatility,Half volatility,32,0.14692710404652862
+3,half_volatility,Half volatility,33,0.1464577920550667
+3,half_volatility,Half volatility,34,0.14642542098444092
+3,half_volatility,Half volatility,35,0.14494255502741338
+3,half_volatility,Half volatility,36,0.14254743640552828
+3,half_volatility,Half volatility,37,0.1466507180990434
+3,half_volatility,Half volatility,38,0.14452135871813307
+3,half_volatility,Half volatility,39,0.1432398766970656
+3,half_volatility,Half volatility,40,0.1506037874803414
+3,half_volatility,Half volatility,41,0.14242001784048303
+3,half_volatility,Half volatility,42,0.14650014316206794
+3,half_volatility,Half volatility,43,0.14681496688583148
+3,half_volatility,Half volatility,44,0.1480563469650773
+3,half_volatility,Half volatility,45,0.1429796351704135
+3,half_volatility,Half volatility,46,0.14162181906378518
+3,half_volatility,Half volatility,47,0.14826519932719484
+3,half_volatility,Half volatility,48,0.14486060253554753
+3,half_volatility,Half volatility,49,0.145339769241531
+3,half_volatility,Half volatility,50,0.148992110469405
+3,half_volatility,Half volatility,51,0.1467620316408145
+3,half_volatility,Half volatility,52,0.14834323084677767
+3,half_volatility,Half volatility,53,0.14887330428470125
+3,half_volatility,Half volatility,54,0.1451777249916512
+3,half_volatility,Half volatility,55,0.14169983061629823
+3,half_volatility,Half volatility,56,0.14930984369472639
+3,half_volatility,Half volatility,57,0.14451085422738036
+3,half_volatility,Half volatility,58,0.14903415788309046
+3,half_volatility,Half volatility,59,0.14094465126279507
+3,half_volatility,Half volatility,60,0.14016079142155807
+3,half_volatility,Half volatility,61,0.14732426639995871
+3,half_volatility,Half volatility,62,0.14504201733144392
+3,half_volatility,Half volatility,63,0.1398713037470858
+3,half_volatility,Half volatility,64,0.14591643144796673
+3,half_volatility,Half volatility,65,0.15148203696254967
+3,half_volatility,Half volatility,66,0.14920192566674106
+3,half_volatility,Half volatility,67,0.14854085052876354
+3,half_volatility,Half volatility,68,0.14730886498689236
+3,half_volatility,Half volatility,69,0.14726185403302813
+3,half_volatility,Half volatility,70,0.14613947409307862
+3,half_volatility,Half volatility,71,0.14224706062166398
+3,half_volatility,Half volatility,72,0.14322235542739392
+3,half_volatility,Half volatility,73,0.14824423936809975
+3,half_volatility,Half volatility,74,0.1472111684554419
+3,half_volatility,Half volatility,75,0.1416560319597917
+3,half_volatility,Half volatility,76,0.14369480150142788
+3,half_volatility,Half volatility,77,0.14751811034366563
+3,half_volatility,Half volatility,78,0.14350583201950481
+3,half_volatility,Half volatility,79,0.1474442153706909
+3,half_volatility,Half volatility,80,0.14456349988159325
+3,half_volatility,Half volatility,81,0.14817521329199798
+3,half_volatility,Half volatility,82,0.1426552473107063
+3,half_volatility,Half volatility,83,0.14670261788605538
+3,half_volatility,Half volatility,84,0.145488378254038
+3,half_volatility,Half volatility,85,0.14742012878933258
+3,half_volatility,Half volatility,86,0.14460337166867884
+3,half_volatility,Half volatility,87,0.14490955785774484
+3,half_volatility,Half volatility,88,0.14890391499099181
+3,half_volatility,Half volatility,89,0.14422110162763835
+3,half_volatility,Half volatility,90,0.1440046437490288
+3,half_volatility,Half volatility,91,0.1391910165728474
+3,half_volatility,Half volatility,92,0.14287953014451027
+3,half_volatility,Half volatility,93,0.14802278478757314
+3,half_volatility,Half volatility,94,0.14491209969434884
+3,half_volatility,Half volatility,95,0.13761254355276292
+3,half_volatility,Half volatility,96,0.14944943036773534
+3,half_volatility,Half volatility,97,0.14647590716495162
+3,half_volatility,Half volatility,98,0.14501293319957212
+3,half_volatility,Half volatility,99,0.14207050622129969
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,0,0.5857516306020815
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,1,0.5769419906030995
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,2,0.6528880943321741
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,3,0.5999033321572439
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,4,0.5735003552114419
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,5,0.5807290741115818
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,6,0.6232575955594994
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,7,0.5899825696042724
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,8,0.6016689643167378
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,9,0.6912584779655674
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,10,0.5704391995102155
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,11,0.6557558485187986
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,12,0.6317048765147916
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,13,0.5764127958587176
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,14,0.5868977593882582
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,15,0.6507484323800371
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,16,0.6545550287346318
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,17,0.6161424057187539
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,18,0.6128642263012842
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,19,0.5735057646174355
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,20,0.5297369621875035
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,21,0.6193924912185428
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,22,0.5808352585342001
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,23,0.6631248452986062
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,24,0.5766740646818617
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,25,0.6596384523869545
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,26,0.596856543218404
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,27,0.6085841615577225
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,28,0.6157723367646062
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,29,0.6444389373773269
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,30,0.6260204802157415
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,31,0.598384526330479
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,32,0.6286760714278874
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,33,0.5786715385208191
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,34,0.5550040963065868
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,35,0.6248795134131835
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,36,0.6666605030947484
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,37,0.6038428049571697
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,38,0.6211482787257746
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,39,0.596376158150561
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,40,0.5563622130108793
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,41,0.6317608308564098
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,42,0.6151522024211247
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,43,0.571920904250971
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,44,0.6187944760888995
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,45,0.5978067512487414
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,46,0.6037033281206828
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,47,0.5799484765497097
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,48,0.6237258633993306
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,49,0.6127652268406493
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,50,0.5924105663142372
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,51,0.6626192229822649
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,52,0.6136187655673826
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,53,0.5702889853099594
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,54,0.5948353159132665
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,55,0.6427459614156753
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,56,0.5736773573124214
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,57,0.6127320824218905
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,58,0.5780876457146826
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,59,0.6422210608170802
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,60,0.6241280036567017
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,61,0.6290365323633382
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,62,0.5804341720910299
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,63,0.6559358417336854
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,64,0.6042344161019664
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,65,0.5522119467470468
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,66,0.6360271001777963
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,67,0.5378634875776135
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,68,0.5782879833901711
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,69,0.5978197255408172
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,70,0.6198994897307886
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,71,0.6653078186418466
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,72,0.636346867357315
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,73,0.6055742226818047
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,74,0.5982769723260355
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,75,0.6693186964738778
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,76,0.737333786940583
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,77,0.5624714974574399
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,78,0.6610766083123248
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,79,0.5609014520705565
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,80,0.6126618967315253
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,81,0.6127266802900463
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,82,0.704111878663954
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,83,0.5465453235081644
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,84,0.630649467784988
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,85,0.5326987808394454
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,86,0.6534382668522644
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,87,0.6489344722596989
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,88,0.5822509404717666
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,89,0.6669046731051993
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,90,0.6279768731493389
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,91,0.6897652139113203
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,92,0.6218272894495221
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,93,0.6420873479402212
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,94,0.6307876947108901
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,95,0.7178337747365062
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,96,0.5675082202092782
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,97,0.634388624352303
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,98,0.6007237747501875
+3,sorted_0,Sorted by KONGSBERG GRUPPEN,99,0.6281701370731141
+3,sorted_1,Sorted by FRONTLINE,0,0.43186059978728153
+3,sorted_1,Sorted by FRONTLINE,1,0.4385850004313917
+3,sorted_1,Sorted by FRONTLINE,2,0.4908094435181183
+3,sorted_1,Sorted by FRONTLINE,3,0.4564124660885148
+3,sorted_1,Sorted by FRONTLINE,4,0.42283201378852986
+3,sorted_1,Sorted by FRONTLINE,5,0.423223798946447
+3,sorted_1,Sorted by FRONTLINE,6,0.4686466788584535
+3,sorted_1,Sorted by FRONTLINE,7,0.44410172260976427
+3,sorted_1,Sorted by FRONTLINE,8,0.4294444063566628
+3,sorted_1,Sorted by FRONTLINE,9,0.5159364092558358
+3,sorted_1,Sorted by FRONTLINE,10,0.42687161382558314
+3,sorted_1,Sorted by FRONTLINE,11,0.4758564649768949
+3,sorted_1,Sorted by FRONTLINE,12,0.49447618157649376
+3,sorted_1,Sorted by FRONTLINE,13,0.3971568866875614
+3,sorted_1,Sorted by FRONTLINE,14,0.42105784123948764
+3,sorted_1,Sorted by FRONTLINE,15,0.4900703672502674
+3,sorted_1,Sorted by FRONTLINE,16,0.460569410503245
+3,sorted_1,Sorted by FRONTLINE,17,0.49311631945841855
+3,sorted_1,Sorted by FRONTLINE,18,0.4631471303241007
+3,sorted_1,Sorted by FRONTLINE,19,0.419917228741272
+3,sorted_1,Sorted by FRONTLINE,20,0.43873322821838867
+3,sorted_1,Sorted by FRONTLINE,21,0.48133963341630104
+3,sorted_1,Sorted by FRONTLINE,22,0.4584242593811471
+3,sorted_1,Sorted by FRONTLINE,23,0.5227439711333348
+3,sorted_1,Sorted by FRONTLINE,24,0.41494670366214254
+3,sorted_1,Sorted by FRONTLINE,25,0.44460566631987974
+3,sorted_1,Sorted by FRONTLINE,26,0.4543617525226465
+3,sorted_1,Sorted by FRONTLINE,27,0.4269031921153915
+3,sorted_1,Sorted by FRONTLINE,28,0.461764839014015
+3,sorted_1,Sorted by FRONTLINE,29,0.4072268830402041
+3,sorted_1,Sorted by FRONTLINE,30,0.40468561560474614
+3,sorted_1,Sorted by FRONTLINE,31,0.4736881953536116
+3,sorted_1,Sorted by FRONTLINE,32,0.4482686951286511
+3,sorted_1,Sorted by FRONTLINE,33,0.39480096377465473
+3,sorted_1,Sorted by FRONTLINE,34,0.4096796905365523
+3,sorted_1,Sorted by FRONTLINE,35,0.42468626668122195
+3,sorted_1,Sorted by FRONTLINE,36,0.49100521063804436
+3,sorted_1,Sorted by FRONTLINE,37,0.4016648944483523
+3,sorted_1,Sorted by FRONTLINE,38,0.4653353960832541
+3,sorted_1,Sorted by FRONTLINE,39,0.43878787865821123
+3,sorted_1,Sorted by FRONTLINE,40,0.40371497161788106
+3,sorted_1,Sorted by FRONTLINE,41,0.5003661804474165
+3,sorted_1,Sorted by FRONTLINE,42,0.4448807815605629
+3,sorted_1,Sorted by FRONTLINE,43,0.41046104584342585
+3,sorted_1,Sorted by FRONTLINE,44,0.4421681885186765
+3,sorted_1,Sorted by FRONTLINE,45,0.4058371987538367
+3,sorted_1,Sorted by FRONTLINE,46,0.45383491116108915
+3,sorted_1,Sorted by FRONTLINE,47,0.42740325648455046
+3,sorted_1,Sorted by FRONTLINE,48,0.41116111244619274
+3,sorted_1,Sorted by FRONTLINE,49,0.4436844034328753
+3,sorted_1,Sorted by FRONTLINE,50,0.43140854596113865
+3,sorted_1,Sorted by FRONTLINE,51,0.46640306001793147
+3,sorted_1,Sorted by FRONTLINE,52,0.4382248111447836
+3,sorted_1,Sorted by FRONTLINE,53,0.4300155160963965
+3,sorted_1,Sorted by FRONTLINE,54,0.40053348537383265
+3,sorted_1,Sorted by FRONTLINE,55,0.46877546698329137
+3,sorted_1,Sorted by FRONTLINE,56,0.39575858459822977
+3,sorted_1,Sorted by FRONTLINE,57,0.44096998644109775
+3,sorted_1,Sorted by FRONTLINE,58,0.4139370866375034
+3,sorted_1,Sorted by FRONTLINE,59,0.47460241924412633
+3,sorted_1,Sorted by FRONTLINE,60,0.44927834752056456
+3,sorted_1,Sorted by FRONTLINE,61,0.4836247420565935
+3,sorted_1,Sorted by FRONTLINE,62,0.4183656693728171
+3,sorted_1,Sorted by FRONTLINE,63,0.4748120907952985
+3,sorted_1,Sorted by FRONTLINE,64,0.40086164401117286
+3,sorted_1,Sorted by FRONTLINE,65,0.4012851278858342
+3,sorted_1,Sorted by FRONTLINE,66,0.45870345670837553
+3,sorted_1,Sorted by FRONTLINE,67,0.3769509436948631
+3,sorted_1,Sorted by FRONTLINE,68,0.4327245199224685
+3,sorted_1,Sorted by FRONTLINE,69,0.43179657912587344
+3,sorted_1,Sorted by FRONTLINE,70,0.4764015274753056
+3,sorted_1,Sorted by FRONTLINE,71,0.4901969302897075
+3,sorted_1,Sorted by FRONTLINE,72,0.4850164202575078
+3,sorted_1,Sorted by FRONTLINE,73,0.48313975911373924
+3,sorted_1,Sorted by FRONTLINE,74,0.43995087074938344
+3,sorted_1,Sorted by FRONTLINE,75,0.4950020249445883
+3,sorted_1,Sorted by FRONTLINE,76,0.5144025398888689
+3,sorted_1,Sorted by FRONTLINE,77,0.4219480325685962
+3,sorted_1,Sorted by FRONTLINE,78,0.49614787212121114
+3,sorted_1,Sorted by FRONTLINE,79,0.430117738178893
+3,sorted_1,Sorted by FRONTLINE,80,0.41455791741518444
+3,sorted_1,Sorted by FRONTLINE,81,0.4351695440575815
+3,sorted_1,Sorted by FRONTLINE,82,0.5354863413644385
+3,sorted_1,Sorted by FRONTLINE,83,0.4096743098023804
+3,sorted_1,Sorted by FRONTLINE,84,0.43899129096025796
+3,sorted_1,Sorted by FRONTLINE,85,0.4309754192986338
+3,sorted_1,Sorted by FRONTLINE,86,0.42793142697841247
+3,sorted_1,Sorted by FRONTLINE,87,0.5025496717854377
+3,sorted_1,Sorted by FRONTLINE,88,0.41056774063947415
+3,sorted_1,Sorted by FRONTLINE,89,0.4343879704201424
+3,sorted_1,Sorted by FRONTLINE,90,0.41689475305329676
+3,sorted_1,Sorted by FRONTLINE,91,0.48359850188053605
+3,sorted_1,Sorted by FRONTLINE,92,0.4782332051258741
+3,sorted_1,Sorted by FRONTLINE,93,0.4520766407219896
+3,sorted_1,Sorted by FRONTLINE,94,0.4335408499624298
+3,sorted_1,Sorted by FRONTLINE,95,0.5064931413150966
+3,sorted_1,Sorted by FRONTLINE,96,0.4069163021544927
+3,sorted_1,Sorted by FRONTLINE,97,0.45603570862131887
+3,sorted_1,Sorted by FRONTLINE,98,0.45860094203950025
+3,sorted_1,Sorted by FRONTLINE,99,0.4559386543277535
+3,sorted_2,Sorted by WILH Wilhelmsen B,0,0.6496827255951982
+3,sorted_2,Sorted by WILH Wilhelmsen B,1,0.6328057299045995
+3,sorted_2,Sorted by WILH Wilhelmsen B,2,0.7031647647186096
+3,sorted_2,Sorted by WILH Wilhelmsen B,3,0.6322182400565362
+3,sorted_2,Sorted by WILH Wilhelmsen B,4,0.6268405207447338
+3,sorted_2,Sorted by WILH Wilhelmsen B,5,0.6990119867447215
+3,sorted_2,Sorted by WILH Wilhelmsen B,6,0.6810055542710565
+3,sorted_2,Sorted by WILH Wilhelmsen B,7,0.6742355450882864
+3,sorted_2,Sorted by WILH Wilhelmsen B,8,0.6430943060319241
+3,sorted_2,Sorted by WILH Wilhelmsen B,9,0.7492914261799114
+3,sorted_2,Sorted by WILH Wilhelmsen B,10,0.6467012664317073
+3,sorted_2,Sorted by WILH Wilhelmsen B,11,0.7081330043521552
+3,sorted_2,Sorted by WILH Wilhelmsen B,12,0.6450872360621334
+3,sorted_2,Sorted by WILH Wilhelmsen B,13,0.6450974776782354
+3,sorted_2,Sorted by WILH Wilhelmsen B,14,0.675762869471375
+3,sorted_2,Sorted by WILH Wilhelmsen B,15,0.6616520231719435
+3,sorted_2,Sorted by WILH Wilhelmsen B,16,0.6705261137925715
+3,sorted_2,Sorted by WILH Wilhelmsen B,17,0.6523944552744014
+3,sorted_2,Sorted by WILH Wilhelmsen B,18,0.6941385204811557
+3,sorted_2,Sorted by WILH Wilhelmsen B,19,0.6116364536043123
+3,sorted_2,Sorted by WILH Wilhelmsen B,20,0.6476078887448041
+3,sorted_2,Sorted by WILH Wilhelmsen B,21,0.7252482778073682
+3,sorted_2,Sorted by WILH Wilhelmsen B,22,0.6649171456400722
+3,sorted_2,Sorted by WILH Wilhelmsen B,23,0.6805430848470513
+3,sorted_2,Sorted by WILH Wilhelmsen B,24,0.6434912845721511
+3,sorted_2,Sorted by WILH Wilhelmsen B,25,0.6797068668930288
+3,sorted_2,Sorted by WILH Wilhelmsen B,26,0.6220807100265735
+3,sorted_2,Sorted by WILH Wilhelmsen B,27,0.6638577094788628
+3,sorted_2,Sorted by WILH Wilhelmsen B,28,0.7090156171244852
+3,sorted_2,Sorted by WILH Wilhelmsen B,29,0.6516020155393313
+3,sorted_2,Sorted by WILH Wilhelmsen B,30,0.6344737334879774
+3,sorted_2,Sorted by WILH Wilhelmsen B,31,0.6234370034206994
+3,sorted_2,Sorted by WILH Wilhelmsen B,32,0.7032348018452507
+3,sorted_2,Sorted by WILH Wilhelmsen B,33,0.6447530737740902
+3,sorted_2,Sorted by WILH Wilhelmsen B,34,0.6346051863239965
+3,sorted_2,Sorted by WILH Wilhelmsen B,35,0.6507851466114177
+3,sorted_2,Sorted by WILH Wilhelmsen B,36,0.6930388923852129
+3,sorted_2,Sorted by WILH Wilhelmsen B,37,0.6018063451893316
+3,sorted_2,Sorted by WILH Wilhelmsen B,38,0.6549752157485879
+3,sorted_2,Sorted by WILH Wilhelmsen B,39,0.6597299271400409
+3,sorted_2,Sorted by WILH Wilhelmsen B,40,0.6287204577845616
+3,sorted_2,Sorted by WILH Wilhelmsen B,41,0.6931465733274064
+3,sorted_2,Sorted by WILH Wilhelmsen B,42,0.6526134114596375
+3,sorted_2,Sorted by WILH Wilhelmsen B,43,0.6446766172681456
+3,sorted_2,Sorted by WILH Wilhelmsen B,44,0.6693207686246598
+3,sorted_2,Sorted by WILH Wilhelmsen B,45,0.6366854040230316
+3,sorted_2,Sorted by WILH Wilhelmsen B,46,0.7311561856960633
+3,sorted_2,Sorted by WILH Wilhelmsen B,47,0.6489433025737817
+3,sorted_2,Sorted by WILH Wilhelmsen B,48,0.6696354225889805
+3,sorted_2,Sorted by WILH Wilhelmsen B,49,0.6369494942614377
+3,sorted_2,Sorted by WILH Wilhelmsen B,50,0.634496090143541
+3,sorted_2,Sorted by WILH Wilhelmsen B,51,0.6943707246631835
+3,sorted_2,Sorted by WILH Wilhelmsen B,52,0.6635104060629133
+3,sorted_2,Sorted by WILH Wilhelmsen B,53,0.6211238979948603
+3,sorted_2,Sorted by WILH Wilhelmsen B,54,0.6228882680427748
+3,sorted_2,Sorted by WILH Wilhelmsen B,55,0.6929758004764195
+3,sorted_2,Sorted by WILH Wilhelmsen B,56,0.6306931566019983
+3,sorted_2,Sorted by WILH Wilhelmsen B,57,0.6883384745602698
+3,sorted_2,Sorted by WILH Wilhelmsen B,58,0.6034757231251657
+3,sorted_2,Sorted by WILH Wilhelmsen B,59,0.7020567158343707
+3,sorted_2,Sorted by WILH Wilhelmsen B,60,0.7559829467549926
+3,sorted_2,Sorted by WILH Wilhelmsen B,61,0.6992528915360469
+3,sorted_2,Sorted by WILH Wilhelmsen B,62,0.6649841371253965
+3,sorted_2,Sorted by WILH Wilhelmsen B,63,0.7175530793447857
+3,sorted_2,Sorted by WILH Wilhelmsen B,64,0.6725798117881685
+3,sorted_2,Sorted by WILH Wilhelmsen B,65,0.6640521453661216
+3,sorted_2,Sorted by WILH Wilhelmsen B,66,0.6676872668665246
+3,sorted_2,Sorted by WILH Wilhelmsen B,67,0.6048363870705783
+3,sorted_2,Sorted by WILH Wilhelmsen B,68,0.6341325028395363
+3,sorted_2,Sorted by WILH Wilhelmsen B,69,0.6048846621677938
+3,sorted_2,Sorted by WILH Wilhelmsen B,70,0.6762797766159391
+3,sorted_2,Sorted by WILH Wilhelmsen B,71,0.7204768884333136
+3,sorted_2,Sorted by WILH Wilhelmsen B,72,0.7399576630563597
+3,sorted_2,Sorted by WILH Wilhelmsen B,73,0.628482885713026
+3,sorted_2,Sorted by WILH Wilhelmsen B,74,0.6223160269534518
+3,sorted_2,Sorted by WILH Wilhelmsen B,75,0.6782890140050803
+3,sorted_2,Sorted by WILH Wilhelmsen B,76,0.7328892865324653
+3,sorted_2,Sorted by WILH Wilhelmsen B,77,0.617966110549109
+3,sorted_2,Sorted by WILH Wilhelmsen B,78,0.7190761042125114
+3,sorted_2,Sorted by WILH Wilhelmsen B,79,0.6589471880320659
+3,sorted_2,Sorted by WILH Wilhelmsen B,80,0.6377539882947058
+3,sorted_2,Sorted by WILH Wilhelmsen B,81,0.6749045026223205
+3,sorted_2,Sorted by WILH Wilhelmsen B,82,0.6723201897831363
+3,sorted_2,Sorted by WILH Wilhelmsen B,83,0.6648701511213909
+3,sorted_2,Sorted by WILH Wilhelmsen B,84,0.7110048984420108
+3,sorted_2,Sorted by WILH Wilhelmsen B,85,0.6165169072146914
+3,sorted_2,Sorted by WILH Wilhelmsen B,86,0.6515993630003704
+3,sorted_2,Sorted by WILH Wilhelmsen B,87,0.698998666214557
+3,sorted_2,Sorted by WILH Wilhelmsen B,88,0.6258643616209323
+3,sorted_2,Sorted by WILH Wilhelmsen B,89,0.6534577034574116
+3,sorted_2,Sorted by WILH Wilhelmsen B,90,0.6836186199465938
+3,sorted_2,Sorted by WILH Wilhelmsen B,91,0.6707988214321813
+3,sorted_2,Sorted by WILH Wilhelmsen B,92,0.6967131623079573
+3,sorted_2,Sorted by WILH Wilhelmsen B,93,0.6456564287364575
+3,sorted_2,Sorted by WILH Wilhelmsen B,94,0.6430813409672966
+3,sorted_2,Sorted by WILH Wilhelmsen B,95,0.7228052695267269
+3,sorted_2,Sorted by WILH Wilhelmsen B,96,0.6571411380316984
+3,sorted_2,Sorted by WILH Wilhelmsen B,97,0.6915125101046019
+3,sorted_2,Sorted by WILH Wilhelmsen B,98,0.6143578608089746
+3,sorted_2,Sorted by WILH Wilhelmsen B,99,0.6833764839721931
+3,sorted_3,Sorted by TOMRA SYSTEMS,0,0.6229435912182884
+3,sorted_3,Sorted by TOMRA SYSTEMS,1,0.6346179296647726
+3,sorted_3,Sorted by TOMRA SYSTEMS,2,0.6876440818555426
+3,sorted_3,Sorted by TOMRA SYSTEMS,3,0.6362815030599553
+3,sorted_3,Sorted by TOMRA SYSTEMS,4,0.632612229630497
+3,sorted_3,Sorted by TOMRA SYSTEMS,5,0.6472232623037831
+3,sorted_3,Sorted by TOMRA SYSTEMS,6,0.676125157213584
+3,sorted_3,Sorted by TOMRA SYSTEMS,7,0.6459926446947529
+3,sorted_3,Sorted by TOMRA SYSTEMS,8,0.6312596255443373
+3,sorted_3,Sorted by TOMRA SYSTEMS,9,0.7466817307314775
+3,sorted_3,Sorted by TOMRA SYSTEMS,10,0.6361033100414283
+3,sorted_3,Sorted by TOMRA SYSTEMS,11,0.68381225194042
+3,sorted_3,Sorted by TOMRA SYSTEMS,12,0.653476757927245
+3,sorted_3,Sorted by TOMRA SYSTEMS,13,0.629054608528582
+3,sorted_3,Sorted by TOMRA SYSTEMS,14,0.6574640110903573
+3,sorted_3,Sorted by TOMRA SYSTEMS,15,0.6349804091904571
+3,sorted_3,Sorted by TOMRA SYSTEMS,16,0.6778701893368172
+3,sorted_3,Sorted by TOMRA SYSTEMS,17,0.6452654624758332
+3,sorted_3,Sorted by TOMRA SYSTEMS,18,0.6194390181800683
+3,sorted_3,Sorted by TOMRA SYSTEMS,19,0.6322098067905224
+3,sorted_3,Sorted by TOMRA SYSTEMS,20,0.6135047717865543
+3,sorted_3,Sorted by TOMRA SYSTEMS,21,0.6409070823687417
+3,sorted_3,Sorted by TOMRA SYSTEMS,22,0.636836342075067
+3,sorted_3,Sorted by TOMRA SYSTEMS,23,0.6780177259513687
+3,sorted_3,Sorted by TOMRA SYSTEMS,24,0.6189010474242597
+3,sorted_3,Sorted by TOMRA SYSTEMS,25,0.6895394223037489
+3,sorted_3,Sorted by TOMRA SYSTEMS,26,0.6135217969297454
+3,sorted_3,Sorted by TOMRA SYSTEMS,27,0.6118529525790057
+3,sorted_3,Sorted by TOMRA SYSTEMS,28,0.7088155533610897
+3,sorted_3,Sorted by TOMRA SYSTEMS,29,0.6760748134829065
+3,sorted_3,Sorted by TOMRA SYSTEMS,30,0.6659133103682943
+3,sorted_3,Sorted by TOMRA SYSTEMS,31,0.6274372887546644
+3,sorted_3,Sorted by TOMRA SYSTEMS,32,0.6299468100849144
+3,sorted_3,Sorted by TOMRA SYSTEMS,33,0.6523855938016846
+3,sorted_3,Sorted by TOMRA SYSTEMS,34,0.6089812995601854
+3,sorted_3,Sorted by TOMRA SYSTEMS,35,0.6689644443901336
+3,sorted_3,Sorted by TOMRA SYSTEMS,36,0.7067476208607513
+3,sorted_3,Sorted by TOMRA SYSTEMS,37,0.5983181272824645
+3,sorted_3,Sorted by TOMRA SYSTEMS,38,0.6650304887515676
+3,sorted_3,Sorted by TOMRA SYSTEMS,39,0.6370523108971701
+3,sorted_3,Sorted by TOMRA SYSTEMS,40,0.6093211611372169
+3,sorted_3,Sorted by TOMRA SYSTEMS,41,0.6861450535823144
+3,sorted_3,Sorted by TOMRA SYSTEMS,42,0.649363200765914
+3,sorted_3,Sorted by TOMRA SYSTEMS,43,0.6448830526490912
+3,sorted_3,Sorted by TOMRA SYSTEMS,44,0.6606213936555151
+3,sorted_3,Sorted by TOMRA SYSTEMS,45,0.6577003579226317
+3,sorted_3,Sorted by TOMRA SYSTEMS,46,0.6551517966280481
+3,sorted_3,Sorted by TOMRA SYSTEMS,47,0.6388545301976181
+3,sorted_3,Sorted by TOMRA SYSTEMS,48,0.6488957900155127
+3,sorted_3,Sorted by TOMRA SYSTEMS,49,0.6415345000924924
+3,sorted_3,Sorted by TOMRA SYSTEMS,50,0.641186130794519
+3,sorted_3,Sorted by TOMRA SYSTEMS,51,0.6580610399046581
+3,sorted_3,Sorted by TOMRA SYSTEMS,52,0.6533418953014858
+3,sorted_3,Sorted by TOMRA SYSTEMS,53,0.6185640819232436
+3,sorted_3,Sorted by TOMRA SYSTEMS,54,0.5795853618748363
+3,sorted_3,Sorted by TOMRA SYSTEMS,55,0.6511288594767238
+3,sorted_3,Sorted by TOMRA SYSTEMS,56,0.5867014852615
+3,sorted_3,Sorted by TOMRA SYSTEMS,57,0.6695204896673757
+3,sorted_3,Sorted by TOMRA SYSTEMS,58,0.6210043137801742
+3,sorted_3,Sorted by TOMRA SYSTEMS,59,0.6911416840724058
+3,sorted_3,Sorted by TOMRA SYSTEMS,60,0.6708952878276249
+3,sorted_3,Sorted by TOMRA SYSTEMS,61,0.6712572804150803
+3,sorted_3,Sorted by TOMRA SYSTEMS,62,0.6288162940097908
+3,sorted_3,Sorted by TOMRA SYSTEMS,63,0.7239822131225527
+3,sorted_3,Sorted by TOMRA SYSTEMS,64,0.618372934720509
+3,sorted_3,Sorted by TOMRA SYSTEMS,65,0.5957372818256683
+3,sorted_3,Sorted by TOMRA SYSTEMS,66,0.6446321601323444
+3,sorted_3,Sorted by TOMRA SYSTEMS,67,0.5718370971343885
+3,sorted_3,Sorted by TOMRA SYSTEMS,68,0.598674738480653
+3,sorted_3,Sorted by TOMRA SYSTEMS,69,0.6381909359553682
+3,sorted_3,Sorted by TOMRA SYSTEMS,70,0.6375248274530861
+3,sorted_3,Sorted by TOMRA SYSTEMS,71,0.6583625456955937
+3,sorted_3,Sorted by TOMRA SYSTEMS,72,0.6769753150760034
+3,sorted_3,Sorted by TOMRA SYSTEMS,73,0.6315589338500949
+3,sorted_3,Sorted by TOMRA SYSTEMS,74,0.6427344690889149
+3,sorted_3,Sorted by TOMRA SYSTEMS,75,0.6821759329350169
+3,sorted_3,Sorted by TOMRA SYSTEMS,76,0.7736300458717007
+3,sorted_3,Sorted by TOMRA SYSTEMS,77,0.6523007831299595
+3,sorted_3,Sorted by TOMRA SYSTEMS,78,0.6850263747865422
+3,sorted_3,Sorted by TOMRA SYSTEMS,79,0.5997716585792287
+3,sorted_3,Sorted by TOMRA SYSTEMS,80,0.6336227637548928
+3,sorted_3,Sorted by TOMRA SYSTEMS,81,0.6730987057137885
+3,sorted_3,Sorted by TOMRA SYSTEMS,82,0.7204970297616211
+3,sorted_3,Sorted by TOMRA SYSTEMS,83,0.6453444219945694
+3,sorted_3,Sorted by TOMRA SYSTEMS,84,0.6417873169657601
+3,sorted_3,Sorted by TOMRA SYSTEMS,85,0.5705679305063052
+3,sorted_3,Sorted by TOMRA SYSTEMS,86,0.680399284283336
+3,sorted_3,Sorted by TOMRA SYSTEMS,87,0.6716527585493917
+3,sorted_3,Sorted by TOMRA SYSTEMS,88,0.6078933405740645
+3,sorted_3,Sorted by TOMRA SYSTEMS,89,0.6651925131185725
+3,sorted_3,Sorted by TOMRA SYSTEMS,90,0.6248467079822381
+3,sorted_3,Sorted by TOMRA SYSTEMS,91,0.7534513650629998
+3,sorted_3,Sorted by TOMRA SYSTEMS,92,0.6385361233024613
+3,sorted_3,Sorted by TOMRA SYSTEMS,93,0.6435277811796437
+3,sorted_3,Sorted by TOMRA SYSTEMS,94,0.6549387486022494
+3,sorted_3,Sorted by TOMRA SYSTEMS,95,0.6849651051915947
+3,sorted_3,Sorted by TOMRA SYSTEMS,96,0.608341657437144
+3,sorted_3,Sorted by TOMRA SYSTEMS,97,0.642818460480262
+3,sorted_3,Sorted by TOMRA SYSTEMS,98,0.6590448760418863
+3,sorted_3,Sorted by TOMRA SYSTEMS,99,0.6856958834347101
+3,baseline_seed_0,baseline seed 0,0,2.2637906591215247
+3,baseline_seed_0,baseline seed 0,1,4.40184476667148
+3,baseline_seed_0,baseline seed 0,2,1.7370046843116356
+3,baseline_seed_0,baseline seed 0,3,3.6106795530677216
+3,baseline_seed_0,baseline seed 0,4,3.151600183841009
+3,baseline_seed_0,baseline seed 0,5,2.5335082383192957
+3,baseline_seed_0,baseline seed 0,6,2.186992517045883
+3,baseline_seed_0,baseline seed 0,7,2.655919157200416
+3,baseline_seed_0,baseline seed 0,8,4.533185114374809
+3,baseline_seed_0,baseline seed 0,9,3.899081744677577
+3,baseline_seed_0,baseline seed 0,10,2.1915430315911193
+3,baseline_seed_0,baseline seed 0,11,3.5288779999363586
+3,baseline_seed_0,baseline seed 0,12,4.699250428932591
+3,baseline_seed_0,baseline seed 0,13,1.3447118487684786
+3,baseline_seed_0,baseline seed 0,14,2.398946572275768
+3,baseline_seed_0,baseline seed 0,15,3.817817448653307
+3,baseline_seed_0,baseline seed 0,16,2.2240948424602047
+3,baseline_seed_0,baseline seed 0,17,1.750271908042287
+3,baseline_seed_0,baseline seed 0,18,2.025098395223288
+3,baseline_seed_0,baseline seed 0,19,2.0866766932034437
+3,baseline_seed_0,baseline seed 0,20,1.7404537136100982
+3,baseline_seed_0,baseline seed 0,21,3.513813339982523
+3,baseline_seed_0,baseline seed 0,22,1.9015441948769878
+3,baseline_seed_0,baseline seed 0,23,2.35332772064482
+3,baseline_seed_0,baseline seed 0,24,2.4466864667650707
+3,baseline_seed_0,baseline seed 0,25,2.9262025164776544
+3,baseline_seed_0,baseline seed 0,26,1.8004978669799194
+3,baseline_seed_0,baseline seed 0,27,2.219937844107453
+3,baseline_seed_0,baseline seed 0,28,3.2381535329888043
+3,baseline_seed_0,baseline seed 0,29,3.4708068278286417
+3,baseline_seed_0,baseline seed 0,30,2.63839506211807
+3,baseline_seed_0,baseline seed 0,31,1.882882987006255
+3,baseline_seed_0,baseline seed 0,32,2.4575210461801356
+3,baseline_seed_0,baseline seed 0,33,1.8774839816386302
+3,baseline_seed_0,baseline seed 0,34,2.856233061660745
+3,baseline_seed_0,baseline seed 0,35,1.9476573330451943
+3,baseline_seed_0,baseline seed 0,36,2.1135595751793903
+3,baseline_seed_0,baseline seed 0,37,2.4012425866516907
+3,baseline_seed_0,baseline seed 0,38,3.2394632018626637
+3,baseline_seed_0,baseline seed 0,39,1.8187794325138458
+3,baseline_seed_0,baseline seed 0,40,4.127608097480304
+3,baseline_seed_0,baseline seed 0,41,3.4865162568806047
+3,baseline_seed_0,baseline seed 0,42,3.8803848061630157
+3,baseline_seed_0,baseline seed 0,43,3.98461205181623
+3,baseline_seed_0,baseline seed 0,44,3.3952957151610144
+3,baseline_seed_0,baseline seed 0,45,3.494380426083775
+3,baseline_seed_0,baseline seed 0,46,1.697626357401419
+3,baseline_seed_0,baseline seed 0,47,2.3388414726325824
+3,baseline_seed_0,baseline seed 0,48,2.112176289426246
+3,baseline_seed_0,baseline seed 0,49,1.8520573472267912
+3,baseline_seed_0,baseline seed 0,50,1.6759286571593046
+3,baseline_seed_0,baseline seed 0,51,1.9522859043524676
+3,baseline_seed_0,baseline seed 0,52,3.4118585422905707
+3,baseline_seed_0,baseline seed 0,53,1.90150067285434
+3,baseline_seed_0,baseline seed 0,54,2.7406133155828183
+3,baseline_seed_0,baseline seed 0,55,3.753404763170728
+3,baseline_seed_0,baseline seed 0,56,2.3324400132775547
+3,baseline_seed_0,baseline seed 0,57,2.4366252632171252
+3,baseline_seed_0,baseline seed 0,58,2.0518108615091433
+3,baseline_seed_0,baseline seed 0,59,3.7997327844965927
+3,baseline_seed_0,baseline seed 0,60,1.7127647033043363
+3,baseline_seed_0,baseline seed 0,61,3.4914132748557063
+3,baseline_seed_0,baseline seed 0,62,2.1529164831321714
+3,baseline_seed_0,baseline seed 0,63,2.5383061821344377
+3,baseline_seed_0,baseline seed 0,64,3.1054899057464933
+3,baseline_seed_0,baseline seed 0,65,5.631340406433432
+3,baseline_seed_0,baseline seed 0,66,2.6502809012408854
+3,baseline_seed_0,baseline seed 0,67,1.6430061431289817
+3,baseline_seed_0,baseline seed 0,68,2.429687164362792
+3,baseline_seed_0,baseline seed 0,69,1.6508807525855584
+3,baseline_seed_0,baseline seed 0,70,3.3532314871753535
+3,baseline_seed_0,baseline seed 0,71,1.8714797981905333
+3,baseline_seed_0,baseline seed 0,72,2.1838859742941548
+3,baseline_seed_0,baseline seed 0,73,1.418816831778196
+3,baseline_seed_0,baseline seed 0,74,2.769783361219658
+3,baseline_seed_0,baseline seed 0,75,2.776729916358076
+3,baseline_seed_0,baseline seed 0,76,2.0740884040631067
+3,baseline_seed_0,baseline seed 0,77,3.7837312221400934
+3,baseline_seed_0,baseline seed 0,78,3.103040511303783
+3,baseline_seed_0,baseline seed 0,79,2.356200387265606
+3,baseline_seed_0,baseline seed 0,80,2.5722868939698817
+3,baseline_seed_0,baseline seed 0,81,3.965530781787292
+3,baseline_seed_0,baseline seed 0,82,2.7618381335806133
+3,baseline_seed_0,baseline seed 0,83,2.30243567919571
+3,baseline_seed_0,baseline seed 0,84,3.410648179632887
+3,baseline_seed_0,baseline seed 0,85,2.9626262919690625
+3,baseline_seed_0,baseline seed 0,86,4.1415222869971915
+3,baseline_seed_0,baseline seed 0,87,3.852998280642899
+3,baseline_seed_0,baseline seed 0,88,2.6532021515425463
+3,baseline_seed_0,baseline seed 0,89,3.822662750765084
+3,baseline_seed_0,baseline seed 0,90,2.2335039974266686
+3,baseline_seed_0,baseline seed 0,91,2.1005663214268737
+3,baseline_seed_0,baseline seed 0,92,2.396870733349682
+3,baseline_seed_0,baseline seed 0,93,1.6286322959354336
+3,baseline_seed_0,baseline seed 0,94,3.9522240511829585
+3,baseline_seed_0,baseline seed 0,95,1.5745753666618723
+3,baseline_seed_0,baseline seed 0,96,2.1000702794776824
+3,baseline_seed_0,baseline seed 0,97,2.491193509523499
+3,baseline_seed_0,baseline seed 0,98,1.5631106458824362
+3,baseline_seed_0,baseline seed 0,99,1.4280249308018529
+3,baseline_seed_1,baseline seed 1,0,1.8635137506043156
+3,baseline_seed_1,baseline seed 1,1,3.522244097890381
+3,baseline_seed_1,baseline seed 1,2,2.696833241700388
+3,baseline_seed_1,baseline seed 1,3,2.4662695008301183
+3,baseline_seed_1,baseline seed 1,4,2.652399280496983
+3,baseline_seed_1,baseline seed 1,5,1.9807773165861455
+3,baseline_seed_1,baseline seed 1,6,2.7625743429403693
+3,baseline_seed_1,baseline seed 1,7,2.07254473845023
+3,baseline_seed_1,baseline seed 1,8,2.1764292680812645
+3,baseline_seed_1,baseline seed 1,9,2.3268579390579767
+3,baseline_seed_1,baseline seed 1,10,2.4631540764930766
+3,baseline_seed_1,baseline seed 1,11,1.907525693710855
+3,baseline_seed_1,baseline seed 1,12,2.260369411242747
+3,baseline_seed_1,baseline seed 1,13,1.8947568937428216
+3,baseline_seed_1,baseline seed 1,14,2.285107240405365
+3,baseline_seed_1,baseline seed 1,15,2.4140375369301563
+3,baseline_seed_1,baseline seed 1,16,2.367795443717833
+3,baseline_seed_1,baseline seed 1,17,2.4447097424754705
+3,baseline_seed_1,baseline seed 1,18,2.604895936333428
+3,baseline_seed_1,baseline seed 1,19,2.101624355755169
+3,baseline_seed_1,baseline seed 1,20,2.0756418984296343
+3,baseline_seed_1,baseline seed 1,21,2.8068442714962143
+3,baseline_seed_1,baseline seed 1,22,2.028200932466176
+3,baseline_seed_1,baseline seed 1,23,3.3669419514321035
+3,baseline_seed_1,baseline seed 1,24,2.5573801611505433
+3,baseline_seed_1,baseline seed 1,25,2.2515032789036016
+3,baseline_seed_1,baseline seed 1,26,1.9511021109080777
+3,baseline_seed_1,baseline seed 1,27,3.2249261594247125
+3,baseline_seed_1,baseline seed 1,28,2.4670182818062836
+3,baseline_seed_1,baseline seed 1,29,1.9031366249605943
+3,baseline_seed_1,baseline seed 1,30,2.3239909234890748
+3,baseline_seed_1,baseline seed 1,31,2.478632970663179
+3,baseline_seed_1,baseline seed 1,32,2.346624352934259
+3,baseline_seed_1,baseline seed 1,33,2.7688536549942113
+3,baseline_seed_1,baseline seed 1,34,3.2598360827338855
+3,baseline_seed_1,baseline seed 1,35,2.9905062799920334
+3,baseline_seed_1,baseline seed 1,36,2.373784494498842
+3,baseline_seed_1,baseline seed 1,37,2.0592328194584653
+3,baseline_seed_1,baseline seed 1,38,2.740353354678566
+3,baseline_seed_1,baseline seed 1,39,2.7907125029815787
+3,baseline_seed_1,baseline seed 1,40,1.8232675485494307
+3,baseline_seed_1,baseline seed 1,41,2.4915486109015226
+3,baseline_seed_1,baseline seed 1,42,1.9475642569092388
+3,baseline_seed_1,baseline seed 1,43,2.765369936691035
+3,baseline_seed_1,baseline seed 1,44,3.6704669350298227
+3,baseline_seed_1,baseline seed 1,45,2.194550034964291
+3,baseline_seed_1,baseline seed 1,46,2.1276323678177196
+3,baseline_seed_1,baseline seed 1,47,3.250786316543127
+3,baseline_seed_1,baseline seed 1,48,2.613407626701612
+3,baseline_seed_1,baseline seed 1,49,2.4361531910241148
+3,baseline_seed_1,baseline seed 1,50,2.792264839726375
+3,baseline_seed_1,baseline seed 1,51,2.6068269684446785
+3,baseline_seed_1,baseline seed 1,52,3.3757980678572914
+3,baseline_seed_1,baseline seed 1,53,1.8421401620161648
+3,baseline_seed_1,baseline seed 1,54,2.6272039964155587
+3,baseline_seed_1,baseline seed 1,55,3.7231044577484425
+3,baseline_seed_1,baseline seed 1,56,2.922518084568637
+3,baseline_seed_1,baseline seed 1,57,3.5780323321680263
+3,baseline_seed_1,baseline seed 1,58,1.8777159448496916
+3,baseline_seed_1,baseline seed 1,59,2.4162847021735145
+3,baseline_seed_1,baseline seed 1,60,2.1613154158105576
+3,baseline_seed_1,baseline seed 1,61,2.4603985096841963
+3,baseline_seed_1,baseline seed 1,62,2.781936528710474
+3,baseline_seed_1,baseline seed 1,63,2.7085985948161264
+3,baseline_seed_1,baseline seed 1,64,1.9136483821934405
+3,baseline_seed_1,baseline seed 1,65,1.9244825348322776
+3,baseline_seed_1,baseline seed 1,66,2.2088178105991734
+3,baseline_seed_1,baseline seed 1,67,2.7646916201835414
+3,baseline_seed_1,baseline seed 1,68,2.465855071712432
+3,baseline_seed_1,baseline seed 1,69,2.075020783065362
+3,baseline_seed_1,baseline seed 1,70,2.468209767017341
+3,baseline_seed_1,baseline seed 1,71,2.5591779526705083
+3,baseline_seed_1,baseline seed 1,72,3.9930634521082267
+3,baseline_seed_1,baseline seed 1,73,2.053145578057216
+3,baseline_seed_1,baseline seed 1,74,1.850902231140863
+3,baseline_seed_1,baseline seed 1,75,3.487739865429897
+3,baseline_seed_1,baseline seed 1,76,2.848645591188948
+3,baseline_seed_1,baseline seed 1,77,2.5676831260013975
+3,baseline_seed_1,baseline seed 1,78,3.637846331451253
+3,baseline_seed_1,baseline seed 1,79,2.288691671322974
+3,baseline_seed_1,baseline seed 1,80,2.33429336337937
+3,baseline_seed_1,baseline seed 1,81,2.3938080528767522
+3,baseline_seed_1,baseline seed 1,82,2.4485444370443132
+3,baseline_seed_1,baseline seed 1,83,2.3529898702930527
+3,baseline_seed_1,baseline seed 1,84,1.7846683830610441
+3,baseline_seed_1,baseline seed 1,85,1.9282381227372853
+3,baseline_seed_1,baseline seed 1,86,2.9517112245344737
+3,baseline_seed_1,baseline seed 1,87,2.294556262784464
+3,baseline_seed_1,baseline seed 1,88,3.0643591085427544
+3,baseline_seed_1,baseline seed 1,89,3.2645682607301847
+3,baseline_seed_1,baseline seed 1,90,2.158761659231554
+3,baseline_seed_1,baseline seed 1,91,3.3628019864203984
+3,baseline_seed_1,baseline seed 1,92,2.058936634556891
+3,baseline_seed_1,baseline seed 1,93,3.2182090022254823
+3,baseline_seed_1,baseline seed 1,94,2.4136057034225518
+3,baseline_seed_1,baseline seed 1,95,3.3493967321343487
+3,baseline_seed_1,baseline seed 1,96,3.5296054752050385
+3,baseline_seed_1,baseline seed 1,97,2.508224984959039
+3,baseline_seed_1,baseline seed 1,98,2.6252490292484647
+3,baseline_seed_1,baseline seed 1,99,2.9886198031102182
+3,baseline_seed_2,baseline seed 2,0,2.0178448063038443
+3,baseline_seed_2,baseline seed 2,1,2.1684848906111753
+3,baseline_seed_2,baseline seed 2,2,1.842778668651945
+3,baseline_seed_2,baseline seed 2,3,2.2082368919368487
+3,baseline_seed_2,baseline seed 2,4,1.836833110493516
+3,baseline_seed_2,baseline seed 2,5,2.1054569816782163
+3,baseline_seed_2,baseline seed 2,6,1.642163526553167
+3,baseline_seed_2,baseline seed 2,7,2.3641525141494415
+3,baseline_seed_2,baseline seed 2,8,2.298572694918772
+3,baseline_seed_2,baseline seed 2,9,1.6097672272994363
+3,baseline_seed_2,baseline seed 2,10,2.3281714226183623
+3,baseline_seed_2,baseline seed 2,11,2.0437836899293735
+3,baseline_seed_2,baseline seed 2,12,2.192718971846741
+3,baseline_seed_2,baseline seed 2,13,1.5912566523684983
+3,baseline_seed_2,baseline seed 2,14,1.7391558234947195
+3,baseline_seed_2,baseline seed 2,15,2.598892841079136
+3,baseline_seed_2,baseline seed 2,16,2.148543907542018
+3,baseline_seed_2,baseline seed 2,17,1.9484383763561117
+3,baseline_seed_2,baseline seed 2,18,2.5466989529427186
+3,baseline_seed_2,baseline seed 2,19,1.9899582065544896
+3,baseline_seed_2,baseline seed 2,20,1.4010977593719627
+3,baseline_seed_2,baseline seed 2,21,1.8086870901541883
+3,baseline_seed_2,baseline seed 2,22,1.7705919786060698
+3,baseline_seed_2,baseline seed 2,23,1.9670404543938285
+3,baseline_seed_2,baseline seed 2,24,1.9825828468664153
+3,baseline_seed_2,baseline seed 2,25,2.2852780857727475
+3,baseline_seed_2,baseline seed 2,26,1.7331218069746537
+3,baseline_seed_2,baseline seed 2,27,1.7288984564365537
+3,baseline_seed_2,baseline seed 2,28,2.561130880285643
+3,baseline_seed_2,baseline seed 2,29,1.6394857595392238
+3,baseline_seed_2,baseline seed 2,30,1.7825949051866998
+3,baseline_seed_2,baseline seed 2,31,1.6485525616033891
+3,baseline_seed_2,baseline seed 2,32,2.276886352466176
+3,baseline_seed_2,baseline seed 2,33,1.5609454284935727
+3,baseline_seed_2,baseline seed 2,34,1.8719317572738403
+3,baseline_seed_2,baseline seed 2,35,2.1918657880608587
+3,baseline_seed_2,baseline seed 2,36,2.113283064573361
+3,baseline_seed_2,baseline seed 2,37,1.7717171847281794
+3,baseline_seed_2,baseline seed 2,38,1.7503220945468203
+3,baseline_seed_2,baseline seed 2,39,1.7953375704997225
+3,baseline_seed_2,baseline seed 2,40,2.2643153662879745
+3,baseline_seed_2,baseline seed 2,41,1.8131069968329838
+3,baseline_seed_2,baseline seed 2,42,1.6157198240344561
+3,baseline_seed_2,baseline seed 2,43,2.254241996090419
+3,baseline_seed_2,baseline seed 2,44,2.4066900123904236
+3,baseline_seed_2,baseline seed 2,45,1.748159656767619
+3,baseline_seed_2,baseline seed 2,46,2.733120027534358
+3,baseline_seed_2,baseline seed 2,47,2.2431517562216925
+3,baseline_seed_2,baseline seed 2,48,1.9457443726198718
+3,baseline_seed_2,baseline seed 2,49,1.6900431606341315
+3,baseline_seed_2,baseline seed 2,50,1.6617783148462164
+3,baseline_seed_2,baseline seed 2,51,1.7916001678990272
+3,baseline_seed_2,baseline seed 2,52,1.7178625929490012
+3,baseline_seed_2,baseline seed 2,53,2.2520981432762204
+3,baseline_seed_2,baseline seed 2,54,2.028333116605344
+3,baseline_seed_2,baseline seed 2,55,2.0904895900523957
+3,baseline_seed_2,baseline seed 2,56,1.765285249735126
+3,baseline_seed_2,baseline seed 2,57,2.40659168412068
+3,baseline_seed_2,baseline seed 2,58,2.859766823804135
+3,baseline_seed_2,baseline seed 2,59,2.122395233072375
+3,baseline_seed_2,baseline seed 2,60,1.626497103698441
+3,baseline_seed_2,baseline seed 2,61,1.531791933979974
+3,baseline_seed_2,baseline seed 2,62,1.8864367111489484
+3,baseline_seed_2,baseline seed 2,63,2.16476506886865
+3,baseline_seed_2,baseline seed 2,64,2.233371859135546
+3,baseline_seed_2,baseline seed 2,65,2.091019731385053
+3,baseline_seed_2,baseline seed 2,66,1.8709560413539126
+3,baseline_seed_2,baseline seed 2,67,1.6563810465820623
+3,baseline_seed_2,baseline seed 2,68,1.5770060315819234
+3,baseline_seed_2,baseline seed 2,69,1.7767476099542394
+3,baseline_seed_2,baseline seed 2,70,2.0340124114556204
+3,baseline_seed_2,baseline seed 2,71,2.024321538294082
+3,baseline_seed_2,baseline seed 2,72,2.1428630699068876
+3,baseline_seed_2,baseline seed 2,73,2.0148890142995963
+3,baseline_seed_2,baseline seed 2,74,1.4031760266217126
+3,baseline_seed_2,baseline seed 2,75,1.4688625663436312
+3,baseline_seed_2,baseline seed 2,76,1.7700297351913545
+3,baseline_seed_2,baseline seed 2,77,1.8943876421845705
+3,baseline_seed_2,baseline seed 2,78,1.926201333002173
+3,baseline_seed_2,baseline seed 2,79,1.9290473643253971
+3,baseline_seed_2,baseline seed 2,80,1.7319859023500086
+3,baseline_seed_2,baseline seed 2,81,1.7189112937359294
+3,baseline_seed_2,baseline seed 2,82,1.623520043250237
+3,baseline_seed_2,baseline seed 2,83,1.556366291686968
+3,baseline_seed_2,baseline seed 2,84,1.9365731847369543
+3,baseline_seed_2,baseline seed 2,85,1.9125351352789306
+3,baseline_seed_2,baseline seed 2,86,1.878692029848176
+3,baseline_seed_2,baseline seed 2,87,2.1540657027450183
+3,baseline_seed_2,baseline seed 2,88,2.0699762597794114
+3,baseline_seed_2,baseline seed 2,89,1.7240573477993173
+3,baseline_seed_2,baseline seed 2,90,1.669821437091868
+3,baseline_seed_2,baseline seed 2,91,2.23034943658716
+3,baseline_seed_2,baseline seed 2,92,1.6882633310196624
+3,baseline_seed_2,baseline seed 2,93,1.9276546672425294
+3,baseline_seed_2,baseline seed 2,94,2.196808613739268
+3,baseline_seed_2,baseline seed 2,95,1.8190601850210297
+3,baseline_seed_2,baseline seed 2,96,1.6312752378691178
+3,baseline_seed_2,baseline seed 2,97,2.7661018606301866
+3,baseline_seed_2,baseline seed 2,98,2.0876421151988653
+3,baseline_seed_2,baseline seed 2,99,1.94610887870349
+3,weight10_seed_0,weight10 seed 0,0,0.49080148999490636
+3,weight10_seed_0,weight10 seed 0,1,0.5256968365721191
+3,weight10_seed_0,weight10 seed 0,2,0.6823439499912592
+3,weight10_seed_0,weight10 seed 0,3,0.6416199024795841
+3,weight10_seed_0,weight10 seed 0,4,0.5093211263590354
+3,weight10_seed_0,weight10 seed 0,5,0.5488698699769496
+3,weight10_seed_0,weight10 seed 0,6,0.5596169832413188
+3,weight10_seed_0,weight10 seed 0,7,0.5775543920435888
+3,weight10_seed_0,weight10 seed 0,8,0.6093275625446936
+3,weight10_seed_0,weight10 seed 0,9,0.48976052624089045
+3,weight10_seed_0,weight10 seed 0,10,0.533843483202935
+3,weight10_seed_0,weight10 seed 0,11,0.5699927892197572
+3,weight10_seed_0,weight10 seed 0,12,0.6418761984449195
+3,weight10_seed_0,weight10 seed 0,13,0.5048367323524778
+3,weight10_seed_0,weight10 seed 0,14,0.6335049453728429
+3,weight10_seed_0,weight10 seed 0,15,0.5448842807190097
+3,weight10_seed_0,weight10 seed 0,16,0.6016830745120887
+3,weight10_seed_0,weight10 seed 0,17,0.4532266454828582
+3,weight10_seed_0,weight10 seed 0,18,0.6305186884084117
+3,weight10_seed_0,weight10 seed 0,19,0.5231519035797255
+3,weight10_seed_0,weight10 seed 0,20,0.6361367158562095
+3,weight10_seed_0,weight10 seed 0,21,0.6429643638088667
+3,weight10_seed_0,weight10 seed 0,22,0.5421405400159645
+3,weight10_seed_0,weight10 seed 0,23,0.6344086941305975
+3,weight10_seed_0,weight10 seed 0,24,0.6503095223784777
+3,weight10_seed_0,weight10 seed 0,25,0.6826714907503637
+3,weight10_seed_0,weight10 seed 0,26,0.5544822434544802
+3,weight10_seed_0,weight10 seed 0,27,0.599438101954054
+3,weight10_seed_0,weight10 seed 0,28,0.6019464390658532
+3,weight10_seed_0,weight10 seed 0,29,0.5273797727340176
+3,weight10_seed_0,weight10 seed 0,30,0.6182606996332207
+3,weight10_seed_0,weight10 seed 0,31,0.5206937498821795
+3,weight10_seed_0,weight10 seed 0,32,0.6327168260203994
+3,weight10_seed_0,weight10 seed 0,33,0.5219192787533792
+3,weight10_seed_0,weight10 seed 0,34,0.6169088377174593
+3,weight10_seed_0,weight10 seed 0,35,0.6216791415423342
+3,weight10_seed_0,weight10 seed 0,36,0.5860637566081518
+3,weight10_seed_0,weight10 seed 0,37,0.6881178514286777
+3,weight10_seed_0,weight10 seed 0,38,0.6230536136926261
+3,weight10_seed_0,weight10 seed 0,39,0.5563762122312329
+3,weight10_seed_0,weight10 seed 0,40,0.540927029722068
+3,weight10_seed_0,weight10 seed 0,41,0.6074200491217272
+3,weight10_seed_0,weight10 seed 0,42,0.624896081375954
+3,weight10_seed_0,weight10 seed 0,43,0.5242693893012348
+3,weight10_seed_0,weight10 seed 0,44,0.5832022354675188
+3,weight10_seed_0,weight10 seed 0,45,0.6219614609891094
+3,weight10_seed_0,weight10 seed 0,46,0.5887869100620037
+3,weight10_seed_0,weight10 seed 0,47,0.5843140003171784
+3,weight10_seed_0,weight10 seed 0,48,0.6010510313142446
+3,weight10_seed_0,weight10 seed 0,49,0.5821908906217664
+3,weight10_seed_0,weight10 seed 0,50,0.6360790802578195
+3,weight10_seed_0,weight10 seed 0,51,0.4951100389001395
+3,weight10_seed_0,weight10 seed 0,52,0.5544436219594336
+3,weight10_seed_0,weight10 seed 0,53,0.5309358017831763
+3,weight10_seed_0,weight10 seed 0,54,0.6604831971935312
+3,weight10_seed_0,weight10 seed 0,55,0.5689509334547918
+3,weight10_seed_0,weight10 seed 0,56,0.5605084799223226
+3,weight10_seed_0,weight10 seed 0,57,0.5023757098379051
+3,weight10_seed_0,weight10 seed 0,58,0.6165832579419526
+3,weight10_seed_0,weight10 seed 0,59,0.5091453528600604
+3,weight10_seed_0,weight10 seed 0,60,0.5358122088867473
+3,weight10_seed_0,weight10 seed 0,61,0.4562580997003686
+3,weight10_seed_0,weight10 seed 0,62,0.6034369574440686
+3,weight10_seed_0,weight10 seed 0,63,0.518812840651682
+3,weight10_seed_0,weight10 seed 0,64,0.6666109466592337
+3,weight10_seed_0,weight10 seed 0,65,0.5609042085862191
+3,weight10_seed_0,weight10 seed 0,66,0.491196069322458
+3,weight10_seed_0,weight10 seed 0,67,0.7239729500522908
+3,weight10_seed_0,weight10 seed 0,68,0.5204538347146923
+3,weight10_seed_0,weight10 seed 0,69,0.580492418267589
+3,weight10_seed_0,weight10 seed 0,70,0.524809309577647
+3,weight10_seed_0,weight10 seed 0,71,0.6464775747374475
+3,weight10_seed_0,weight10 seed 0,72,0.4914984715296222
+3,weight10_seed_0,weight10 seed 0,73,0.5484923623662328
+3,weight10_seed_0,weight10 seed 0,74,0.573950312395086
+3,weight10_seed_0,weight10 seed 0,75,0.5050276192469545
+3,weight10_seed_0,weight10 seed 0,76,0.5613355806213438
+3,weight10_seed_0,weight10 seed 0,77,0.6025455152256883
+3,weight10_seed_0,weight10 seed 0,78,0.5478067630530433
+3,weight10_seed_0,weight10 seed 0,79,0.5748065437398949
+3,weight10_seed_0,weight10 seed 0,80,0.6606220122915362
+3,weight10_seed_0,weight10 seed 0,81,0.5625524966734322
+3,weight10_seed_0,weight10 seed 0,82,0.5555124438226136
+3,weight10_seed_0,weight10 seed 0,83,0.5234341880236388
+3,weight10_seed_0,weight10 seed 0,84,0.6005026900517554
+3,weight10_seed_0,weight10 seed 0,85,0.646930931935401
+3,weight10_seed_0,weight10 seed 0,86,0.5563224811244087
+3,weight10_seed_0,weight10 seed 0,87,0.6150281816771277
+3,weight10_seed_0,weight10 seed 0,88,0.6063463186847643
+3,weight10_seed_0,weight10 seed 0,89,0.5086647658128104
+3,weight10_seed_0,weight10 seed 0,90,0.5725374849153154
+3,weight10_seed_0,weight10 seed 0,91,0.5517205494901943
+3,weight10_seed_0,weight10 seed 0,92,0.613604689727867
+3,weight10_seed_0,weight10 seed 0,93,0.47560267469224776
+3,weight10_seed_0,weight10 seed 0,94,0.5408541972653564
+3,weight10_seed_0,weight10 seed 0,95,0.4738063253279603
+3,weight10_seed_0,weight10 seed 0,96,0.6307683566398115
+3,weight10_seed_0,weight10 seed 0,97,0.5672173517116395
+3,weight10_seed_0,weight10 seed 0,98,0.5882553046458787
+3,weight10_seed_0,weight10 seed 0,99,0.7259158515408438
+3,weight10_seed_1,weight10 seed 1,0,0.428932189767405
+3,weight10_seed_1,weight10 seed 1,1,0.3498440344947907
+3,weight10_seed_1,weight10 seed 1,2,0.4453279994652835
+3,weight10_seed_1,weight10 seed 1,3,0.35855384380124217
+3,weight10_seed_1,weight10 seed 1,4,0.44548612687151096
+3,weight10_seed_1,weight10 seed 1,5,0.4048975890203379
+3,weight10_seed_1,weight10 seed 1,6,0.38900377787590273
+3,weight10_seed_1,weight10 seed 1,7,0.42089883462767214
+3,weight10_seed_1,weight10 seed 1,8,0.4209012899687485
+3,weight10_seed_1,weight10 seed 1,9,0.3812331699813816
+3,weight10_seed_1,weight10 seed 1,10,0.4478945609605821
+3,weight10_seed_1,weight10 seed 1,11,0.46978639580087506
+3,weight10_seed_1,weight10 seed 1,12,0.4692027875203313
+3,weight10_seed_1,weight10 seed 1,13,0.4214019132384682
+3,weight10_seed_1,weight10 seed 1,14,0.42099513923458576
+3,weight10_seed_1,weight10 seed 1,15,0.45560329786454484
+3,weight10_seed_1,weight10 seed 1,16,0.3352032120784576
+3,weight10_seed_1,weight10 seed 1,17,0.3752890044007668
+3,weight10_seed_1,weight10 seed 1,18,0.38897459413397645
+3,weight10_seed_1,weight10 seed 1,19,0.3682778014689098
+3,weight10_seed_1,weight10 seed 1,20,0.4062778910851519
+3,weight10_seed_1,weight10 seed 1,21,0.38929616326730104
+3,weight10_seed_1,weight10 seed 1,22,0.4911870029279118
+3,weight10_seed_1,weight10 seed 1,23,0.44331104932392107
+3,weight10_seed_1,weight10 seed 1,24,0.37970737784553527
+3,weight10_seed_1,weight10 seed 1,25,0.48718888262045335
+3,weight10_seed_1,weight10 seed 1,26,0.4301071521781933
+3,weight10_seed_1,weight10 seed 1,27,0.5198607243830973
+3,weight10_seed_1,weight10 seed 1,28,0.41109262106206745
+3,weight10_seed_1,weight10 seed 1,29,0.38580180105951206
+3,weight10_seed_1,weight10 seed 1,30,0.3888264213682329
+3,weight10_seed_1,weight10 seed 1,31,0.36505501204061597
+3,weight10_seed_1,weight10 seed 1,32,0.503883205080176
+3,weight10_seed_1,weight10 seed 1,33,0.38451957256295916
+3,weight10_seed_1,weight10 seed 1,34,0.41704743442622255
+3,weight10_seed_1,weight10 seed 1,35,0.33276117237817004
+3,weight10_seed_1,weight10 seed 1,36,0.3598988494528112
+3,weight10_seed_1,weight10 seed 1,37,0.47340600730170845
+3,weight10_seed_1,weight10 seed 1,38,0.4133454365648626
+3,weight10_seed_1,weight10 seed 1,39,0.3379346134258469
+3,weight10_seed_1,weight10 seed 1,40,0.40368763841263466
+3,weight10_seed_1,weight10 seed 1,41,0.3784153235718627
+3,weight10_seed_1,weight10 seed 1,42,0.4242688816545624
+3,weight10_seed_1,weight10 seed 1,43,0.3733476269939245
+3,weight10_seed_1,weight10 seed 1,44,0.48095467891538324
+3,weight10_seed_1,weight10 seed 1,45,0.4827480190326879
+3,weight10_seed_1,weight10 seed 1,46,0.38107943125610977
+3,weight10_seed_1,weight10 seed 1,47,0.4780542392487563
+3,weight10_seed_1,weight10 seed 1,48,0.49748637540044
+3,weight10_seed_1,weight10 seed 1,49,0.4608295343788248
+3,weight10_seed_1,weight10 seed 1,50,0.34740183038236766
+3,weight10_seed_1,weight10 seed 1,51,0.35910555044048714
+3,weight10_seed_1,weight10 seed 1,52,0.39403088415586257
+3,weight10_seed_1,weight10 seed 1,53,0.42981044978077354
+3,weight10_seed_1,weight10 seed 1,54,0.36936940719044364
+3,weight10_seed_1,weight10 seed 1,55,0.5039630923829937
+3,weight10_seed_1,weight10 seed 1,56,0.37797861746261235
+3,weight10_seed_1,weight10 seed 1,57,0.45022435777765135
+3,weight10_seed_1,weight10 seed 1,58,0.4312956351437989
+3,weight10_seed_1,weight10 seed 1,59,0.3459376634522787
+3,weight10_seed_1,weight10 seed 1,60,0.36439165862781076
+3,weight10_seed_1,weight10 seed 1,61,0.39851457992683614
+3,weight10_seed_1,weight10 seed 1,62,0.35469203683401396
+3,weight10_seed_1,weight10 seed 1,63,0.3706553767649922
+3,weight10_seed_1,weight10 seed 1,64,0.48096989999247036
+3,weight10_seed_1,weight10 seed 1,65,0.33716792596499
+3,weight10_seed_1,weight10 seed 1,66,0.36463432641298016
+3,weight10_seed_1,weight10 seed 1,67,0.3765737028820928
+3,weight10_seed_1,weight10 seed 1,68,0.3815279936750549
+3,weight10_seed_1,weight10 seed 1,69,0.4009256120392233
+3,weight10_seed_1,weight10 seed 1,70,0.4589309429742087
+3,weight10_seed_1,weight10 seed 1,71,0.4103071141013034
+3,weight10_seed_1,weight10 seed 1,72,0.38563104253121944
+3,weight10_seed_1,weight10 seed 1,73,0.4104353576096186
+3,weight10_seed_1,weight10 seed 1,74,0.41441205095165357
+3,weight10_seed_1,weight10 seed 1,75,0.40356578328811077
+3,weight10_seed_1,weight10 seed 1,76,0.4661821886412975
+3,weight10_seed_1,weight10 seed 1,77,0.3793662893190367
+3,weight10_seed_1,weight10 seed 1,78,0.4780495199858592
+3,weight10_seed_1,weight10 seed 1,79,0.37784497233617276
+3,weight10_seed_1,weight10 seed 1,80,0.34754752860293464
+3,weight10_seed_1,weight10 seed 1,81,0.3633756460844654
+3,weight10_seed_1,weight10 seed 1,82,0.4706504970655001
+3,weight10_seed_1,weight10 seed 1,83,0.42177387714842235
+3,weight10_seed_1,weight10 seed 1,84,0.3904002903380638
+3,weight10_seed_1,weight10 seed 1,85,0.5106562676367622
+3,weight10_seed_1,weight10 seed 1,86,0.32821678453897873
+3,weight10_seed_1,weight10 seed 1,87,0.3916606212953214
+3,weight10_seed_1,weight10 seed 1,88,0.39407643464992653
+3,weight10_seed_1,weight10 seed 1,89,0.3884593687994475
+3,weight10_seed_1,weight10 seed 1,90,0.5543191988440779
+3,weight10_seed_1,weight10 seed 1,91,0.38021163360554044
+3,weight10_seed_1,weight10 seed 1,92,0.34474854509145597
+3,weight10_seed_1,weight10 seed 1,93,0.38555820105270194
+3,weight10_seed_1,weight10 seed 1,94,0.5281314762015322
+3,weight10_seed_1,weight10 seed 1,95,0.546193360898465
+3,weight10_seed_1,weight10 seed 1,96,0.3465341296163574
+3,weight10_seed_1,weight10 seed 1,97,0.36047110780058683
+3,weight10_seed_1,weight10 seed 1,98,0.4914796199310784
+3,weight10_seed_1,weight10 seed 1,99,0.411417104243144
+3,weight10_seed_2,weight10 seed 2,0,1.150129284012927
+3,weight10_seed_2,weight10 seed 2,1,1.6178965925238615
+3,weight10_seed_2,weight10 seed 2,2,1.3798036866748384
+3,weight10_seed_2,weight10 seed 2,3,1.2835677674161559
+3,weight10_seed_2,weight10 seed 2,4,1.2647741573776072
+3,weight10_seed_2,weight10 seed 2,5,1.1004769921925197
+3,weight10_seed_2,weight10 seed 2,6,1.1356064168734636
+3,weight10_seed_2,weight10 seed 2,7,1.0100162105407777
+3,weight10_seed_2,weight10 seed 2,8,1.9997780200611945
+3,weight10_seed_2,weight10 seed 2,9,0.8622455545519713
+3,weight10_seed_2,weight10 seed 2,10,1.0255262566053758
+3,weight10_seed_2,weight10 seed 2,11,1.58030036570805
+3,weight10_seed_2,weight10 seed 2,12,1.2556344116382783
+3,weight10_seed_2,weight10 seed 2,13,1.541909761725277
+3,weight10_seed_2,weight10 seed 2,14,1.1587649548498327
+3,weight10_seed_2,weight10 seed 2,15,1.7779396387565631
+3,weight10_seed_2,weight10 seed 2,16,0.627570349872111
+3,weight10_seed_2,weight10 seed 2,17,1.0296242678507326
+3,weight10_seed_2,weight10 seed 2,18,0.9474790352555545
+3,weight10_seed_2,weight10 seed 2,19,0.9224672329390152
+3,weight10_seed_2,weight10 seed 2,20,1.7895006583862618
+3,weight10_seed_2,weight10 seed 2,21,1.6217849938571824
+3,weight10_seed_2,weight10 seed 2,22,1.2908159906234136
+3,weight10_seed_2,weight10 seed 2,23,1.1296996318525394
+3,weight10_seed_2,weight10 seed 2,24,1.6887666180139855
+3,weight10_seed_2,weight10 seed 2,25,1.1677290640495066
+3,weight10_seed_2,weight10 seed 2,26,2.108740918862932
+3,weight10_seed_2,weight10 seed 2,27,0.9946789065495881
+3,weight10_seed_2,weight10 seed 2,28,1.7995503510867108
+3,weight10_seed_2,weight10 seed 2,29,1.3141657500480755
+3,weight10_seed_2,weight10 seed 2,30,1.132548629210482
+3,weight10_seed_2,weight10 seed 2,31,1.647622191962455
+3,weight10_seed_2,weight10 seed 2,32,1.3395923628851363
+3,weight10_seed_2,weight10 seed 2,33,2.964266616620989
+3,weight10_seed_2,weight10 seed 2,34,0.7118609595835966
+3,weight10_seed_2,weight10 seed 2,35,1.3934344777237169
+3,weight10_seed_2,weight10 seed 2,36,0.9099594222715485
+3,weight10_seed_2,weight10 seed 2,37,1.486028017933223
+3,weight10_seed_2,weight10 seed 2,38,0.7658064363757191
+3,weight10_seed_2,weight10 seed 2,39,1.9109823657558274
+3,weight10_seed_2,weight10 seed 2,40,1.5254940266024875
+3,weight10_seed_2,weight10 seed 2,41,0.9848770670533046
+3,weight10_seed_2,weight10 seed 2,42,1.6372518945139292
+3,weight10_seed_2,weight10 seed 2,43,0.9688766722808015
+3,weight10_seed_2,weight10 seed 2,44,1.3603688736834203
+3,weight10_seed_2,weight10 seed 2,45,1.5796420420528878
+3,weight10_seed_2,weight10 seed 2,46,0.7751289545506457
+3,weight10_seed_2,weight10 seed 2,47,1.4317725534415457
+3,weight10_seed_2,weight10 seed 2,48,1.012445786078882
+3,weight10_seed_2,weight10 seed 2,49,1.2504945535967271
+3,weight10_seed_2,weight10 seed 2,50,1.757994921962716
+3,weight10_seed_2,weight10 seed 2,51,1.1893424134449644
+3,weight10_seed_2,weight10 seed 2,52,1.5418381845264857
+3,weight10_seed_2,weight10 seed 2,53,1.3391370905732423
+3,weight10_seed_2,weight10 seed 2,54,1.175445558440438
+3,weight10_seed_2,weight10 seed 2,55,1.4444317701223144
+3,weight10_seed_2,weight10 seed 2,56,1.3245899028627621
+3,weight10_seed_2,weight10 seed 2,57,1.4399529429815412
+3,weight10_seed_2,weight10 seed 2,58,0.8311052916250737
+3,weight10_seed_2,weight10 seed 2,59,1.2687828249355166
+3,weight10_seed_2,weight10 seed 2,60,1.4264384025660686
+3,weight10_seed_2,weight10 seed 2,61,1.3785179705734125
+3,weight10_seed_2,weight10 seed 2,62,1.2130260773396124
+3,weight10_seed_2,weight10 seed 2,63,2.059323997322265
+3,weight10_seed_2,weight10 seed 2,64,1.6211178844834615
+3,weight10_seed_2,weight10 seed 2,65,1.2080481608047176
+3,weight10_seed_2,weight10 seed 2,66,1.951777315953689
+3,weight10_seed_2,weight10 seed 2,67,2.2718143839106633
+3,weight10_seed_2,weight10 seed 2,68,1.533403704076943
+3,weight10_seed_2,weight10 seed 2,69,1.2651939229357436
+3,weight10_seed_2,weight10 seed 2,70,1.2743062181418983
+3,weight10_seed_2,weight10 seed 2,71,1.7807713707554702
+3,weight10_seed_2,weight10 seed 2,72,1.4734917087106878
+3,weight10_seed_2,weight10 seed 2,73,0.7259503259319703
+3,weight10_seed_2,weight10 seed 2,74,0.7640923560344933
+3,weight10_seed_2,weight10 seed 2,75,1.0506262691624206
+3,weight10_seed_2,weight10 seed 2,76,0.9667616490352228
+3,weight10_seed_2,weight10 seed 2,77,1.3784059007496086
+3,weight10_seed_2,weight10 seed 2,78,1.5340762147850773
+3,weight10_seed_2,weight10 seed 2,79,1.1899273474047627
+3,weight10_seed_2,weight10 seed 2,80,1.4319838162609717
+3,weight10_seed_2,weight10 seed 2,81,1.3383999688998491
+3,weight10_seed_2,weight10 seed 2,82,2.3074172350969118
+3,weight10_seed_2,weight10 seed 2,83,0.7268881517744625
+3,weight10_seed_2,weight10 seed 2,84,0.904289239520962
+3,weight10_seed_2,weight10 seed 2,85,0.9649088012183499
+3,weight10_seed_2,weight10 seed 2,86,1.2727888134390646
+3,weight10_seed_2,weight10 seed 2,87,1.135023117726266
+3,weight10_seed_2,weight10 seed 2,88,1.1003452646906455
+3,weight10_seed_2,weight10 seed 2,89,0.7851068603092579
+3,weight10_seed_2,weight10 seed 2,90,1.586365567096159
+3,weight10_seed_2,weight10 seed 2,91,1.1127656670121202
+3,weight10_seed_2,weight10 seed 2,92,1.4768081000763658
+3,weight10_seed_2,weight10 seed 2,93,1.2413147443733037
+3,weight10_seed_2,weight10 seed 2,94,0.9271702467103615
+3,weight10_seed_2,weight10 seed 2,95,1.6718085402427132
+3,weight10_seed_2,weight10 seed 2,96,1.3525229389938311
+3,weight10_seed_2,weight10 seed 2,97,1.235423091364711
+3,weight10_seed_2,weight10 seed 2,98,1.77528912334065
+3,weight10_seed_2,weight10 seed 2,99,1.4715376648977856
+3,weight30_seed_0,weight30 seed 0,0,0.8141693920270736
+3,weight30_seed_0,weight30 seed 0,1,0.6732363801302477
+3,weight30_seed_0,weight30 seed 0,2,0.7183425983127167
+3,weight30_seed_0,weight30 seed 0,3,0.6764767678464708
+3,weight30_seed_0,weight30 seed 0,4,0.7826469936062401
+3,weight30_seed_0,weight30 seed 0,5,0.6981826038206653
+3,weight30_seed_0,weight30 seed 0,6,0.7665914347599078
+3,weight30_seed_0,weight30 seed 0,7,0.6715932190933944
+3,weight30_seed_0,weight30 seed 0,8,0.8328485168226566
+3,weight30_seed_0,weight30 seed 0,9,0.6595421501285829
+3,weight30_seed_0,weight30 seed 0,10,0.5967452066762922
+3,weight30_seed_0,weight30 seed 0,11,0.7490698560271625
+3,weight30_seed_0,weight30 seed 0,12,0.6938177221536375
+3,weight30_seed_0,weight30 seed 0,13,0.602948678113256
+3,weight30_seed_0,weight30 seed 0,14,0.8775715825225058
+3,weight30_seed_0,weight30 seed 0,15,0.6801209271698183
+3,weight30_seed_0,weight30 seed 0,16,0.7956361597468234
+3,weight30_seed_0,weight30 seed 0,17,0.6186376268427403
+3,weight30_seed_0,weight30 seed 0,18,0.6509725127443745
+3,weight30_seed_0,weight30 seed 0,19,0.8328938804936366
+3,weight30_seed_0,weight30 seed 0,20,0.7104534371396312
+3,weight30_seed_0,weight30 seed 0,21,0.7103245393401185
+3,weight30_seed_0,weight30 seed 0,22,0.8892959941057051
+3,weight30_seed_0,weight30 seed 0,23,0.7684834630665968
+3,weight30_seed_0,weight30 seed 0,24,0.8665227888511668
+3,weight30_seed_0,weight30 seed 0,25,0.5929975771631271
+3,weight30_seed_0,weight30 seed 0,26,0.611308921381389
+3,weight30_seed_0,weight30 seed 0,27,0.7817022970400357
+3,weight30_seed_0,weight30 seed 0,28,0.7827488455997857
+3,weight30_seed_0,weight30 seed 0,29,0.6224874988257718
+3,weight30_seed_0,weight30 seed 0,30,0.6893257779758857
+3,weight30_seed_0,weight30 seed 0,31,0.5109657005012137
+3,weight30_seed_0,weight30 seed 0,32,0.7004059861799304
+3,weight30_seed_0,weight30 seed 0,33,0.6474501352451848
+3,weight30_seed_0,weight30 seed 0,34,0.5855768652981704
+3,weight30_seed_0,weight30 seed 0,35,0.7734154278951068
+3,weight30_seed_0,weight30 seed 0,36,0.6396220051774655
+3,weight30_seed_0,weight30 seed 0,37,0.7114230425218744
+3,weight30_seed_0,weight30 seed 0,38,0.7356343943755137
+3,weight30_seed_0,weight30 seed 0,39,0.8177148532493588
+3,weight30_seed_0,weight30 seed 0,40,0.7862662875411911
+3,weight30_seed_0,weight30 seed 0,41,0.6369247624653473
+3,weight30_seed_0,weight30 seed 0,42,0.6656163992653629
+3,weight30_seed_0,weight30 seed 0,43,0.957785617233321
+3,weight30_seed_0,weight30 seed 0,44,0.5514445785583006
+3,weight30_seed_0,weight30 seed 0,45,0.6716152915783753
+3,weight30_seed_0,weight30 seed 0,46,0.6597986897687409
+3,weight30_seed_0,weight30 seed 0,47,0.6236782798652123
+3,weight30_seed_0,weight30 seed 0,48,0.640789820287144
+3,weight30_seed_0,weight30 seed 0,49,0.7148526188748984
+3,weight30_seed_0,weight30 seed 0,50,0.5311547107679522
+3,weight30_seed_0,weight30 seed 0,51,0.6785860028818389
+3,weight30_seed_0,weight30 seed 0,52,0.7973394913377481
+3,weight30_seed_0,weight30 seed 0,53,0.7294361866331199
+3,weight30_seed_0,weight30 seed 0,54,0.7689384189602809
+3,weight30_seed_0,weight30 seed 0,55,0.6462573220379243
+3,weight30_seed_0,weight30 seed 0,56,0.5861342346485566
+3,weight30_seed_0,weight30 seed 0,57,0.9055188092594344
+3,weight30_seed_0,weight30 seed 0,58,0.7941324162152325
+3,weight30_seed_0,weight30 seed 0,59,0.743028849419519
+3,weight30_seed_0,weight30 seed 0,60,0.589098826748723
+3,weight30_seed_0,weight30 seed 0,61,0.6943887964287095
+3,weight30_seed_0,weight30 seed 0,62,0.7783144979610183
+3,weight30_seed_0,weight30 seed 0,63,0.6546452943208495
+3,weight30_seed_0,weight30 seed 0,64,0.8394478730044904
+3,weight30_seed_0,weight30 seed 0,65,0.7539122601617047
+3,weight30_seed_0,weight30 seed 0,66,0.8365842497348354
+3,weight30_seed_0,weight30 seed 0,67,0.8155625326501716
+3,weight30_seed_0,weight30 seed 0,68,0.7793796626165237
+3,weight30_seed_0,weight30 seed 0,69,0.7212368419408376
+3,weight30_seed_0,weight30 seed 0,70,0.6312520919170452
+3,weight30_seed_0,weight30 seed 0,71,0.7454114023711176
+3,weight30_seed_0,weight30 seed 0,72,0.684695973407763
+3,weight30_seed_0,weight30 seed 0,73,0.6338792627895605
+3,weight30_seed_0,weight30 seed 0,74,0.6697136192481957
+3,weight30_seed_0,weight30 seed 0,75,0.6859586073183012
+3,weight30_seed_0,weight30 seed 0,76,0.8006995248179827
+3,weight30_seed_0,weight30 seed 0,77,0.706760140072063
+3,weight30_seed_0,weight30 seed 0,78,0.5831886814799028
+3,weight30_seed_0,weight30 seed 0,79,0.6440031837700596
+3,weight30_seed_0,weight30 seed 0,80,0.7794789695121003
+3,weight30_seed_0,weight30 seed 0,81,0.6247226164426126
+3,weight30_seed_0,weight30 seed 0,82,0.5746054060699728
+3,weight30_seed_0,weight30 seed 0,83,0.6938654601963539
+3,weight30_seed_0,weight30 seed 0,84,0.5048843017197662
+3,weight30_seed_0,weight30 seed 0,85,0.8483769916598223
+3,weight30_seed_0,weight30 seed 0,86,0.7670976707491578
+3,weight30_seed_0,weight30 seed 0,87,0.7743070603708038
+3,weight30_seed_0,weight30 seed 0,88,0.7612268807724635
+3,weight30_seed_0,weight30 seed 0,89,0.6058316642250571
+3,weight30_seed_0,weight30 seed 0,90,0.5117852337324764
+3,weight30_seed_0,weight30 seed 0,91,0.7004971324109821
+3,weight30_seed_0,weight30 seed 0,92,0.6627159228612535
+3,weight30_seed_0,weight30 seed 0,93,0.6234092372454488
+3,weight30_seed_0,weight30 seed 0,94,0.5467882876523673
+3,weight30_seed_0,weight30 seed 0,95,0.5889347799641422
+3,weight30_seed_0,weight30 seed 0,96,0.7190561365636999
+3,weight30_seed_0,weight30 seed 0,97,0.6333560848256394
+3,weight30_seed_0,weight30 seed 0,98,0.6130400933951405
+3,weight30_seed_0,weight30 seed 0,99,0.7606763779255558

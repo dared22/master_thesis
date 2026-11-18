@@ -1,0 +1,14 @@
+{
+  "n_paths": 1000,
+  "sample_seed": 100,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "selection_rule": "lowest_validation_mmd2",
+  "test_evaluated": false,
+  "absolute_loss_units": "absolute log returns, original centering restored",
+  "coarse_dt": 0.25,
+  "fine_dt": 0.125
+}

@@ -1,0 +1,15 @@
+{
+  "sample_seed": 100,
+  "n_paths": 1000,
+  "generator_output": "increments",
+  "temporal_penalty_weight": 0.0,
+  "signature_loss_weight": 0.0,
+  "inspected_step": null,
+  "lags": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

@@ -1,0 +1,6 @@
+,mean error / target std,max relative std error,max absolute signed ACF,max absolute abs-return ACF,cross-stock correlation RMSE
+training,True,True,True,True,True
+validation,True,True,True,True,True
+fresh target,True,True,True,True,True
+seed 0: selected,False,True,True,True,False
+seed 0: final,False,True,True,True,True

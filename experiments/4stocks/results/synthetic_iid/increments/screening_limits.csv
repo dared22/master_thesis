@@ -1,0 +1,6 @@
+,limit
+mean error / target std,0.05
+max relative std error,0.1
+max absolute signed ACF,0.05
+max absolute abs-return ACF,0.05
+cross-stock correlation RMSE,0.05

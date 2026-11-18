@@ -1,0 +1,83 @@
+{
+  "stock_order": [
+    "KONGSBERG GRUPPEN",
+    "FRONTLINE",
+    "WILH Wilhelmsen B",
+    "TOMRA SYSTEMS"
+  ],
+  "transform": "log1p",
+  "ddof": 1,
+  "training_count": [
+    3734,
+    3810,
+    3246,
+    3810
+  ],
+  "training_mean": [
+    0.0007097211184480659,
+    -0.0006929571212180756,
+    0.0005904917208495446,
+    0.000661496604162083
+  ],
+  "training_std": [
+    0.019227351196946265,
+    0.03814822536123386,
+    0.01950779956101827,
+    0.021849883996401784
+  ],
+  "window_length": 20,
+  "stride": 1,
+  "observation_times": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "time_unit": "market session",
+  "calendar": "Observed source calendar corrected in adjusted_price_histories.ipynb",
+  "splits": {
+    "train": {
+      "source": "train_returns.csv",
+      "first_date": "2005-01-03",
+      "last_date": "2020-03-05",
+      "rows": 3811,
+      "candidates": 3792,
+      "retained": 1679,
+      "rejected": 2113
+    },
+    "validation": {
+      "source": "validation_returns.csv",
+      "first_date": "2020-03-06",
+      "last_date": "2023-06-07",
+      "rows": 817,
+      "candidates": 798,
+      "retained": 709,
+      "rejected": 89
+    },
+    "test": {
+      "source": "test_returns.csv",
+      "first_date": "2023-06-08",
+      "last_date": "2026-09-08",
+      "rows": 817,
+      "candidates": 798,
+      "retained": 798,
+      "rejected": 0
+    }
+  }
+}

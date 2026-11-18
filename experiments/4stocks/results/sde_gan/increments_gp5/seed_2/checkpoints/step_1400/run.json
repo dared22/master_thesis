@@ -1,0 +1,91 @@
+{
+  "fit_seed": 2,
+  "evaluation_seed": 100,
+  "selected_step": 1400,
+  "validation_score": 0.012045077417423222,
+  "validation_temporal_error": 0.006298534572124481,
+  "validation_volatility_error": 0.19802837755724906,
+  "validation_signature_error": null,
+  "validation_absolute_temporal_error": 0.018257832154631615,
+  "selection_rule": "validation_snapshot",
+  "kernel_bandwidth": 11.42571316816387,
+  "temporal_penalty": {
+    "weight": 0.0,
+    "lags": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "units": "standardized log returns",
+    "training_target": null
+  },
+  "signature_loss": {
+    "weight": 0.0,
+    "depth": 2,
+    "embedding": "cumulative standardized log returns, zero basepoint, lead-lag, normalized time",
+    "estimator": "unbiased cross-path squared mean-feature error",
+    "training_reference": null
+  },
+  "absolute_temporal_penalty": {
+    "weight": 0.0,
+    "lags": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "units": "absolute log returns",
+    "training_reference": {
+      "training_target": [
+        [
+          0.2073056548833847,
+          0.28580841422080994,
+          0.19385263323783875,
+          0.14013375341892242
+        ],
+        [
+          0.10852689296007156,
+          0.19800004363059998,
+          0.07722847908735275,
+          0.11738473922014236
+        ],
+        [
+          0.10418442636728287,
+          0.1788252890110016,
+          0.06516120582818985,
+          0.07341939210891724
+        ],
+        [
+          0.042265884578228,
+          0.16342665255069733,
+          0.06629332154989243,
+          0.07744983583688736
+        ],
+        [
+          0.06106167286634445,
+          0.155666321516037,
+          0.06984446197748184,
+          0.048600003123283386
+        ]
+      ],
+      "return_offset": [
+        0.03691205754876137,
+        -0.01816485822200775,
+        0.030269520357251167,
+        0.030274605378508568
+      ]
+    }
+  },
+  "package_versions": {
+    "jax": "0.6.2",
+    "jaxlib": "0.6.2",
+    "equinox": "0.13.8",
+    "diffrax": "0.7.0",
+    "optax": "0.2.8",
+    "numpy": "2.2.6"
+  },
+  "python_version": "3.10.4"
+}

@@ -1,0 +1,126 @@
+{
+  "experiment": "absolute_acf_1",
+  "seed": 1,
+  "config": {
+    "generator_hidden_size": 8,
+    "initial_noise_size": 4,
+    "brownian_size": 4,
+    "critic_hidden_size": 16,
+    "mlp_width": 32,
+    "mlp_depth": 2,
+    "generator_dt": 0.25,
+    "critic_dt": 0.25,
+    "brownian_tol": 0.0625,
+    "batch_size": 8,
+    "generator_lr": 0.0001,
+    "critic_lr": 0.0001,
+    "adam_b1": 0.0,
+    "adam_b2": 0.9,
+    "gradient_penalty_weight": 10.0,
+    "temporal_penalty_weight": 0.0,
+    "signature_loss_weight": 0.0,
+    "retain_validation_checkpoints": true,
+    "generator_steps": 2000,
+    "critic_steps": 5,
+    "validation_every": 100,
+    "validation_size": 256,
+    "evaluation_paths": 256,
+    "bandwidth_sample_size": 256,
+    "evaluation_seed": 100,
+    "sampling_batch_size": 8,
+    "generator_output": "increments",
+    "absolute_temporal_penalty_weight": 1
+  },
+  "selection": "lowest_validation_mmd2",
+  "sample_seed": 100,
+  "evaluation_paths": 1000,
+  "train_sha256": "7541d3942a6f3999532170a944da06904846ccc84f2ab8313ad3d7fb32e80305",
+  "validation_sha256": "12b66429645938d1a5739b2a15d45be5366ff223c70297e98021b29d03686cb5",
+  "preprocessing": {
+    "stock_order": [
+      "KONGSBERG GRUPPEN",
+      "FRONTLINE",
+      "WILH Wilhelmsen B",
+      "TOMRA SYSTEMS"
+    ],
+    "transform": "log1p",
+    "ddof": 1,
+    "training_count": [
+      3734,
+      3810,
+      3246,
+      3810
+    ],
+    "training_mean": [
+      0.0007097211184480659,
+      -0.0006929571212180756,
+      0.0005904917208495446,
+      0.000661496604162083
+    ],
+    "training_std": [
+      0.019227351196946265,
+      0.03814822536123386,
+      0.01950779956101827,
+      0.021849883996401784
+    ],
+    "window_length": 20,
+    "stride": 1,
+    "observation_times": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "time_unit": "market session",
+    "calendar": "Observed source calendar corrected in adjusted_price_histories.ipynb",
+    "splits": {
+      "train": {
+        "source": "train_returns.csv",
+        "first_date": "2005-01-03",
+        "last_date": "2020-03-05",
+        "rows": 3811,
+        "candidates": 3792,
+        "retained": 1679,
+        "rejected": 2113
+      },
+      "validation": {
+        "source": "validation_returns.csv",
+        "first_date": "2020-03-06",
+        "last_date": "2023-06-07",
+        "rows": 817,
+        "candidates": 798,
+        "retained": 709,
+        "rejected": 89
+      },
+      "test": {
+        "source": "test_returns.csv",
+        "first_date": "2023-06-08",
+        "last_date": "2026-09-08",
+        "rows": 817,
+        "candidates": 798,
+        "retained": 798,
+        "rejected": 0
+      }
+    }
+  },
+  "code_sha256": "9e9288b1a7caf4819103a503fe96706472fbb71fe70b73533dc15a8635ec10f0",
+  "elapsed_seconds": 837.6911467919126,
+  "selected_step": 1000,
+  "validation_mmd2": 0.010254525275456006
+}

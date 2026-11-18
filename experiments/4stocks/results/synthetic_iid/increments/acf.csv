@@ -1,0 +1,121 @@
+dataset,kind,series,lag,acf
+fresh target,signed,Series 1,1,-0.004969151279430693
+fresh target,signed,Series 1,2,0.004018171001075629
+fresh target,signed,Series 1,3,-0.003356358254537328
+fresh target,signed,Series 1,4,-0.0008350189903619142
+fresh target,signed,Series 1,5,0.005297465501735631
+seed 0: selected,signed,Series 1,1,-0.004839141538152306
+seed 0: selected,signed,Series 1,2,-0.010709923530748436
+seed 0: selected,signed,Series 1,3,-0.01679706972154099
+seed 0: selected,signed,Series 1,4,-0.0131114692010389
+seed 0: selected,signed,Series 1,5,-0.007943329055883004
+seed 0: final,signed,Series 1,1,-0.009565476231549396
+seed 0: final,signed,Series 1,2,-0.0071541448500216185
+seed 0: final,signed,Series 1,3,-0.015615175544576457
+seed 0: final,signed,Series 1,4,-0.007931365850485539
+seed 0: final,signed,Series 1,5,-0.0060044988448164065
+fresh target,signed,Series 2,1,-0.0051857363114542155
+fresh target,signed,Series 2,2,-0.0019329370007174656
+fresh target,signed,Series 2,3,-0.015863493612885655
+fresh target,signed,Series 2,4,0.019392698065533308
+fresh target,signed,Series 2,5,0.01194091214017533
+seed 0: selected,signed,Series 2,1,-0.007126457407594192
+seed 0: selected,signed,Series 2,2,-0.00872329209949092
+seed 0: selected,signed,Series 2,3,0.003812280946634578
+seed 0: selected,signed,Series 2,4,-0.004651308018416033
+seed 0: selected,signed,Series 2,5,-0.023863853949357645
+seed 0: final,signed,Series 2,1,0.025094972476526152
+seed 0: final,signed,Series 2,2,0.023580479299222402
+seed 0: final,signed,Series 2,3,0.02232901608006355
+seed 0: final,signed,Series 2,4,0.019507647845483717
+seed 0: final,signed,Series 2,5,0.008895857259111422
+fresh target,signed,Series 3,1,-0.014479998679544463
+fresh target,signed,Series 3,2,-0.006045926227311807
+fresh target,signed,Series 3,3,-0.018333115986514575
+fresh target,signed,Series 3,4,0.008582251141641866
+fresh target,signed,Series 3,5,0.007611707787122154
+seed 0: selected,signed,Series 3,1,0.0025009818275589647
+seed 0: selected,signed,Series 3,2,-0.006865517387643528
+seed 0: selected,signed,Series 3,3,0.0215728099127442
+seed 0: selected,signed,Series 3,4,0.000631733626416795
+seed 0: selected,signed,Series 3,5,-0.008783673938950695
+seed 0: final,signed,Series 3,1,0.0182736615073696
+seed 0: final,signed,Series 3,2,0.010302323131728847
+seed 0: final,signed,Series 3,3,0.033959269200521586
+seed 0: final,signed,Series 3,4,0.01278150688035697
+seed 0: final,signed,Series 3,5,0.003565810605295585
+fresh target,signed,Series 4,1,-0.010125910643890164
+fresh target,signed,Series 4,2,0.01462807168689453
+fresh target,signed,Series 4,3,-0.008212591832479292
+fresh target,signed,Series 4,4,-0.009492318243095195
+fresh target,signed,Series 4,5,0.006112905869893823
+seed 0: selected,signed,Series 4,1,0.005983528492649385
+seed 0: selected,signed,Series 4,2,0.01800234707669016
+seed 0: selected,signed,Series 4,3,0.013741718184523606
+seed 0: selected,signed,Series 4,4,0.014057788778820732
+seed 0: selected,signed,Series 4,5,-0.00798188785053009
+seed 0: final,signed,Series 4,1,-0.042246098174612653
+seed 0: final,signed,Series 4,2,-0.015682667835530774
+seed 0: final,signed,Series 4,3,-0.019100933689908842
+seed 0: final,signed,Series 4,4,-0.0177981191885088
+seed 0: final,signed,Series 4,5,-0.03083199229584255
+fresh target,absolute,Series 1,1,-0.004046479894730714
+fresh target,absolute,Series 1,2,0.006853826700251415
+fresh target,absolute,Series 1,3,0.005355856718286069
+fresh target,absolute,Series 1,4,-0.008728529161453278
+fresh target,absolute,Series 1,5,0.005144679971894219
+seed 0: selected,absolute,Series 1,1,-0.0030795795567677684
+seed 0: selected,absolute,Series 1,2,-0.006575769890065152
+seed 0: selected,absolute,Series 1,3,0.00997976492419308
+seed 0: selected,absolute,Series 1,4,0.016763115111477284
+seed 0: selected,absolute,Series 1,5,0.0037979043708374015
+seed 0: final,absolute,Series 1,1,-0.0060903705358278815
+seed 0: final,absolute,Series 1,2,0.00014017287670770216
+seed 0: final,absolute,Series 1,3,0.023611574027275074
+seed 0: final,absolute,Series 1,4,0.014042483040778516
+seed 0: final,absolute,Series 1,5,0.002878258120490576
+fresh target,absolute,Series 2,1,0.00954263289226041
+fresh target,absolute,Series 2,2,-0.00039495213041740296
+fresh target,absolute,Series 2,3,0.011788186986293948
+fresh target,absolute,Series 2,4,-0.00011641821238048757
+fresh target,absolute,Series 2,5,0.009168592537240962
+seed 0: selected,absolute,Series 2,1,-0.007503239569523087
+seed 0: selected,absolute,Series 2,2,0.005242375840397766
+seed 0: selected,absolute,Series 2,3,0.006934610362510692
+seed 0: selected,absolute,Series 2,4,0.010419271673713428
+seed 0: selected,absolute,Series 2,5,0.00253932807318867
+seed 0: final,absolute,Series 2,1,0.0022213750945314944
+seed 0: final,absolute,Series 2,2,0.0024488859929682845
+seed 0: final,absolute,Series 2,3,-0.006167509991415839
+seed 0: final,absolute,Series 2,4,0.020815283611166406
+seed 0: final,absolute,Series 2,5,0.0034201703690263734
+fresh target,absolute,Series 3,1,-0.008772847893685326
+fresh target,absolute,Series 3,2,-0.0009472267599159568
+fresh target,absolute,Series 3,3,0.01955018368907325
+fresh target,absolute,Series 3,4,0.004297529975384356
+fresh target,absolute,Series 3,5,0.00628265443123418
+seed 0: selected,absolute,Series 3,1,0.0029002967030552725
+seed 0: selected,absolute,Series 3,2,0.006848726164811837
+seed 0: selected,absolute,Series 3,3,0.010459069943254476
+seed 0: selected,absolute,Series 3,4,0.0069023792087435035
+seed 0: selected,absolute,Series 3,5,-0.0008164725300628602
+seed 0: final,absolute,Series 3,1,-0.002109604558472442
+seed 0: final,absolute,Series 3,2,-0.001439253865561403
+seed 0: final,absolute,Series 3,3,0.009250209693139782
+seed 0: final,absolute,Series 3,4,0.0033593582868642778
+seed 0: final,absolute,Series 3,5,0.0036736501329495542
+fresh target,absolute,Series 4,1,-0.0041533013953936665
+fresh target,absolute,Series 4,2,0.0008068775904378131
+fresh target,absolute,Series 4,3,0.006556781610723367
+fresh target,absolute,Series 4,4,0.0005794983544317817
+fresh target,absolute,Series 4,5,0.021923923914954093
+seed 0: selected,absolute,Series 4,1,-0.010625901173252041
+seed 0: selected,absolute,Series 4,2,0.004989233899954026
+seed 0: selected,absolute,Series 4,3,0.006698255012671323
+seed 0: selected,absolute,Series 4,4,0.009924255663227207
+seed 0: selected,absolute,Series 4,5,0.0010416523575702105
+seed 0: final,absolute,Series 4,1,0.0023271770646086745
+seed 0: final,absolute,Series 4,2,-0.004733124049716301
+seed 0: final,absolute,Series 4,3,0.005037702694974893
+seed 0: final,absolute,Series 4,4,0.0029937296584304244
+seed 0: final,absolute,Series 4,5,-0.006392656878810942
