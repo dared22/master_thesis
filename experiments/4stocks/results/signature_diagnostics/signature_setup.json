@@ -115,42 +115,42 @@
   "models": [
     {
       "dataset": "baseline_seed_0",
-      "checkpoint": "results/sde_gan/seed_0",
+      "checkpoint": "results/sde_gan/direct_returns_baseline/seed_0",
       "selected_step": 1600,
       "weight": 0.0,
       "solver_step": 0.25
     },
     {
       "dataset": "baseline_seed_1",
-      "checkpoint": "results/sde_gan/seed_1",
+      "checkpoint": "results/sde_gan/direct_returns_baseline/seed_1",
       "selected_step": 2000,
       "weight": 0.0,
       "solver_step": 0.25
     },
     {
       "dataset": "baseline_seed_2",
-      "checkpoint": "results/sde_gan/seed_2",
+      "checkpoint": "results/sde_gan/direct_returns_baseline/seed_2",
       "selected_step": 2000,
       "weight": 0.0,
       "solver_step": 0.25
     },
     {
       "dataset": "weight10_seed_0",
-      "checkpoint": "results/sde_gan/temporal_penalty/seed_0",
+      "checkpoint": "results/sde_gan/temporal_penalty_10/seed_0",
       "selected_step": 1600,
       "weight": 10.0,
       "solver_step": 0.25
     },
     {
       "dataset": "weight10_seed_1",
-      "checkpoint": "results/sde_gan/temporal_penalty/seed_1",
+      "checkpoint": "results/sde_gan/temporal_penalty_10/seed_1",
       "selected_step": 1400,
       "weight": 10.0,
       "solver_step": 0.25
     },
     {
       "dataset": "weight10_seed_2",
-      "checkpoint": "results/sde_gan/temporal_penalty/seed_2",
+      "checkpoint": "results/sde_gan/temporal_penalty_10/seed_2",
       "selected_step": 1600,
       "weight": 10.0,
       "solver_step": 0.25

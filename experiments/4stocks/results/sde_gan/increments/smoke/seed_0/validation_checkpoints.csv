@@ -1,3 +1,0 @@
-step,validation_mmd2,validation_temporal_error,validation_volatility_error,validation_signature_error,path
-0,0.053591890320368485,0.0358077734708786,0.7667189540745412,,checkpoints/step_0000
-50,0.05388258640711219,0.021586259827017784,0.764901777906334,,checkpoints/step_0050
