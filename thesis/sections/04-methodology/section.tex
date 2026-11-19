@@ -4,45 +4,42 @@
 \subsection{Data source and sample}
 \label{sec:data-source}
 
-The equity data were obtained from TITLON, a financial database for Norwegian
-academic institutions containing Oslo Stock Exchange histories, adjusted prices,
-and sector classifications \parencite{TITLON}. The downloaded export contains
-1,876,617 records for 1,133 ISINs\footnote{An ISIN (International Securities
-Identification Number) is a unique 12-character code used to identify a
-financial security, such as a specific share class.}, spanning 2 January 1980 to
-8 September 2026.
-The dataset includes each stock's full available history.
+The stock data come from TITLON, a financial database for Norwegian academic
+institutions \parencite{TITLON}. The export contains 1,876,617 records for
+1,133 ISINs\footnote{An International Securities Identification Number (ISIN)
+identifies a security, such as a share class.}, from 2 January 1980 to
+8 September 2026. The sample covers 2,510 trading days on the Oslo Stock Exchange,
+from 8 September 2016 to 8 September 2026. Prices and turnover are recorded in
+Norwegian kroner (NOK).
 
-\textcolor{red}{TODO: The analysis below currently uses only the last five years
-of data (8 September 2021 to 8 September 2026). Decide whether to use the full
-dataset or a shorter period.}
+We keep only stocks that have a valid price on the last trading day. Over the
+ten years, a stock can have missing prices on fewer than 5\% of trading days
+and no gap longer than four trading days. We keep one share class per company,
+leaving 109 stocks.
 
-After the preparation below, the sample contains 195 stock histories over 1,257
-exchange sessions. Prices and turnover are recorded in NOK. Adjusted prices
-supply the returns; dates and identifiers align histories, turnover selects
-between qualifying share classes, and recorded sector labels define the groups
-in Table~\ref{tab:eda-sectors}. This is a selected Oslo-equity sample, not a
-reconstruction of historical OSEBX constituents. The final modelling universe is
-not fixed by this exploratory sample.
+We matched each stock's final ISIN to Euronext's Industry Classification
+Benchmark (ICB) using the snapshot from 17 November 2026
+\parencite{EuronextOsloEquities}. We use the same classification for the stock's
+entire history. Table~\ref{tab:eda-sectors} groups stocks by ICB Industry,
+the level closest to TITLON's broad sector categories.
 
 \begin{table}[htbp]
     \centering
-    \caption{Selected stocks by latest recorded sector. Source labels are retained;
-    in particular, Bank and Financials remain separate.}
+    \caption{Retained stocks by ICB Industry in the 17 November 2026 snapshot.}
     \label{tab:eda-sectors}
     \small
     \begin{tabular}{lr@{\hspace{1cm}}lr}
         \hline
-        Sector & Stocks & Sector & Stocks \\
+        Industry & Stocks & Industry & Stocks \\
         \hline
-        Bank & 2 & Health Care & 13 \\
-        Basic Materials & 12 & Industrials & 38 \\
-        Consumer Discretionary & 11 & Real Estate & 4 \\
-        Consumer Staples & 21 & Technology & 18 \\
-        Energy & 35 & Telecommunications & 4 \\
-        Financials & 30 & Utilities & 7 \\
+        Basic Materials & 4 & Industrials & 22 \\
+        Consumer Discretionary & 6 & Real Estate & 2 \\
+        Consumer Staples & 9 & Technology & 11 \\
+        Energy & 27 & Telecommunications & 2 \\
+        Financials & 19 & Utilities & 1 \\
+        Health Care & 6 & & \\
         \hline
-        \multicolumn{3}{r}{Total} & 195 \\
+        \multicolumn{3}{r}{Total} & 109 \\
         \hline
     \end{tabular}
 \end{table}
