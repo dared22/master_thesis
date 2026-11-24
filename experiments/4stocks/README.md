@@ -1,53 +1,64 @@
-# Four-stock SDE-GAN experiment
+# Four-stock SDE-GAN baseline experiment
 
-This experiment fits an SDE-GAN to 20-session windows of four stocks and
-compares the generated returns with observed returns and historical simulation.
+This toy experiment builds and checks a reproducible Neural SDE-GAN baseline on
+four Oslo Børs stocks drawn directly from
+[Data/eligible/price_histories.csv](../../Data/eligible/price_histories.csv)
+(the same 10-year eligible panel and short-gap interpolation pipeline used in
+the main thesis analysis), and compares it against Fixed Historical Simulation,
+Rolling 252-session Historical Simulation, and the zero-shot Sundial TSFM
+benchmark.
 
-## Notebooks
+## Stocks and data
 
-Open the notebooks with the repository's Python environment. The first two
-notebooks produce the files in [data/](data/). The remaining notebooks use
-those files or synthetic data.
+- **Source:** `Data/eligible/price_histories.csv` (`2016-09-08` to `2026-09-08`,
+  2,510 trading sessions → 2,509 daily returns).
+- **Companies:** `KONGSBERG GRUPPEN` (`NO0013536151`), `FRONTLINE`
+  (`CY0200352116`), `WILH, WILHELMSEN A` (`NO0010571698`), and
+  `TOMRA SYSTEMS` (`NO0012470089`).
+- **Preprocessing:** Thesis eligibility screen, natural cubic-spline
+  interpolation for internal gaps up to 5 sessions (matching
+  `EDA/02_sector_dependence.ipynb`; 0 missing prices for these four stocks),
+  chronological **70% / 15% / 15%** train/validation/test split, `log1p`
+  returns standardized with training-only mean and sample standard deviation,
+  and complete 20-session windows (stride 1).
 
-| Notebook | Purpose |
-| --- | --- |
-| [Adjusted price histories](notebooks/adjusted_price_histories.ipynb) | Extract the four stocks from the source export and write the chronological return splits. |
-| [Prepare windows and train the SDE-GAN](notebooks/prepare_windows_and_train_sde_gan.ipynb) | Build standardized windows and scalers. Set `MODE` to inspect saved runs, run a smoke check, or train. |
-| [Inspect the increment SDE-GAN](notebooks/inspect_increment_sde_gan.ipynb) | Compare solver steps, sample paths, and check volatility and autocorrelation at a fixed checkpoint. |
-| [Compare with historical simulation](notebooks/compare_sde_gan_with_historical_simulation.ipynb) | Compare the fitted models and historical simulation on validation returns. |
-| [Signature diagnostics](notebooks/signature_diagnostics.ipynb) | Check which path distortions the signature features detect. |
-| [Synthetic IID returns benchmark](notebooks/synthetic_iid_returns_benchmark.ipynb) | Compare the generator variants on independent daily returns. Set `MODE = "inspect"` to use saved models. |
+## Workflow
 
-## Code and results
-
-The [model/](model/) directory contains the SDE-GAN implementation and its
-tests. The [scripts/](scripts/) directory contains the three ablation entry
-points. Use these commands from the repository root.
-
-```sh
-uv run python experiments/4stocks/scripts/train_increment_ablation.py gp5 0
-uv run python experiments/4stocks/scripts/evaluate_increment_ablations.py
-uv run python experiments/4stocks/scripts/check_monte_carlo_risk.py
-```
-
-The training command handles one variant and seed at a time. The evaluation
-uses the saved runs for both variants (`gp5` and `absolute_acf_1`) and seeds
-0–2. The Monte Carlo check uses the sample files produced by the evaluation.
-
-- [results/sde_gan/](results/sde_gan/) holds models fitted to stock returns.
-  `direct_returns_baseline/` is the original model and `increments/` is the
-  increment baseline. Each seed directory contains the selected model, with
-  intermediate snapshots in `checkpoints/` where available.
-- [results/increment_ablations/](results/increment_ablations/) holds the
-  across-seed metrics, plots, samples, and Monte Carlo risk checks. Paths
-  in `selected_checkpoints.csv` are relative to the experiment directory.
-- [results/signature_diagnostics/](results/signature_diagnostics/) and
-  [results/synthetic_iid/](results/synthetic_iid/) hold the two diagnostics.
-
-Notebook smoke runs write scratch output to `.cache/4stocks/smoke/` at the
-repository root. Use this command from the repository root to run the model
-tests.
+Run all commands from the repository root:
 
 ```sh
+# 1. Prepare return splits and standardized windows from Data/eligible
+uv run python experiments/4stocks/scripts/prepare_data.py
+
+# 2. Train stabilized, mean-anchored increments SDE-GAN seeds
+uv run python experiments/4stocks/scripts/train.py 0 1 2
+
+# 3. Run the zero-shot Sundial TSFM benchmark on validation (saved to results/tsfm/)
+uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py
+
+# 4. Evaluate SDE-GAN, Fixed HS, Rolling HS (252d), and saved TSFM forecasts
+uv run python experiments/4stocks/scripts/evaluate.py
+
+# Run model and benchmark unit tests
 uv run python -m unittest discover -s experiments/4stocks/model
+uv run python -m unittest discover -s benchmarks
 ```
+
+Use [notebooks/inspect_and_compare.ipynb](notebooks/inspect_and_compare.ipynb)
+to inspect the prepared returns, compare Fixed HS, Rolling HS, TSFM, and
+SDE-GAN (including VaR time-series and quantile-loss plots), and review
+multivariate correlation and ACF diagnostics interactively.
+
+## Layout
+
+- [data/](data/): Prepared return splits, window dates, standardized window
+  arrays, and `preprocessing.json`.
+- [model/](model/): Equinox Neural SDE generator, Neural CDE critic, stabilized
+  WGAN-GP training loop (`architecture.py`, `training.py`, `sde_gan.py`, and
+  `test_sde_gan.py`).
+- [scripts/](scripts/): Reproducible CLI pipeline (`prepare_data.py`,
+  `train.py`, `run_tsfm.py`, `evaluate.py`).
+- [notebooks/](notebooks/): Single interactive inspection and comparison
+  notebook (`inspect_and_compare.ipynb`).
+- [results/](results/): Saved model checkpoints (`sde_gan/seed_*/`), TSFM
+  forecasts (`tsfm/`), and combined evaluation tables/plots (`evaluation/`).

@@ -312,8 +312,8 @@ class TestChronology(unittest.TestCase):
 class TestExistingCSVs(unittest.TestCase):
     def test_independent_window_counts_and_fixed_validation(self) -> None:
         directory = Path(__file__).resolve().parents[1] / 'experiments/4stocks/data'
-        expected = {'train': (3811, 3208, 1679), 'validation': (817, 802, 709),
-                    'test': (817, 817, 798)}
+        expected = {'train': (1756, 1756, 1737), 'validation': (376, 376, 357),
+                    'test': (377, 377, 358)}
         for split, (n_rows, h1, h20) in expected.items():
             path = directory / f'{split}_returns.csv'
             source = pd.read_csv(path)
@@ -335,12 +335,12 @@ class TestExistingCSVs(unittest.TestCase):
         with patch.object(benchmark, '_scenarios', wraps=benchmark._scenarios) as build:
             result = benchmark.backtest(directory / 'validation_returns.csv')
             self.assertEqual(build.call_count, 1)
-        self.assertEqual(len(result.forecasts), 1596)
-        self.assertEqual(result.coverage.n_targets.tolist(), [798, 798])
-        self.assertEqual(result.coverage.n_estimates.tolist(), [798, 798])
-        self.assertEqual(result.coverage.n_comparisons.tolist(), [709, 709])
+        self.assertEqual(len(result.forecasts), 714)
+        self.assertEqual(result.coverage.n_targets.tolist(), [357, 357])
+        self.assertEqual(result.coverage.n_estimates.tolist(), [357, 357])
+        self.assertEqual(result.coverage.n_comparisons.tolist(), [357, 357])
         self.assertEqual(result.metadata['counts']['n_trailing_excluded'], 19)
-        self.assertEqual(result.metadata['counts']['n_missing_realization_targets'], 89)
+        self.assertEqual(result.metadata['counts']['n_missing_realization_targets'], 0)
         self.assertEqual(benchmark.summarize().risk.small_tail_sample.tolist(), [False, True])
         json.dumps(result.metadata, allow_nan=False)
 

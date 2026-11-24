@@ -1,0 +1,214 @@
+{
+  "protocol": {
+    "split": "validation",
+    "preprocessing": {
+      "source_file": "Data/eligible/price_histories.csv",
+      "source_sha256": "a2aca90860ec058ca35d8f381a1566b0ada23a2b9c43b04b73063169cebd4c39",
+      "stock_ids": [
+        "NO0013536151",
+        "CY0200352116",
+        "NO0010571698",
+        "NO0012470089"
+      ],
+      "stock_order": [
+        "KONGSBERG GRUPPEN",
+        "FRONTLINE",
+        "WILH, WILHELMSEN A",
+        "TOMRA SYSTEMS"
+      ],
+      "max_interpolation_gap": 5,
+      "observed_missing_prices": 0,
+      "interpolated_prices": 0,
+      "split_fractions": [
+        0.7,
+        0.15,
+        0.15
+      ],
+      "transform": "log1p",
+      "ddof": 1,
+      "training_count": [
+        1756,
+        1756,
+        1756,
+        1756
+      ],
+      "training_mean": [
+        0.000975675963336433,
+        0.0006849185905723318,
+        0.00045820465725794764,
+        0.0006508336124628905
+      ],
+      "training_std": [
+        0.018968568328430514,
+        0.03187435883364141,
+        0.020191483750960294,
+        0.021401517965283293
+      ],
+      "window_length": 20,
+      "stride": 1,
+      "observation_times": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "time_unit": "market session",
+      "calendar": "Data/eligible/price_histories.csv (XOSL 10-year eligible panel)",
+      "splits": {
+        "train": {
+          "source": "train_returns.csv",
+          "first_date": "2016-09-09",
+          "last_date": "2023-09-05",
+          "rows": 1756,
+          "candidates": 1737,
+          "retained": 1737,
+          "rejected": 0
+        },
+        "validation": {
+          "source": "validation_returns.csv",
+          "first_date": "2023-09-06",
+          "last_date": "2025-03-05",
+          "rows": 376,
+          "candidates": 357,
+          "retained": 357,
+          "rejected": 0
+        },
+        "test": {
+          "source": "test_returns.csv",
+          "first_date": "2025-03-06",
+          "last_date": "2026-09-08",
+          "rows": 377,
+          "candidates": 358,
+          "retained": 358,
+          "rejected": 0
+        }
+      }
+    },
+    "target": "log_price",
+    "horizon_sessions": 20,
+    "context_sessions": 252,
+    "num_samples": 1000,
+    "target_stride": 1,
+    "batch_size": 16,
+    "sample_chunk_size": 250,
+    "seed": 0,
+    "model_id": "thuml/sundial-base-128m",
+    "revin": true,
+    "revision": null,
+    "history_sha256": "85a6ebbcbe3880fdf7c75fa785e444933176a5f390f8a80e8c78060040ecb0c2",
+    "eval_sha256": "0394b165d2fdfa3ded98c7ad6969d24c52d260d5b291a5a7289b1371429a3c81"
+  },
+  "elapsed_seconds": 702.7483784998767,
+  "benchmark_metadata": {
+    "method": "tsfm",
+    "forecaster": {
+      "forecaster": "sundial",
+      "model_id": "thuml/sundial-base-128m",
+      "revision": null,
+      "device": "cpu",
+      "dtype": "float32",
+      "revin": true,
+      "sample_chunk_size": 250,
+      "max_context_length": 2880,
+      "pretraining_release_note": "thuml/sundial-base-128m was released February 2025 (arXiv:2502.00816); check overlap with evaluation dates when interpreting zero-shot results.",
+      "package_versions": {
+        "torch": "2.14.1",
+        "transformers": "4.40.1"
+      }
+    },
+    "configuration": {
+      "assets": [
+        "KONGSBERG GRUPPEN",
+        "FRONTLINE",
+        "WILH, WILHELMSEN A",
+        "TOMRA SYSTEMS"
+      ],
+      "return_type": "simple",
+      "target": "log_price",
+      "horizon_sessions": 20,
+      "rebalance": "daily",
+      "confidence_levels": [
+        0.95,
+        0.99
+      ],
+      "context_sessions": 252,
+      "num_samples": 1000,
+      "target_stride": 1,
+      "batch_size": 16,
+      "seed": 0,
+      "model_id": "thuml/sundial-base-128m",
+      "device": "cpu",
+      "dtype": "float32",
+      "sample_chunk_size": 250,
+      "revin": true,
+      "revision": null,
+      "weights": {
+        "KONGSBERG GRUPPEN": 0.25,
+        "FRONTLINE": 0.25,
+        "WILH, WILHELMSEN A": 0.25,
+        "TOMRA SYSTEMS": 0.25
+      }
+    },
+    "input_return_type": "simple",
+    "target_representation": "log_price",
+    "context_vector_length": 253,
+    "loss_units": "fractional",
+    "inputs": {
+      "fit": {
+        "source": null,
+        "fingerprint": "2652018f66bd52f0a7cadfc3fe17ff9b351ecf5c91661f166e53b8f32ed117b0",
+        "history_start": "2016-09-09",
+        "history_end": "2023-09-05",
+        "n_history_sessions": 1756
+      },
+      "evaluation": {
+        "source": null,
+        "fingerprint": "9840077411a7e78400ff595fc8e4933d6a0c8875512c816e449bf3558ebead28",
+        "history_start": "2023-09-06",
+        "history_end": "2025-03-05",
+        "n_history_sessions": 376
+      }
+    },
+    "counts": {
+      "n_available_starts": 357,
+      "n_targets": 357,
+      "n_trailing_excluded": 19,
+      "n_forecast_rows": 714,
+      "n_unavailable_estimate_targets": 0,
+      "n_missing_realization_targets": 0,
+      "total_clamped_paths": 0
+    },
+    "package_versions": {
+      "python": "3.10.4",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "torch": "2.14.1",
+      "transformers": "4.40.1"
+    },
+    "missing_context_policy": "select the last context_sessions complete portfolio sessions strictly before target_start; skip incomplete rows without filling; require all selected assets",
+    "return_clamping_policy": "limited liability floor at return=-1.0 if any simulated daily return <= -1.0 (target=\"return\" only); logged in n_clamped_paths",
+    "quantile_convention": "inverse empirical CDF; no interpolation",
+    "es_convention": "mean of worst 1-confidence mass with fractional boundary",
+    "es_integer_mass_tolerance_per_scenario": 1.7763568394002505e-15,
+    "weight_sum_absolute_tolerance": 1e-10,
+    "target_stride": 1,
+    "overlapping_scenarios": false,
+    "overlapping_targets": true
+  }
+}

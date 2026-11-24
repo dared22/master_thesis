@@ -1,29 +1,45 @@
 {
+  "source_file": "Data/eligible/price_histories.csv",
+  "source_sha256": "a2aca90860ec058ca35d8f381a1566b0ada23a2b9c43b04b73063169cebd4c39",
+  "stock_ids": [
+    "NO0013536151",
+    "CY0200352116",
+    "NO0010571698",
+    "NO0012470089"
+  ],
   "stock_order": [
     "KONGSBERG GRUPPEN",
     "FRONTLINE",
-    "WILH Wilhelmsen B",
+    "WILH, WILHELMSEN A",
     "TOMRA SYSTEMS"
+  ],
+  "max_interpolation_gap": 5,
+  "observed_missing_prices": 0,
+  "interpolated_prices": 0,
+  "split_fractions": [
+    0.7,
+    0.15,
+    0.15
   ],
   "transform": "log1p",
   "ddof": 1,
   "training_count": [
-    3734,
-    3810,
-    3246,
-    3810
+    1756,
+    1756,
+    1756,
+    1756
   ],
   "training_mean": [
-    0.0007097211184480659,
-    -0.0006929571212180756,
-    0.0005904917208495446,
-    0.000661496604162083
+    0.000975675963336433,
+    0.0006849185905723318,
+    0.00045820465725794764,
+    0.0006508336124628905
   ],
   "training_std": [
-    0.019227351196946265,
-    0.03814822536123386,
-    0.01950779956101827,
-    0.021849883996401784
+    0.018968568328430514,
+    0.03187435883364141,
+    0.020191483750960294,
+    0.021401517965283293
   ],
   "window_length": 20,
   "stride": 1,
@@ -50,33 +66,33 @@
     19
   ],
   "time_unit": "market session",
-  "calendar": "Observed source calendar corrected in adjusted_price_histories.ipynb",
+  "calendar": "Data/eligible/price_histories.csv (XOSL 10-year eligible panel)",
   "splits": {
     "train": {
       "source": "train_returns.csv",
-      "first_date": "2005-01-03",
-      "last_date": "2020-03-05",
-      "rows": 3811,
-      "candidates": 3792,
-      "retained": 1679,
-      "rejected": 2113
+      "first_date": "2016-09-09",
+      "last_date": "2023-09-05",
+      "rows": 1756,
+      "candidates": 1737,
+      "retained": 1737,
+      "rejected": 0
     },
     "validation": {
       "source": "validation_returns.csv",
-      "first_date": "2020-03-06",
-      "last_date": "2023-06-07",
-      "rows": 817,
-      "candidates": 798,
-      "retained": 709,
-      "rejected": 89
+      "first_date": "2023-09-06",
+      "last_date": "2025-03-05",
+      "rows": 376,
+      "candidates": 357,
+      "retained": 357,
+      "rejected": 0
     },
     "test": {
       "source": "test_returns.csv",
-      "first_date": "2023-06-08",
+      "first_date": "2025-03-06",
       "last_date": "2026-09-08",
-      "rows": 817,
-      "candidates": 798,
-      "retained": 798,
+      "rows": 377,
+      "candidates": 358,
+      "retained": 358,
       "rejected": 0
     }
   }
