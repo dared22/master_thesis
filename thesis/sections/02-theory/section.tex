@@ -44,7 +44,7 @@ equity-return paths and assessing their dependence and risk characteristics.}
 \label{sec:ode-theory}
 
 An ordinary differential equation (ODE) specifies how a state
-$x(t)\in\mathbb{R}^{d}$ changes over time. Together with a starting value,
+$x(t)\in\mathbb{R}^{d}$ changes over time. Together with a starting value $x_0$,
 it forms an initial-value problem \parencite{kohler2014elementary}:
 \begin{equation}
     \frac{dx(t)}{dt}=f(x(t),u(t),t),\qquad x(t_0)=x_0.
@@ -60,8 +60,21 @@ starting state plus the accumulated change
     x(t)=x_0+\int_{t_0}^{t}f(x(s),u(s),s)\,ds.
     \label{eq:ode-integral}
 \end{equation}
+Given the initial condition $x_0$, the known input $u$, and the vector field
+$f$, this relation determines how the system evolves into the future when a
+unique solution exists.\footnote{A unique solution means that, for a given
+starting state $x_0$ and input $u$, there is exactly one path $x(t)$ satisfying
+the equation, so the system cannot follow more than one trajectory from the same
+starting point.}
 
 \subsubsection{Numerical approximation}
+
+An analytical solution expresses $x(t)$ as an explicit formula of time. For
+most ODEs in practice, however, no closed-form formula can be found,
+particularly when the vector field $f$ is nonlinear, high-dimensional, or
+learned by a neural network. A numerical solution instead approximates $x(t)$
+at discrete time points by stepping forward in time
+\parencite{kohler2014elementary}.
 
 Euler's method approximates the solution by taking steps using the rate of
 change at the start of each step \parencite{kohler2014elementary}:
@@ -76,7 +89,7 @@ Figure~\ref{fig:ode-euler} shows how smaller steps improve this approximation.
 For sufficiently smooth solutions and small steps, halving $h$ roughly halves
 the error over a fixed time interval \parencite{kohler2014elementary}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.9\linewidth]{figures/theory/ode-euler.pdf}
     \caption{Exact solution of $dx/dt=2x$, $x(0)=1$, and Euler approximations
