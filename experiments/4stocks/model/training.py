@@ -50,10 +50,41 @@ class SDEGANConfig:
     sampling_batch_size: int = 8
     generator_output: str = 'returns'
     absolute_temporal_penalty_weight: float = 0.0
+    grad_clip_norm: float | None = None
+    lr_schedule: str = 'constant'
+    ema_decay: float | None = None
+    mmd_bandwidth_multipliers: tuple[float, ...] = (1.0,)
+    mean_penalty_weight: float = 0.0
 
     def __post_init__(self) -> None:
         if self.generator_output not in ('returns', 'increments'):
             raise ValueError('generator_output must be returns or increments')
+        if self.lr_schedule not in ('constant', 'cosine'):
+            raise ValueError('lr_schedule must be constant or cosine')
+        if self.grad_clip_norm is not None:
+            if (isinstance(self.grad_clip_norm, bool)
+                    or not np.isfinite(self.grad_clip_norm)
+                    or self.grad_clip_norm <= 0):
+                raise ValueError('grad_clip_norm must be positive and finite or None')
+        if self.ema_decay is not None:
+            if (isinstance(self.ema_decay, bool)
+                    or not np.isfinite(self.ema_decay)
+                    or not (0 < self.ema_decay < 1)):
+                raise ValueError('ema_decay must lie in (0, 1) or be None')
+        if isinstance(self.mmd_bandwidth_multipliers, (str, bytes)):
+            raise ValueError('mmd_bandwidth_multipliers must be a nonempty sequence of positive numbers')
+        try:
+            raw_multipliers = tuple(self.mmd_bandwidth_multipliers)
+        except TypeError as error:
+            raise ValueError('mmd_bandwidth_multipliers must be a nonempty sequence of positive numbers') from error
+        if not raw_multipliers:
+            raise ValueError('mmd_bandwidth_multipliers must be nonempty')
+        multipliers = []
+        for value in raw_multipliers:
+            if isinstance(value, bool) or not np.isfinite(value) or value <= 0:
+                raise ValueError('mmd_bandwidth_multipliers entries must be positive and finite')
+            multipliers.append(float(value))
+        object.__setattr__(self, 'mmd_bandwidth_multipliers', tuple(multipliers))
         for name in (
             'generator_hidden_size', 'initial_noise_size', 'brownian_size',
             'critic_hidden_size', 'mlp_width', 'mlp_depth', 'batch_size',
@@ -81,8 +112,14 @@ class SDEGANConfig:
         if (not np.isfinite(self.absolute_temporal_penalty_weight)
                 or self.absolute_temporal_penalty_weight < 0):
             raise ValueError('absolute_temporal_penalty_weight must be nonnegative and finite')
+        if (isinstance(self.mean_penalty_weight, bool)
+                or not np.isfinite(self.mean_penalty_weight)
+                or self.mean_penalty_weight < 0):
+            raise ValueError('mean_penalty_weight must be nonnegative and finite')
         if self.signature_loss_weight > 0 and self.batch_size < 2:
             raise ValueError('Signature loss requires batch_size >= 2')
+        if self.mean_penalty_weight > 0 and self.batch_size < 2:
+            raise ValueError('Mean penalty requires batch_size >= 2')
         if not isinstance(self.retain_validation_checkpoints, bool):
             raise ValueError('retain_validation_checkpoints must be a boolean')
         if not (0 <= self.adam_b1 < 1 and 0 <= self.adam_b2 < 1):
@@ -262,12 +299,32 @@ def absolute_temporal_penalty(
     return temporal_penalty(jnp.abs(paths + offset), target)
 
 
+def mean_penalty(paths: jax.Array, target: jax.Array) -> jax.Array:
+    """Unbiased cross-path squared error of per-stock standardized return means.
+
+    Cross-path products remove the variance-shrinkage bias of naive squared
+    batch means. Independent generated paths are required; individual batch
+    estimates may be negative. Do not clip them to zero.
+    """
+    if len(paths) < 2:
+        raise ValueError('Mean penalty requires at least two independent paths')
+    residuals = paths.mean(axis=1) - jax.lax.stop_gradient(target)
+    cross_sum = jnp.sum(residuals.sum(axis=0) ** 2 - jnp.sum(residuals ** 2, axis=0))
+    return cross_sum / (len(paths) * (len(paths) - 1) * residuals.shape[1])
+
+
+def mean_error(paths: jax.Array, target: jax.Array) -> jax.Array:
+    """Nonnegative RMS per-stock mean error in standardized units for reporting."""
+    return jnp.sqrt(jnp.mean((paths.mean(axis=(0, 1)) - target) ** 2))
+
+
 def _generator_objective(
     generator: Generator, critic: Critic, keys: jax.Array, config: SDEGANConfig,
     temporal_target: jax.Array | None,
     signature_reference: tuple[jax.Array, jax.Array, jax.Array] | None = None,
     absolute_temporal_reference: tuple[jax.Array, jax.Array] | None = None,
-) -> tuple[jax.Array, tuple[jax.Array, jax.Array, jax.Array, jax.Array]]:
+    mean_target: jax.Array | None = None,
+) -> tuple[jax.Array, tuple[jax.Array, jax.Array, jax.Array, jax.Array, jax.Array]]:
     """Compute all generator terms from the same generated batch."""
     paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
     adversarial = -jax.vmap(lambda x: critic(x, config.critic_dt))(paths).mean()
@@ -286,10 +343,16 @@ def _generator_objective(
         if absolute_temporal_reference is None:
             raise ValueError('An absolute temporal reference is required when its penalty is enabled')
         absolute_penalty = absolute_temporal_penalty(paths, absolute_temporal_reference)
+    mean_pen = jnp.array(0.0)
+    if config.mean_penalty_weight > 0:
+        if mean_target is None:
+            raise ValueError('A training mean_target is required when the mean penalty is enabled')
+        mean_pen = mean_penalty(paths, mean_target)
     total = (adversarial + config.temporal_penalty_weight * penalty
              + config.signature_loss_weight * signature
-             + config.absolute_temporal_penalty_weight * absolute_penalty)
-    return total, (adversarial, penalty, signature, absolute_penalty)
+             + config.absolute_temporal_penalty_weight * absolute_penalty
+             + config.mean_penalty_weight * mean_pen)
+    return total, (adversarial, penalty, signature, absolute_penalty, mean_pen)
 
 
 def generator_loss(
@@ -297,10 +360,12 @@ def generator_loss(
     temporal_target: jax.Array | None = None,
     signature_reference: tuple[jax.Array, jax.Array, jax.Array] | None = None,
     absolute_temporal_reference: tuple[jax.Array, jax.Array] | None = None,
+    mean_target: jax.Array | None = None,
 ) -> jax.Array:
     """Differentiate the fixed critic and optional moment losses through paths."""
     return _generator_objective(generator, critic, keys, config, temporal_target,
-                                 signature_reference, absolute_temporal_reference)[0]
+                                 signature_reference, absolute_temporal_reference,
+                                 mean_target)[0]
 
 
 def tree_finite(tree: Any) -> jax.Array:
@@ -309,14 +374,37 @@ def tree_finite(tree: Any) -> jax.Array:
     return jnp.all(jnp.stack([jnp.isfinite(x).all() for x in leaves]))
 
 
+def _make_optimizer(lr: float, total_steps: int, config: SDEGANConfig) -> Any:
+    """Build Adam with optional cosine decay and global gradient norm clipping."""
+    learning_rate: Any = (
+        optax.cosine_decay_schedule(init_value=lr, decay_steps=total_steps, alpha=0.1)
+        if config.lr_schedule == 'cosine' else lr
+    )
+    adam = optax.adam(learning_rate, b1=config.adam_b1, b2=config.adam_b2)
+    if config.grad_clip_norm is not None:
+        return optax.chain(optax.clip_by_global_norm(config.grad_clip_norm), adam)
+    return adam
+
+
+@eqx.filter_jit
+def update_ema(ema_model: Generator, live_model: Generator, decay: jax.Array) -> Generator:
+    """Update exponential moving average over inexact array leaves of the generator."""
+    ema_params, static = eqx.partition(ema_model, eqx.is_inexact_array)
+    live_params = eqx.filter(live_model, eqx.is_inexact_array)
+    updated = jax.tree.map(lambda e, g: decay * e + (1.0 - decay) * g, ema_params, live_params)
+    return eqx.combine(updated, static)
+
+
 def make_updates(
     config: SDEGANConfig, temporal_target: jax.Array | None = None,
     signature_reference: tuple[jax.Array, jax.Array, jax.Array] | None = None,
     absolute_temporal_reference: tuple[jax.Array, jax.Array] | None = None,
+    mean_target: jax.Array | None = None,
 ) -> tuple[Any, Any, Any, Any]:
     """Build independent Adam transformations and compiled player updates."""
-    g_optimizer = optax.adam(config.generator_lr, b1=config.adam_b1, b2=config.adam_b2)
-    d_optimizer = optax.adam(config.critic_lr, b1=config.adam_b1, b2=config.adam_b2)
+    g_optimizer = _make_optimizer(config.generator_lr, config.generator_steps, config)
+    d_optimizer = _make_optimizer(
+        config.critic_lr, config.generator_steps * config.critic_steps, config)
 
     @eqx.filter_jit
     def critic_update(critic: Critic, state: Any, real: jax.Array,
@@ -333,14 +421,14 @@ def make_updates(
     @eqx.filter_jit
     def generator_update(generator: Generator, state: Any, critic: Critic,
                          keys: jax.Array) -> tuple[Any, ...]:
-        (loss, (adversarial, penalty, signature, absolute_penalty)), grads = eqx.filter_value_and_grad(
+        (loss, (adversarial, penalty, signature, absolute_penalty, mean_pen)), grads = eqx.filter_value_and_grad(
             _generator_objective, has_aux=True
         )(generator, critic, keys, config, temporal_target, signature_reference,
-          absolute_temporal_reference)
+          absolute_temporal_reference, mean_target)
         updates, state = g_optimizer.update(grads, state)
         generator = eqx.apply_updates(generator, updates)
         metrics = jnp.array([loss, optax.tree.norm(grads), adversarial, penalty, signature,
-                             absolute_penalty])
+                             absolute_penalty, mean_pen])
         valid = tree_finite((metrics, grads, generator, state))
         return generator, state, metrics, valid
 
@@ -359,16 +447,28 @@ def kernel_bandwidth(train: np.ndarray, key: jax.Array, size: int) -> float:
     return float(np.median(positive))
 
 
-def mmd_squared(real: np.ndarray, fake: np.ndarray, bandwidth: float) -> float:
-    """Biased squared Gaussian-kernel MMD, including all diagonal terms."""
+def mmd_squared(
+    real: np.ndarray, fake: np.ndarray, bandwidth: float,
+    multipliers: tuple[float, ...] = (1.0,),
+) -> float:
+    """Biased squared Gaussian-kernel MMD, averaged over bandwidth multipliers."""
     real = np.asarray(real, dtype=np.float64).reshape(len(real), -1)
     fake = np.asarray(fake, dtype=np.float64).reshape(len(fake), -1)
 
-    def kernel_mean(a: np.ndarray, b: np.ndarray) -> float:
-        squared = np.sum((a[:, None] - b[None, :]) ** 2, axis=-1)
-        return float(np.exp(-squared / (2 * bandwidth ** 2)).mean())
+    def pairwise_sq(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+        sq_a = np.sum(a * a, axis=1, keepdims=True)
+        sq_b = np.sum(b * b, axis=1, keepdims=True)
+        return np.maximum(sq_a + sq_b.T - 2.0 * (a @ b.T), 0.0)
 
-    return kernel_mean(real, real) + kernel_mean(fake, fake) - 2 * kernel_mean(real, fake)
+    rr = pairwise_sq(real, real)
+    ff = pairwise_sq(fake, fake)
+    rf = pairwise_sq(real, fake)
+    scores = []
+    for mult in multipliers:
+        denom = 2.0 * (bandwidth * mult) ** 2
+        scores.append(float(np.exp(-rr / denom).mean() + np.exp(-ff / denom).mean()
+                            - 2.0 * np.exp(-rf / denom).mean()))
+    return float(np.mean(scores))
 
 
 def volatility_error(real: np.ndarray, fake: np.ndarray) -> float:
@@ -421,21 +521,26 @@ def train(
         _, scale, active = signature_reference
         validation_signature_reference = (signature_features(jnp.asarray(fixed_validation)).mean(axis=0),
                                            scale, active)
+    train_mean_target = jax.lax.stop_gradient(data.mean(axis=(0, 1)))
+    mean_target = train_mean_target if config.mean_penalty_weight > 0 else None
     g_opt, d_opt, g_update, d_update = make_updates(
-        config, temporal_target, signature_reference, absolute_temporal_reference)
+        config, temporal_target, signature_reference, absolute_temporal_reference, mean_target)
     g_state = g_opt.init(eqx.filter(generator, eqx.is_inexact_array))
     d_state = d_opt.init(eqx.filter(critic, eqx.is_inexact_array))
     key = jr.fold_in(jr.PRNGKey(seed), 2)
 
-    def evaluate(model: Generator) -> tuple[float, float, float, float | None, float | None]:
+    def evaluate(model: Generator) -> tuple[float, float, float, float | None, float | None, float]:
         samples = sample_paths(model, config.evaluation_paths, evaluation_key, config)
-        score = mmd_squared(fixed_validation, samples, bandwidth)
+        score = (mmd_squared(fixed_validation, samples, bandwidth)
+                 if config.mmd_bandwidth_multipliers == (1.0,)
+                 else mmd_squared(fixed_validation, samples, bandwidth, config.mmd_bandwidth_multipliers))
         temporal_error = float(temporal_penalty(jnp.asarray(samples), validation_target))
         vol_error = volatility_error(fixed_validation, samples)
+        m_error = float(mean_error(jnp.asarray(samples), train_mean_target))
         sig_error = (float(signature_error(jnp.asarray(samples), validation_signature_reference))
                      if validation_signature_reference is not None else None)
-        if not np.isfinite([score, temporal_error, vol_error]).all():
-            raise FloatingPointError('Nonfinite validation MMD2, temporal error, or volatility error')
+        if not np.isfinite([score, temporal_error, vol_error, m_error]).all():
+            raise FloatingPointError('Nonfinite validation MMD2, temporal, volatility, or mean error')
         if sig_error is not None and not np.isfinite(sig_error):
             raise FloatingPointError('Nonfinite validation signature error')
         absolute_error = (float(absolute_temporal_penalty(
@@ -443,16 +548,20 @@ def train(
             if absolute_temporal_reference is not None else None)
         if absolute_error is not None and not np.isfinite(absolute_error):
             raise FloatingPointError('Nonfinite validation absolute temporal error')
-        return score, temporal_error, vol_error, sig_error, absolute_error
+        return score, temporal_error, vol_error, sig_error, absolute_error, m_error
 
-    best_score, temporal_error, vol_error, sig_error, absolute_error = evaluate(generator)
+    ema_generator = generator if config.ema_decay is not None else None
+    best_score, temporal_error, vol_error, sig_error, absolute_error, m_error = evaluate(
+        ema_generator if ema_generator is not None else generator)
     checkpoints = []
     if config.retain_validation_checkpoints:
-        checkpoints.append({'step': 0, 'generator': generator, 'validation_mmd2': best_score,
+        checkpoints.append({'step': 0, 'generator': ema_generator if ema_generator is not None else generator,
+                            'validation_mmd2': best_score,
                             'validation_temporal_error': temporal_error,
                             'validation_volatility_error': vol_error, 'validation_signature_error': sig_error,
-                            'validation_absolute_temporal_error': absolute_error})
-    best_generator, best_step = generator, 0
+                            'validation_absolute_temporal_error': absolute_error,
+                            'train_mean_error': m_error})
+    best_generator, best_step = (ema_generator if ema_generator is not None else generator), 0
     history: History = [{
         'step': 0, 'generator_loss': None, 'critic_loss': None,
         'gradient_penalty': None, 'generator_grad_norm': None,
@@ -464,6 +573,7 @@ def train(
         'validation_volatility_error': vol_error,
         'signature_loss': None, 'validation_signature_error': sig_error,
         'absolute_temporal_penalty': None, 'validation_absolute_temporal_error': absolute_error,
+        'mean_penalty': None, 'train_mean_error': m_error,
     }]
     for step in range(1, config.generator_steps + 1):
         cycle_started = perf_counter()
@@ -489,7 +599,12 @@ def train(
                 raise FloatingPointError('Nonfinite generator update')
         except Exception as error:
             raise RuntimeError(f'Generator update {step} failed') from error
-        g_loss, g_norm, adversarial, g_temporal_penalty, g_signature_loss, g_absolute_penalty = map(float, metrics)
+        if ema_generator is not None:
+            effective_decay = jnp.asarray(min(config.ema_decay, 1.0 - 1.0 / (step + 1)), dtype=jnp.float32)
+            ema_generator = update_ema(ema_generator, generator, effective_decay)
+        evaluated_generator = ema_generator if ema_generator is not None else generator
+        (g_loss, g_norm, adversarial, g_temporal_penalty, g_signature_loss,
+         g_absolute_penalty, g_mean_penalty) = map(float, metrics)
         cycle_seconds = perf_counter() - cycle_started
         d_loss, penalty, d_norm, input_norm = map(float, np.mean(critic_metrics, axis=0))
         score = None
@@ -497,17 +612,19 @@ def train(
         vol_error = None
         sig_error = None
         absolute_error = None
+        m_error = None
         if step % config.validation_every == 0 or step == config.generator_steps:
-            score, temporal_error, vol_error, sig_error, absolute_error = evaluate(generator)
+            score, temporal_error, vol_error, sig_error, absolute_error, m_error = evaluate(evaluated_generator)
             if config.retain_validation_checkpoints:
-                checkpoints.append({'step': step, 'generator': generator, 'validation_mmd2': score,
+                checkpoints.append({'step': step, 'generator': evaluated_generator, 'validation_mmd2': score,
                                     'validation_temporal_error': temporal_error,
                                     'validation_volatility_error': vol_error, 'validation_signature_error': sig_error,
-                                    'validation_absolute_temporal_error': absolute_error})
+                                    'validation_absolute_temporal_error': absolute_error,
+                                    'train_mean_error': m_error})
             if score < best_score:
-                best_generator, best_score, best_step = generator, score, step
-            logger.info('seed=%d step=%d/%d mmd2=%.6f signed_acf_mse=%.6f absolute_acf_mse=%s',
-                        seed, step, config.generator_steps, score, temporal_error, absolute_error)
+                best_generator, best_score, best_step = evaluated_generator, score, step
+            logger.info('seed=%d step=%d/%d mmd2=%.6f signed_acf_mse=%.6f train_mean_rmse=%.5f',
+                        seed, step, config.generator_steps, score, temporal_error, m_error)
         history.append({
             'step': step, 'generator_loss': g_loss, 'critic_loss': d_loss,
             'gradient_penalty': penalty, 'generator_grad_norm': g_norm,
@@ -521,15 +638,18 @@ def train(
             'signature_loss': g_signature_loss, 'validation_signature_error': sig_error,
             'absolute_temporal_penalty': g_absolute_penalty,
             'validation_absolute_temporal_error': absolute_error,
+            'mean_penalty': g_mean_penalty, 'train_mean_error': m_error,
         })
+    final_generator = ema_generator if ema_generator is not None else generator
     return {
         'best_generator': best_generator, 'best_step': best_step,
         'validation_score': best_score, 'kernel_bandwidth': bandwidth,
-        'final_generator': generator, 'final_critic': critic, 'history': history,
+        'final_generator': final_generator, 'final_critic': critic, 'history': history,
         'temporal_target': None if temporal_target is None else np.asarray(temporal_target).tolist(),
         'absolute_temporal_reference': (None if absolute_temporal_reference is None else
                                         {name: np.asarray(value).tolist() for name, value in
                                          zip(('training_target', 'return_offset'), absolute_temporal_reference)}),
+        'mean_target': None if mean_target is None else np.asarray(mean_target).tolist(),
         'validation_checkpoints': checkpoints,
         'signature_reference': (None if signature_reference is None else
                                 {name: np.asarray(value).tolist() for name, value in

@@ -25,8 +25,8 @@ from architecture import solve_sde
 from sde_gan import SDEGAN, SDEGANConfig
 from training import (
     generate_batch, generator_loss, gradient_penalty, initialize_models,
-    kernel_bandwidth, make_updates, mmd_squared, sample_paths, train,
-    tree_finite, validate_windows,
+    kernel_bandwidth, make_updates, mean_error, mean_penalty, mmd_squared, sample_paths, train,
+    tree_finite, update_ema, validate_windows,
     temporal_autocorrelation, temporal_penalty, absolute_temporal_penalty,
     volatility_error, signature_features, fit_signature_reference, signature_loss, signature_error,
 )
@@ -102,7 +102,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(6), jnp.array(True)
+            return model, state, jnp.ones(7), jnp.array(True)
         with patch('training.make_updates', return_value=(g_opt, d_opt, g_update, d_update)), \
              patch('training.generate_batch', return_value=jnp.zeros((2, 20, 4))), \
              patch('training.sample_paths', return_value=np.zeros((4, 20, 4))), \
@@ -118,7 +118,7 @@ class TestInputsAndMetrics(unittest.TestCase):
         def d_update(model, state, real, fake, alpha):
             return model, state, jnp.ones(4), jnp.array(True)
         def g_update(model, state, critic, keys):
-            return model, state, jnp.ones(6), jnp.array(True)
+            return model, state, jnp.ones(7), jnp.array(True)
         def sample(model, n_paths, key, config):
             noise_keys.append(np.asarray(key))
             return np.zeros((n_paths, 20, 4))
@@ -382,7 +382,7 @@ class TestTemporalPenalty(unittest.TestCase):
         saved_critic = critic
         _, _, metrics, valid = update(generator, state, critic, keys)
         self.assertTrue(bool(valid))
-        self.assertEqual(metrics.shape, (6,))
+        self.assertEqual(metrics.shape, (7,))
         assert_tree_equal(self, saved_critic, critic)
 
     def test_training_target_and_serialization(self) -> None:
@@ -454,8 +454,8 @@ class TestAbsoluteTemporalPenalty(unittest.TestCase):
         state = g_opt.init(eqx.filter(generator, eqx.is_inexact_array))
         _, _, metrics, valid = update(generator, state, critic, keys)
         self.assertTrue(bool(valid))
-        self.assertEqual(metrics.shape, (6,))
-        np.testing.assert_allclose(metrics[-1], absolute_temporal_penalty(paths, reference), rtol=1e-5)
+        self.assertEqual(metrics.shape, (7,))
+        np.testing.assert_allclose(metrics[5], absolute_temporal_penalty(paths, reference), rtol=1e-5)
 
     def test_training_reference_logging_and_restore(self) -> None:
         config = small_config(generator_output='increments', absolute_temporal_penalty_weight=1,
@@ -591,7 +591,7 @@ class TestSignatureLoss(unittest.TestCase):
         saved_critic = critic
         _, _, metrics, valid = update(generator, state, critic, keys)
         self.assertTrue(bool(valid))
-        self.assertEqual(metrics.shape, (6,))
+        self.assertEqual(metrics.shape, (7,))
         assert_tree_equal(self, saved_critic, critic)
 
     def test_reference_logging_and_checkpoint_roundtrip(self) -> None:
@@ -614,6 +614,107 @@ class TestSignatureLoss(unittest.TestCase):
                 self.assertEqual(restored.run_metadata['signature_loss'], model.run_metadata['signature_loss'])
                 self.assertTrue(np.isfinite(restored.history[-1]['validation_signature_error']))
             np.testing.assert_array_equal(model.sample(5, 48), SDEGAN.load(directory).sample(5, 48))
+
+
+class TestStabilizationOptions(unittest.TestCase):
+    def test_config_validation_and_multiscale_mmd(self) -> None:
+        for kwargs in (
+            {'grad_clip_norm': 0}, {'grad_clip_norm': -1}, {'grad_clip_norm': np.nan},
+            {'grad_clip_norm': True}, {'lr_schedule': 'linear'},
+            {'ema_decay': 0}, {'ema_decay': 1}, {'ema_decay': -0.5}, {'ema_decay': True},
+            {'mmd_bandwidth_multipliers': ()}, {'mmd_bandwidth_multipliers': (0.0,)},
+            {'mmd_bandwidth_multipliers': (1.0, -0.5)}, {'mmd_bandwidth_multipliers': '1.0'},
+        ):
+            with self.assertRaises(ValueError):
+                small_config(**kwargs)
+        cfg = small_config(mmd_bandwidth_multipliers=[0.5, 1.0, 2.0])
+        self.assertEqual(cfg.mmd_bandwidth_multipliers, (0.5, 1.0, 2.0))
+        a, b = synthetic(70, 6), synthetic(71, 8)
+        expected = np.mean([mmd_squared(a, b, 2.0 * m) for m in (0.5, 1.0, 2.0)])
+        self.assertAlmostEqual(mmd_squared(a, b, 2.0, (0.5, 1.0, 2.0)), expected, places=12)
+        self.assertAlmostEqual(mmd_squared(a, a, 2.0, (0.5, 1.0, 2.0)), 0.0, places=12)
+
+    def test_ema_clipping_cosine_and_roundtrip(self) -> None:
+        config = small_config(
+            generator_output='increments', generator_steps=3, validation_every=1,
+            grad_clip_norm=1.0, lr_schedule='cosine', ema_decay=0.9,
+            mmd_bandwidth_multipliers=(0.5, 1.0, 2.0), retain_validation_checkpoints=True,
+        )
+        g0, _ = initialize_models(config, 72)
+        g1, _ = initialize_models(config, 73)
+        blended = update_ema(g0, g1, jnp.asarray(0.75, dtype=jnp.float32))
+        expected_w = 0.75 * g0.readout.weight + 0.25 * g1.readout.weight
+        np.testing.assert_allclose(blended.readout.weight, expected_w, atol=1e-6)
+        model = SDEGAN(config)
+        history = model.fit(synthetic(74, 12), synthetic(75, 8), seed=0)
+        self.assertEqual(len(history), 4)
+        self.assertTrue(all(np.isfinite(v) for row in history for v in row.values() if v is not None))
+        with tempfile.TemporaryDirectory() as directory:
+            model.save(directory)
+            restored = SDEGAN.load(directory)
+            self.assertEqual(restored.config, model.config)
+            np.testing.assert_array_equal(model.sample(5, 76), restored.sample(5, 76))
+            # Legacy configs missing stabilization keys still restore with defaults.
+            config_path = Path(directory) / 'config.json'
+            raw = json.loads(config_path.read_text())
+            for key in ('grad_clip_norm', 'lr_schedule', 'ema_decay', 'mmd_bandwidth_multipliers'):
+                del raw[key]
+            config_path.write_text(json.dumps(raw))
+            legacy = SDEGAN.load(directory)
+            self.assertIsNone(legacy.config.grad_clip_norm)
+            self.assertEqual(legacy.config.lr_schedule, 'constant')
+            self.assertIsNone(legacy.config.ema_decay)
+            self.assertEqual(legacy.config.mmd_bandwidth_multipliers, (1.0,))
+
+
+class TestMeanPenalty(unittest.TestCase):
+    def test_unbiased_estimator_and_validation(self) -> None:
+        data = jnp.asarray(synthetic(80, 8))
+        target = jnp.asarray(synthetic(81, 32).mean(axis=(0, 1)))
+        delta = np.asarray(data.mean(axis=1) - target)
+        expected = np.mean([np.dot(delta[i], delta[j]) / 4
+                            for i in range(8) for j in range(8) if i != j])
+        actual = float(mean_penalty(data, target))
+        np.testing.assert_allclose(actual, expected, rtol=1e-5)
+        naive = float(np.mean(delta.mean(axis=0) ** 2))
+        variance_bias = float(np.mean(delta.var(axis=0, ddof=1)) / 8)
+        np.testing.assert_allclose(naive - actual, variance_bias, rtol=1e-4, atol=1e-6)
+        self.assertAlmostEqual(float(mean_error(data, data.mean(axis=(0, 1)))), 0.0, places=6)
+        for values in (data, jnp.zeros_like(data)):
+            val, grads = jax.value_and_grad(mean_penalty)(values, target)
+            self.assertTrue(bool(jnp.isfinite(val) & jnp.isfinite(grads).all()))
+        for kwargs in ({'mean_penalty_weight': -1}, {'mean_penalty_weight': np.nan},
+                       {'mean_penalty_weight': True}, {'mean_penalty_weight': 1, 'batch_size': 1}):
+            with self.assertRaises(ValueError):
+                small_config(**kwargs)
+
+    def test_active_objective_and_roundtrip(self) -> None:
+        config = small_config(
+            generator_output='increments', generator_steps=2, validation_every=1,
+            mean_penalty_weight=10.0, retain_validation_checkpoints=True,
+        )
+        generator, critic = initialize_models(config, 82)
+        keys = jr.split(jr.PRNGKey(83), config.batch_size)
+        data = synthetic(84, 16)
+        target = jnp.asarray(data.mean(axis=(0, 1)))
+        paths = generate_batch(generator, keys, config.generator_dt, config.brownian_tol)
+        base = generator_loss(generator, critic, keys, replace(config, mean_penalty_weight=0.0))
+        active = generator_loss(generator, critic, keys, config, mean_target=target)
+        np.testing.assert_allclose(active, base + 10.0 * mean_penalty(paths, target), rtol=1e-5)
+        model = SDEGAN(config)
+        history = model.fit(data, synthetic(85, 8), seed=0)
+        np.testing.assert_allclose(model.run_metadata['mean_penalty']['training_target'],
+                                   data.mean(axis=(0, 1)), atol=1e-6)
+        row = history[1]
+        self.assertAlmostEqual(row['generator_loss'],
+                               row['generator_adversarial_loss'] + 10.0 * row['mean_penalty'],
+                               places=5)
+        with tempfile.TemporaryDirectory() as directory:
+            model.save(directory)
+            restored = SDEGAN.load(directory)
+            self.assertEqual(restored.config, model.config)
+            self.assertEqual(restored.run_metadata, model.run_metadata)
+            np.testing.assert_array_equal(model.sample(5, 86), restored.sample(5, 86))
 
 
 class TestSmokeRun(unittest.TestCase):

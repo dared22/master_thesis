@@ -52,6 +52,7 @@ class SDEGAN:
             'validation_volatility_error': self.history[result['best_step']]['validation_volatility_error'],
             'validation_signature_error': self.history[result['best_step']]['validation_signature_error'],
             'validation_absolute_temporal_error': self.history[result['best_step']]['validation_absolute_temporal_error'],
+            'train_mean_error': self.history[result['best_step']]['train_mean_error'],
             'selection_rule': 'lowest_validation_mmd2',
             'kernel_bandwidth': result['kernel_bandwidth'],
             'temporal_penalty': {
@@ -70,6 +71,12 @@ class SDEGAN:
                 'weight': self.config.absolute_temporal_penalty_weight,
                 'lags': [1, 2, 3, 4, 5], 'units': 'absolute log returns',
                 'training_reference': result['absolute_temporal_reference'],
+            },
+            'mean_penalty': {
+                'weight': self.config.mean_penalty_weight,
+                'units': 'standardized log returns',
+                'estimator': 'unbiased cross-path squared mean error',
+                'training_target': result['mean_target'],
             },
             'package_versions': {name: version(name) for name in
                                  ('jax', 'jaxlib', 'equinox', 'diffrax', 'optax', 'numpy')},
@@ -114,6 +121,7 @@ class SDEGAN:
                     'validation_volatility_error': checkpoint['validation_volatility_error'],
                     'validation_signature_error': checkpoint['validation_signature_error'],
                     'validation_absolute_temporal_error': checkpoint['validation_absolute_temporal_error'],
+                    'train_mean_error': checkpoint['train_mean_error'],
                     'selection_rule': 'validation_snapshot',
                 }
                 snapshot.save(directory / relative_path)

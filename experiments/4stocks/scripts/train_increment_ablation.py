@@ -21,9 +21,9 @@ from sde_gan import SDEGAN, SDEGANConfig
 
 
 def main() -> None:
-    """Fit the unchanged baseline configuration with exactly one loss change."""
+    """Fit one increment ablation variant for a specified seed."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('experiment', choices=('gp5', 'absolute_acf_1'))
+    parser.add_argument('experiment', choices=('gp5', 'absolute_acf_1', 'stabilized', 'stabilized_mean10'))
     parser.add_argument('seed', type=int, choices=(0, 1, 2))
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
@@ -33,10 +33,39 @@ def main() -> None:
     assert config.generator_output == 'increments' and config.generator_steps == 2000
     assert config.gradient_penalty_weight == 10 and config.temporal_penalty_weight == 0
     assert config.signature_loss_weight == config.absolute_temporal_penalty_weight == 0
-    config = (replace(config, gradient_penalty_weight=5)
-              if args.experiment == 'gp5' else
-              replace(config, absolute_temporal_penalty_weight=1))
-    folder = 'increments_gp5' if args.experiment == 'gp5' else 'increments_absolute_acf_1'
+    if args.experiment == 'gp5':
+        config = replace(config, gradient_penalty_weight=5)
+        folder = 'increments_gp5'
+    elif args.experiment == 'absolute_acf_1':
+        config = replace(config, absolute_temporal_penalty_weight=1)
+        folder = 'increments_absolute_acf_1'
+    elif args.experiment == 'stabilized':
+        config = replace(
+            config,
+            batch_size=64,
+            sampling_batch_size=64,
+            grad_clip_norm=10.0,
+            lr_schedule='cosine',
+            ema_decay=0.99,
+            validation_size=709,
+            evaluation_paths=1000,
+            mmd_bandwidth_multipliers=(0.5, 1.0, 2.0),
+        )
+        folder = 'increments_stabilized'
+    else:
+        config = replace(
+            config,
+            batch_size=64,
+            sampling_batch_size=64,
+            grad_clip_norm=10.0,
+            lr_schedule='cosine',
+            ema_decay=0.99,
+            validation_size=709,
+            evaluation_paths=1000,
+            mmd_bandwidth_multipliers=(0.5, 1.0, 2.0),
+            mean_penalty_weight=10.0,
+        )
+        folder = 'increments_stabilized_mean10'
     run_dir = results / folder / f'seed_{args.seed}'
     preprocessing = json.loads((DIRECTORY / 'data/preprocessing.json').read_text())
     assert preprocessing == json.loads((baseline / 'preprocessing.json').read_text())
