@@ -283,3 +283,68 @@ the total number of observed changes.
 This is the likelihood of the local Euler approximation. It is generally
 an approximation to the likelihood of the underlying SDE, because the drift
 and diffusion can change within an observation interval.
+
+\clearpage
+
+\section{Stock counts by ICB classification}
+\label{app:icb-sample-composition}
+
+Both tables use the Euronext ICB snapshot described in
+Section~\ref{sec:data-preparation}.
+
+\begin{table}[H]
+    \centering
+    \caption{Sample composition by ICB Supersector.}
+    \label{tab:icb-supersector-counts}
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{.37\linewidth}r
+                    @{\hspace{1em}}>{\raggedright\arraybackslash}p{.37\linewidth}r}
+        \hline
+        Supersector & Stocks & Supersector & Stocks \\
+        \hline
+        Automobiles and Parts & 1 & Industrial Goods and Services & 18 \\
+        Banks & 10 & Insurance & 3 \\
+        Basic Resources & 2 & Personal Care, Drug and Grocery Stores & 1 \\
+        Chemicals & 2 & Real Estate & 2 \\
+        Construction and Materials & 4 & Retail & 2 \\
+        Consumer Products and Services & 2 & Technology & 11 \\
+        Energy & 28 & Telecommunications & 2 \\
+        Financial Services & 6 & Travel and Leisure & 1 \\
+        Food, Beverage and Tobacco & 8 & Utilities & 1 \\
+        Health Care & 7 & & \\
+        \hline
+        \multicolumn{3}{r}{Total} & 111 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Sample composition by ICB Sector.}
+    \label{tab:icb-sector-counts}
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{.37\linewidth}r
+                    @{\hspace{1em}}>{\raggedright\arraybackslash}p{.37\linewidth}r}
+        \hline
+        Sector & Stocks & Sector & Stocks \\
+        \hline
+        Alternative Energy & 2 & Leisure Goods & 1 \\
+        Automobiles and Parts & 1 & Life Insurance & 1 \\
+        Banks & 10 & Medical Equipment and Services & 1 \\
+        Chemicals & 2 & Non-life Insurance & 2 \\
+        Construction and Materials & 4 & Oil, Gas and Coal & 26 \\
+        Electricity & 1 & Personal Care, Drug and Grocery Stores & 1 \\
+        Electronic and Electrical Equipment & 3 & Pharmaceuticals and Biotechnology & 6 \\
+        Finance and Credit Services & 1 & Real Estate Investment and Services & 2 \\
+        Food Producers & 8 & Retailers & 2 \\
+        General Industrials & 3 & Software and Computer Services & 9 \\
+        Household Goods and Home Construction & 1 & Technology Hardware and Equipment & 2 \\
+        Industrial Engineering & 5 & Telecommunications Equipment & 1 \\
+        Industrial Metals and Mining & 2 & Telecommunications Service Providers & 1 \\
+        Industrial Transportation & 7 & Travel and Leisure & 1 \\
+        Investment Banking and Brokerage Services & 5 & & \\
+        \hline
+        \multicolumn{3}{r}{Total} & 111 \\
+        \hline
+    \end{tabular}
+\end{table}

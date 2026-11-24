@@ -12,20 +12,15 @@ identifies a security, such as a share class.}, from 2 January 1980 to
 from 8 September 2016 to 8 September 2026. Prices and turnover are recorded in
 Norwegian kroner (NOK).
 
-We keep only stocks that have a valid price on the last trading day. Over the
-ten years, a stock can have missing prices on fewer than 5\% of trading days
-and no gap longer than four trading days. We keep one share class per company,
-leaving 109 stocks.
-
-We matched each stock's final ISIN to Euronext's Industry Classification
-Benchmark (ICB) using the snapshot from 17 November 2026
-\parencite{EuronextOsloEquities}. We use the same classification for the stock's
-entire history. Table~\ref{tab:eda-sectors} groups stocks by ICB Industry,
-the level closest to TITLON's broad sector categories.
+The final sample contains 111 stocks. Table~\ref{tab:eda-sectors} shows their
+distribution by Industry Classification Benchmark (ICB) Industry. ICB also
+classifies stocks at the more detailed Supersector and Sector levels.
+Tables~\ref{tab:icb-supersector-counts} and~\ref{tab:icb-sector-counts} in
+Appendix~\ref{app:icb-sample-composition} give the stock counts at those levels.
 
 \begin{table}[htbp]
     \centering
-    \caption{Retained stocks by ICB Industry in the 17 November 2026 snapshot.}
+    \caption{Sample composition by ICB Industry.}
     \label{tab:eda-sectors}
     \small
     \begin{tabular}{lr@{\hspace{1cm}}lr}
@@ -35,11 +30,11 @@ the level closest to TITLON's broad sector categories.
         Basic Materials & 4 & Industrials & 22 \\
         Consumer Discretionary & 6 & Real Estate & 2 \\
         Consumer Staples & 9 & Technology & 11 \\
-        Energy & 27 & Telecommunications & 2 \\
+        Energy & 28 & Telecommunications & 2 \\
         Financials & 19 & Utilities & 1 \\
-        Health Care & 6 & & \\
+        Health Care & 7 & & \\
         \hline
-        \multicolumn{3}{r}{Total} & 109 \\
+        \multicolumn{3}{r}{Total} & 111 \\
         \hline
     \end{tabular}
 \end{table}
@@ -47,60 +42,101 @@ the level closest to TITLON's broad sector categories.
 \subsection{Data preparation}
 \label{sec:data-preparation}
 
-Stock histories with different ISINs are joined when the company and security
-identifiers show that they belong together and their dates do not overlap.
-Different share classes traded at the same time are kept separate at this stage.
-
-A stock is included if it has valid adjusted prices at the start and end of the
-period and on at least 95\% of trading days. Trading days follow the Oslo Stock
-Exchange calendar (XOSL). If several share classes of the same company qualify,
-the one with the highest total turnover in NOK over the five years is selected.
-Stocks without a company identifier are kept separate.
+Some share classes appear under different ISINs over time, splitting their
+price histories. A company can also have multiple share classes trading under
+different ISINs at the same time. We reconstruct one price series per share
+class by joining nonoverlapping histories when known ISIN links or identifiers
+in the data indicate continuity. We keep concurrently traded classes separate.
 
 Duplicate prices for the same stock and day are counted once. If these prices
 disagree, the price is treated as missing. Zero, negative, and nonfinite prices
-are also treated as missing. The adjusted prices supplied in the dataset follow
-\(P^{*}=\texttt{Price}\times\texttt{CorpAdj}\times\texttt{DividendAdj}\).
-This formula alone does not show when adjustments take effect or how dividends
-are reinvested. No further adjustments are made.
+are also treated as missing.
+
+Stock splits and dividends can lower the share price while leaving the
+shareholder's total value unchanged. We therefore compare returns using
+TITLON's \texttt{AdjustedPrice} column, given by
+\mbox{\(P^{*}=\texttt{Price}\times\texttt{CorpAdj}\times\texttt{DividendAdj}\)}.
+Here, \texttt{Price} is the recorded share price, \texttt{CorpAdj} adjusts for
+corporate actions such as splits, and \texttt{DividendAdj} adjusts for dividends
+\parencite{TITLONFields}.
+
+Figure~\ref{fig:kongsberg-adjusted-price} shows Kongsberg Gruppen around its
+five-for-one split on 3 June 2025 \parencite[154]{KongsbergAnnualReport2025}.
+From 2 to 3 June, the recorded price fell by 79.5\% and the adjusted price rose
+by 2.7\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figures/data/kongsberg-adjusted-price.pdf}
+    \caption{Kongsberg Gruppen's recorded and adjusted share prices from
+    20 May to 17 June 2025, using TITLON data. The dashed line marks the
+    split. The panels use different vertical scales.}
+    \label{fig:kongsberg-adjusted-price}
+\end{figure}
+
+We then select one share class per company, choosing the class with the most
+valid adjusted prices. Ties are broken by higher total turnover in NOK over
+the sample period, then by the lowest final ISIN. Of the resulting 115
+histories, we keep only those with a valid adjusted price on 8 September 2026,
+the final trading day of the sample. We also require valid prices on more
+than 95\% of trading days and allow gaps of at most five consecutive trading
+days. We count trading days using the Oslo Stock Exchange calendar (XOSL).
+
+We match each retained stock's final ISIN to Euronext's 17 November 2026 ICB
+snapshot and use its Industry classification to define the stock's sector
+throughout the sample \parencite{EuronextOsloEquities}.
+
+Before calculating returns, we fill internal gaps of up to five trading days
+in each stock's adjusted prices. We fit a natural cubic spline to the
+observed prices using trading-day positions and fill a gap only when all
+estimated prices are finite and positive. The spline uses prices on both
+sides of the gap, so these estimates are retrospective.
 
 Daily log returns are calculated as
 \begin{equation}
     r_{i,t}=\log P^{*}_{i,t}-\log P^{*}_{i,t-1},
     \label{eq:eda-log-return}
 \end{equation}
-where \(t-1\) is the previous trading day. The first return uses the price from
-7 September 2021. A missing price leaves the returns for that day and the next
-trading day missing. Missing prices are not filled in, and returns are not
-calculated across gaps. Genuine zero returns and extreme values are kept.
-Extreme values are flagged for review.
+where \(t-1\) is the previous trading day. The first possible return falls on
+the second trading day of the sample. A return remains missing if either
+price is still missing.
 
-The selected sample has 506 missing prices and 862 missing returns. Keeping only
-days with returns for every stock leaves 871 trading days, excluding 30.7\% of
-the days in the sample. Analyses of stock pairs use all days with returns for
-both stocks. Comparisons that require data for every stock use the same 871 days.
+Counting the cash dividend once gives Hunter Group a simple return of
+1.99\% on 30 January 2023 \parencite{HunterGroupDividend2023}. We set
+EAM Solar's 31 October 2024 return to missing because TITLON's adjustment
+reflects the maximum of 250 million shares in an offering that issued
+146.1 million \parencite{EAMSolarProspectus2024,EAMSolarAnnualReport2024}.
+
+Interpolation fills all 1,222 missing prices between observed prices. The
+three prices missing on 8 September 2016 remain unfilled because the sample
+has no earlier observations for those stocks. The interpolated prices provide
+estimates for 2,259 of the 2,262 missing returns after the first trading day.
+Analyses of stock pairs use days with returns for both stocks. Applying the
+same return corrections before comparing the two panels, interpolation
+increases the number of days with returns for all 111 stocks from 1,688 to
+2,507. Using all available returns for each stock and weighting stocks equally,
+the average daily return variance decreases by 0.49\%.
 
 \subsection{Exploratory analysis}
 \label{sec:exploratory-analysis}
 
-The five-year sample shows three broad patterns: large daily price changes,
-changing volatility, and stronger links between stocks in the same sector.
+The ten-year sample shows three broad patterns: large daily price changes,
+changing volatility, and stronger links between stocks in the same industry.
 
 Figure~\ref{fig:eda-return-behaviour}a compares the returns with a normal
 distribution. Returns are scaled separately for each stock so that stocks with
 different levels of volatility can be compared. Overall, extreme returns are
-more common than a normal distribution would suggest. Some extreme values
-still need to be checked for possible data or price-adjustment issues.
+more common than a normal distribution would suggest.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/data/return-behaviour.pdf}
-    \caption{Returns and volatility over the five-year sample, using observed
-    returns only. (a) Comparison with a normal distribution after subtracting
+    \caption{Returns and volatility over the ten-year sample after short-gap
+    interpolation. (a) Comparison with a normal distribution after subtracting
     each stock's mean return and dividing by its standard deviation. The curve
     shows the median across stocks; the band covers the middle 50\%.
     (b) Volatility measured over 60 trading days and converted to an annual
-    scale using \(\sqrt{252}\). Each estimate requires 60 observed returns.
+    scale using \(\sqrt{252}\). Each estimate requires 60 consecutive daily returns.
     The line shows the median across stocks; the band covers the middle 50\%.
     These bands show differences between stocks, not uncertainty intervals.}
     \label{fig:eda-return-behaviour}
@@ -110,19 +146,21 @@ Volatility measures how much returns vary. Figure~\ref{fig:eda-return-behaviour}
 shows that the sample moves between calmer and more volatile periods.
 Volatility also differs across stocks.
 
-Stocks in the same sector tend to move together more than stocks in different
-sectors. Average correlation is 0.112 within sectors and 0.059 across sectors.
-This is an overall pattern and does not hold equally for every sector. The gap
-becomes smaller when each sector is given equal weight, so larger sectors
-influence the result. Figure~\ref{fig:eda-dependence}a shows that average
-correlations also change over time. The stock pairs with enough data to be
-included change over time too, which can affect these averages.
+Stocks in the same ICB Industry tend to move together more than stocks in
+different industries. Using shared dates for each pair, average Pearson
+correlation is 0.169 within industries and 0.109 across industries. The
+within-group average rises to 0.170 at the Supersector level and to 0.193 at
+the Sector level. At the Industry level, the gap changes slightly with
+interpolation, from 0.06057 to 0.06046. It falls to 0.035 when each industry
+with a within-industry estimate is given equal weight.
+Figure~\ref{fig:eda-dependence}a shows how average correlations change over
+time. Most rolling windows use all stock pairs.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/data/dependence-and-losses.pdf}
     \caption{Links between stock returns in the selected sample.
-    (a) Average Pearson correlations within and across sectors, measured over
+    (a) Average Pearson correlations within and across industries, measured over
     63 trading days. Each stock pair needs returns for all 63 days. The lower
     strip shows the share of eligible pairs included.
     (b) Average chance that a stock has one of its worst 5\% of returns when
@@ -132,32 +170,29 @@ included change over time too, which can affect these averages.
     \label{fig:eda-dependence}
 \end{figure}
 
-Large losses also occur together more often within sectors. When one stock has
-one of its worst 5\% of returns, another stock does too on average 13.0\% of the
-time within sectors, compared with 9.6\% across sectors
-(Figure~\ref{fig:eda-dependence}b). These figures describe the observed sample;
-they do not establish that the difference is statistically significant or show
-how stocks behave in even rarer losses.
+Large losses also occur together more often within industries. When one stock
+has one of its worst 5\% of returns, another stock does too on average 17.6\%
+of the time within industries, compared with 13.8\% across industries
+(Figure~\ref{fig:eda-dependence}b).
 
 \subsection{Correlation spikes during market stress}
 \label{sec:eda-implications}
 
-A five-year average can hide sharp increases in correlation. In the two examples
+A full-sample average can hide sharp increases in correlation. In the two examples
 below, correlations rise both within and across sectors around days when many
 stocks fall together. Figure~\ref{fig:eda-correlation-shocks} shows correlations
 over the previous 20 trading days, alongside the median daily stock return.
 
 The first example is January 2022, when concerns about higher interest rates and
 tensions between Russia and Ukraine weighed on equity markets
-\parencite{FOMCJanuary2022}. Around the large loss on 24 January, average
-correlation rises sharply. It later reaches about 0.35 within sectors and 0.30
-across sectors, compared with roughly 0.14 and 0.08 before the jump.
+\parencite{FOMCJanuary2022}. From 21 to 24 January, average correlation rises
+from 0.23 to 0.35 within sectors and from 0.15 to 0.30 across sectors.
 
 The second example is the global sell-off in early August 2024
-\parencite{AquilinaEtAl2024}. Around the losses on 2 and 5 August, average
-correlation rises from about 0.05 to above 0.30 within sectors, and from about
-0.02 to 0.25 across sectors. Both examples show that stocks in different sectors
-can move together more strongly during market stress.
+\parencite{AquilinaEtAl2024}. From 1 to 5 August, average correlation rises
+from 0.07 to 0.34 within sectors and from 0.03 to 0.27 across sectors. Both
+examples show that stocks in different sectors can move together more strongly
+during market stress.
 
 \begin{figure}[htbp]
     \centering
@@ -182,12 +217,3 @@ These jumps motivate copula modelling, which models the links between stock
 returns separately from each stock's return distribution. They also raise the
 question of whether a fixed copula is sufficient or whether dependence needs
 to change over time.
-
-Cubic interpolation of internal price gaps of up to five sessions changes the
-available-pair Pearson sector gap from 0.05347 to 0.05351. This is a retrospective
-sensitivity check: the spline uses later prices and does not add observed
-returns.
-
-\textcolor{red}{TODO: Decide whether to use interpolation to fill short gaps in
-prices or keep the missing values. Update the data preparation and analysis to
-match this choice.}
