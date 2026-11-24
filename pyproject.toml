@@ -22,3 +22,10 @@ dependencies = [
     "threadpoolctl==3.8.0",
     "tslearn==0.10.0",
 ]
+
+[project.optional-dependencies]
+tsfm = [
+    "accelerate==1.15.0",
+    "torch==2.14.1",
+    "transformers==4.40.1",
+]

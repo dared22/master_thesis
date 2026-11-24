@@ -1,13 +1,36 @@
 \section{Theory}
 \label{sec:theory}
 
-Financial time series are commonly modelled as realizations of stochastic
-processes because their future evolution is uncertain \parencite{PishroNik2014}.
+Stock prices often show broad trends over months and years, yet they move
+unevenly from day to day. Longer-term trends reflect gradual changes in a
+company's business, its industry, and the wider economy. At the same time,
+prices react to unpredictable events, such as company news, economic
+announcements, global developments, and changing decisions by buyers and
+sellers. Because these influences cannot be known in advance, future prices
+are uncertain, and financial time series are commonly modelled as realizations
+of stochastic processes \parencite{PishroNik2014}.
+Figure~\ref{fig:stock-price-examples} illustrates this mix of broad trends and
+irregular fluctuations for four stocks on the Oslo Stock Exchange, using the
+dataset described in Section~\ref{sec:data-eda}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/theory/stock-price-examples.pdf}
+    \caption{Adjusted share prices of four Oslo Stock Exchange stocks from
+    September 2016 to September 2026, each scaled to 100 at the start of the
+    period so that their paths can be compared on a common scale (TITLON data;
+    see Section~\ref{sec:data-eda}).}
+    \label{fig:stock-price-examples}
+\end{figure}
+
 This section first introduces ordinary differential equations (ODEs) to describe
-continuous-time dynamics and stochastic processes to describe randomness. It
+continuous-time dynamics and stochastic processes to describe structured
+randomness, specifying how values are distributed and linked across time. It
 then brings these ideas together in stochastic differential equations (SDEs),
 which describe how a system evolves under both systematic and random
-influences. For the financial data considered here, the aim is to learn these
+influences, called \emph{drift} and \emph{diffusion}. More general formulations
+can also include \emph{jump processes} to represent sudden, discontinuous price
+moves. For the financial data considered here, the aim is to learn these
 dynamics from observed time series. SDEs can be fitted to discrete observations,
 including sparsely sampled data, although sparse observations can make the
 underlying dynamics difficult to identify \parencite{SarkkaSolin2019}.
