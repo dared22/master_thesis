@@ -1,7 +1,8 @@
-"""Run the zero-shot Sundial TSFM portfolio risk benchmark on 4stocks splits.
+"""Run zero-shot TSFM portfolio risk benchmarks (Sundial / Timestral) on 4stocks splits.
 
 Requires the optional TSFM extra:
-    uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py
+    uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py --forecaster sundial
+    uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py --forecaster timestral
 """
 
 import argparse
@@ -21,30 +22,75 @@ ROOT = DIRECTORY.parents[1]
 sys.path.insert(0, str(ROOT))
 
 from benchmarks.tsfm import (
-    SUNDIAL_DEFAULT_MODEL_ID, SundialForecaster, TSFMConfig, TSFMForecastBenchmark,
+    DEFAULT_MODEL_IDS, SundialForecaster, TSFMConfig, TSFMForecastBenchmark, TimestralForecaster,
 )
 
 CONFIDENCE_LEVELS = (0.95, 0.99)
 
 
-class _ProgressForecaster:
-    """Thin tqdm progress-bar wrapper around a SampleForecaster."""
+class _ProgressBase:
+    """Shared tqdm progress-bar base for forecaster wrappers."""
 
     def __init__(self, inner: object, split: str, total_targets: int) -> None:
         self._inner = inner
         self.name = inner.name
-        self._bar = tqdm(total=total_targets, desc=f'TSFM {split}', unit='origin', dynamic_ncols=True)
+        self._bar = tqdm(
+            total=total_targets,
+            desc=f'TSFM ({self.name}) {split}',
+            unit='origin',
+            dynamic_ncols=True,
+        )
 
     def metadata(self) -> dict:
         return self._inner.metadata()
 
+    def close(self) -> None:
+        self._bar.close()
+
+
+class _SampleProgressForecaster(_ProgressBase):
     def sample(self, contexts: np.ndarray, horizon: int, num_samples: int, seed: int) -> np.ndarray:
         out = self._inner.sample(contexts, horizon, num_samples, seed)
         self._bar.update(len(contexts))
         return out
 
-    def close(self) -> None:
-        self._bar.close()
+
+class _QuantileProgressForecaster(_ProgressBase):
+    def predict_quantiles(self, contexts: np.ndarray, horizon: int) -> tuple[np.ndarray, tuple[float, ...]]:
+        out = self._inner.predict_quantiles(contexts, horizon)
+        self._bar.update(len(contexts))
+        return out
+
+
+def build_forecaster(config: TSFMConfig) -> SundialForecaster | TimestralForecaster:
+    """Instantiate the lazy TSFM forecaster matching config.forecaster."""
+    assert config.model_id is not None
+    if config.forecaster == 'timestral':
+        return TimestralForecaster(
+            model_id=config.model_id,
+            device=config.device,
+            dtype=config.dtype,
+            revision=config.revision,
+        )
+    assert config.revin is not None
+    return SundialForecaster(
+        model_id=config.model_id,
+        device=config.device,
+        dtype=config.dtype,
+        sample_chunk_size=config.sample_chunk_size,
+        revin=config.revin,
+        revision=config.revision,
+    )
+
+
+def wrap_progress(
+    inner: SundialForecaster | TimestralForecaster,
+    split: str,
+    total_targets: int,
+) -> _SampleProgressForecaster | _QuantileProgressForecaster:
+    if isinstance(inner, TimestralForecaster):
+        return _QuantileProgressForecaster(inner, split, total_targets)
+    return _SampleProgressForecaster(inner, split, total_targets)
 
 
 def pinball_loss_pct(realized: np.ndarray, var: np.ndarray, confidence: float) -> float:
@@ -96,15 +142,12 @@ def run_split(
     output_dir.mkdir(parents=True, exist_ok=True)
     n_available = max(0, len(eval_df) - config.horizon_sessions + 1)
     n_targets = len(range(0, n_available, config.target_stride))
-    logging.info('START TSFM %s: model=%s target=%s context=%d samples=%d stride=%d batch=%d origins=%d device=%s',
-                 split, config.model_id, config.target, config.context_sessions,
+    logging.info('START TSFM (%s) %s: model=%s target=%s revin=%s context=%d samples=%d stride=%d batch=%d origins=%d device=%s',
+                 config.forecaster, split, config.model_id, config.target, config.revin, config.context_sessions,
                  config.num_samples, config.target_stride, config.batch_size, n_targets, config.device)
     started = perf_counter()
-    inner_forecaster = SundialForecaster(
-        model_id=config.model_id, device=config.device, dtype=config.dtype,
-        sample_chunk_size=config.sample_chunk_size, revin=config.revin, revision=config.revision,
-    )
-    forecaster = _ProgressForecaster(inner_forecaster, split, n_targets)
+    inner_forecaster = build_forecaster(config)
+    forecaster = wrap_progress(inner_forecaster, split, n_targets)
     try:
         benchmark = TSFMForecastBenchmark(config, forecaster=forecaster).fit(history_df)
         result = benchmark.backtest(eval_df)
@@ -121,7 +164,8 @@ def run_split(
         'benchmark_metadata': result.metadata,
     }, indent=2, allow_nan=False) + '\n')
 
-    logging.info('DONE TSFM %s in %.1fs (%d forecast rows)', split, elapsed, len(result.forecasts))
+    logging.info('DONE TSFM (%s) %s in %.1fs (%d forecast rows)',
+                 config.forecaster, split, elapsed, len(result.forecasts))
     for confidence in CONFIDENCE_LEVELS:
         sub = result.forecasts.loc[
             result.forecasts.confidence.eq(confidence)
@@ -130,14 +174,17 @@ def run_split(
         ]
         ql = pinball_loss_pct(sub['realized_loss'].to_numpy(), sub['var'].to_numpy(), confidence)
         br = 100.0 * float(sub['breach'].mean())
-        logging.info('  %s %.0f%%: targets=%d mean_VaR=%.2f%% mean_ES=%.2f%% breach=%.2f%% QL=%.4f',
+        mean_es = float(sub['es'].mean())
+        es_text = f'{100.0 * mean_es:.2f}%' if np.isfinite(mean_es) else 'n/a'
+        logging.info('  %s %.0f%%: targets=%d mean_VaR=%.2f%% mean_ES=%s breach=%.2f%% QL=%.4f',
                      split, 100 * confidence, len(sub),
-                     100.0 * float(sub['var'].mean()), 100.0 * float(sub['es'].mean()), br, ql)
+                     100.0 * float(sub['var'].mean()), es_text, br, ql)
     return result.forecasts
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--forecaster', choices=tuple(DEFAULT_MODEL_IDS), default='sundial')
     parser.add_argument('--target', choices=('log_price', 'return'), default='log_price')
     parser.add_argument('--context-sessions', type=int, default=252)
     parser.add_argument('--num-samples', type=int, default=1000)
@@ -145,7 +192,8 @@ def main() -> None:
     parser.add_argument('--batch-size', type=int, default=16)
     parser.add_argument('--sample-chunk-size', type=int, default=250)
     parser.add_argument('--seed', type=int, default=0)
-    parser.add_argument('--model-id', default=SUNDIAL_DEFAULT_MODEL_ID)
+    parser.add_argument('--model-id', default=None,
+                        help='Hugging Face repo id (defaults to the selected forecaster default).')
     parser.add_argument('--device', choices=('cpu', 'mps', 'cuda', 'auto'), default='cpu')
     parser.add_argument('--dtype', choices=('float32', 'float16', 'bfloat16'), default='float32')
     parser.add_argument('--evaluate-test', action='store_true',
@@ -172,6 +220,7 @@ def main() -> None:
         batch_size=args.batch_size,
         sample_chunk_size=args.sample_chunk_size,
         seed=args.seed,
+        forecaster=args.forecaster,
         model_id=args.model_id,
         device=args.device,
         dtype=args.dtype,
@@ -179,7 +228,7 @@ def main() -> None:
 
     train_df = pd.read_csv(DIRECTORY / 'data/train_returns.csv', parse_dates=['Date'])
     val_df = pd.read_csv(DIRECTORY / 'data/validation_returns.csv', parse_dates=['Date'])
-    output_dir = DIRECTORY / 'results/tsfm'
+    output_dir = DIRECTORY / 'results/tsfm' / args.forecaster
 
     run_split('validation', train_df, val_df, config, preprocessing, output_dir, force=args.force)
     if args.evaluate_test:

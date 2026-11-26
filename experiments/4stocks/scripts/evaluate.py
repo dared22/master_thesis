@@ -26,6 +26,11 @@ from sde_gan import SDEGAN
 CONFIDENCE_LEVELS = (0.95, 0.99)
 ROLLING_LOOKBACK_SESSIONS = 252
 SUNDIAL_RELEASE_DATE = pd.Timestamp('2025-02-01')
+TSFM_FORECASTERS = ('sundial', 'timestral')
+TSFM_STYLES = {
+    'sundial': ('C3', 'TSFM (Sundial)'),
+    'timestral': ('C4', 'TSFM (Timestral-28M)'),
+}
 
 
 def acf(paths: np.ndarray, absolute: bool = False) -> np.ndarray:
@@ -107,16 +112,18 @@ def load_observed(split: str, stocks: list[str], dates: pd.DataFrame) -> tuple[p
     return frame, windows
 
 
-def load_tsfm_forecasts(split: str, metadata: dict) -> pd.DataFrame | None:
-    """Load saved TSFM forecasts for a split if they exist and match preprocessing."""
-    tsfm_dir = DIRECTORY / 'results/tsfm'
+def load_tsfm_forecasts(forecaster: str, split: str, metadata: dict) -> pd.DataFrame | None:
+    """Load saved TSFM forecasts for one forecaster and split if they match preprocessing."""
+    tsfm_dir = DIRECTORY / 'results/tsfm' / forecaster
     forecasts_path = tsfm_dir / f'{split}_forecasts.csv'
     meta_path = tsfm_dir / f'{split}_metadata.json'
     if not (forecasts_path.is_file() and meta_path.is_file()):
         return None
     saved_meta = json.loads(meta_path.read_text())
     if saved_meta.get('protocol', {}).get('preprocessing') != metadata:
-        raise ValueError(f'TSFM {split} metadata does not match current data/preprocessing.json')
+        raise ValueError(
+            f'TSFM ({forecaster}) {split} metadata does not match current data/preprocessing.json'
+        )
     return pd.read_csv(forecasts_path, parse_dates=['forecast_origin', 'target_start', 'target_end'])
 
 
@@ -170,7 +177,7 @@ def main() -> None:
 
     risk_records, metric_records, solver_records = [], [], []
     rolling_forecasts: dict[str, pd.DataFrame] = {}
-    tsfm_forecasts: dict[str, pd.DataFrame] = {}
+    tsfm_forecasts: dict[str, dict[str, pd.DataFrame]] = {name: {} for name in TSFM_FORECASTERS}
     samples, signed_curves, abs_curves = {}, {}, {}
 
     for split in eval_splits:
@@ -188,13 +195,17 @@ def main() -> None:
             risk_records.append({**row, 'split': split,
                                  'model': f'historical_rolling_{args.rolling_lookback}', 'seed': -1})
 
-        tsfm_df = load_tsfm_forecasts(split, metadata)
-        if tsfm_df is not None:
-            tsfm_forecasts[split] = tsfm_df
-            for row in score_backtest_frame(tsfm_df):
-                risk_records.append({**row, 'split': split, 'model': 'tsfm_sundial', 'seed': -1})
-        else:
-            print(f'No saved TSFM forecasts found for {split} (run scripts/run_tsfm.py to include TSFM).')
+        for forecaster in TSFM_FORECASTERS:
+            tsfm_df = load_tsfm_forecasts(forecaster, split, metadata)
+            if tsfm_df is not None:
+                tsfm_forecasts[forecaster][split] = tsfm_df
+                for row in score_backtest_frame(tsfm_df):
+                    risk_records.append({**row, 'split': split, 'model': f'tsfm_{forecaster}', 'seed': -1})
+            else:
+                print(
+                    f'No saved {forecaster} TSFM forecasts found for {split} '
+                    f'(run scripts/run_tsfm.py --forecaster {forecaster} to include it).'
+                )
 
     for seed in args.seeds:
         run_dir = DIRECTORY / 'results/sde_gan' / f'seed_{seed}'
@@ -295,14 +306,17 @@ def main() -> None:
         gan_vars = val_risk.loc[val_risk.model.eq('sde_gan') & val_risk.confidence.eq(confidence), 'var_pct']
         ax.axhline(gan_vars.mean(), color='C0', linewidth=1.6, label=f'SDE-GAN mean ({gan_vars.mean():.2f}%)')
         ax.axhspan(gan_vars.min(), gan_vars.max(), color='C0', alpha=0.12)
-        if 'validation' in tsfm_forecasts:
-            tsub = tsfm_forecasts['validation'].loc[
-                tsfm_forecasts['validation'].confidence.eq(confidence)
+        for forecaster in TSFM_FORECASTERS:
+            if 'validation' not in tsfm_forecasts[forecaster]:
+                continue
+            color, label = TSFM_STYLES[forecaster]
+            tsub = tsfm_forecasts[forecaster]['validation'].loc[
+                tsfm_forecasts[forecaster]['validation'].confidence.eq(confidence)
             ].sort_values('target_start')
-            ax.plot(tsub['target_start'], 100.0 * tsub['var'], color='C3', linewidth=1.6, label='TSFM (Sundial)')
+            ax.plot(tsub['target_start'], 100.0 * tsub['var'], color=color, linewidth=1.6, label=label)
             breach_pts = tsub.loc[tsub['breach'].fillna(False)]
             ax.scatter(breach_pts['target_start'], 100.0 * breach_pts['realized_loss'],
-                       color='C3', s=14, zorder=5, label='TSFM breach')
+                       color=color, s=14, zorder=5, label=f'{label} breach')
         if t.min() <= SUNDIAL_RELEASE_DATE <= t.max():
             ax.axvline(SUNDIAL_RELEASE_DATE, color='C3', linestyle=':', alpha=0.7, label='Sundial release (Feb 2025)')
         ax.set(title=f'{confidence:.0%} VaR vs. realized 20-session portfolio loss (validation)',
@@ -330,7 +344,8 @@ def main() -> None:
     (output / 'evaluation.json').write_text(json.dumps({
         'seeds': args.seeds, 'n_paths': args.n_paths, 'sample_seed': args.sample_seed,
         'checkpoint': args.checkpoint, 'rolling_lookback': args.rolling_lookback,
-        'tsfm_splits_loaded': sorted(tsfm_forecasts), 'test_evaluated': args.evaluate_test,
+        'tsfm_splits_loaded': {name: sorted(splits) for name, splits in tsfm_forecasts.items()},
+        'test_evaluated': args.evaluate_test,
     }, indent=2) + '\n')
 
     print('\n=== DISTRIBUTION METRICS (SDE-GAN) ===')

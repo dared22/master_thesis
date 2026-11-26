@@ -232,3 +232,5 @@ sandbox/4stocks_experiment/results/*
 AGENTS.md
 
 /experiments/research/
+# Firecrawl web cache
+.firecrawl/

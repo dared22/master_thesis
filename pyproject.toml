@@ -26,6 +26,7 @@ dependencies = [
 [project.optional-dependencies]
 tsfm = [
     "accelerate==1.15.0",
+    "timestral @ git+https://github.com/mistralai/timestral@a534bdbd244d64f3d9d743f46c7bf6fc330ed4ff",
     "torch==2.14.1",
     "transformers==4.40.1",
 ]

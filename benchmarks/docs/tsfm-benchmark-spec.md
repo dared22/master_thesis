@@ -16,15 +16,15 @@ horizon losses, and estimates value-at-risk (VaR) and expected shortfall (ES).
 | Path, relative to `master_thesis/` | Responsibility |
 | --- | --- |
 | `benchmarks/_common.py` | Shared pure NumPy/pandas input validation, portfolio compounding, empirical VaR/ES, and coverage helpers. |
-| `benchmarks/tsfm.py` | `SampleForecaster` protocol, lazy-loaded `SundialForecaster`, `TSFMConfig`, and `TSFMForecastBenchmark`. |
-| `benchmarks/__init__.py` | Re-exports benchmark classes without importing `torch` or `transformers`. |
+| `benchmarks/tsfm.py` | `SampleForecaster` and `QuantileForecaster` protocols, lazy-loaded `SundialForecaster` and `TimestralForecaster`, `TSFMConfig`, and `TSFMForecastBenchmark`. |
+| `benchmarks/__init__.py` | Re-exports benchmark classes without importing `torch`, `transformers`, or `timestral`. |
 | `benchmarks/test_tsfm.py` | Offline unit tests using deterministic mock forecasters (no PyTorch or network required). |
 | `benchmarks/docs/tsfm-benchmark-spec.md` | This reference specification. |
 
 Importing `benchmarks`, `benchmarks.historical`, or `benchmarks.tsfm`, or
-calling `fit()`, must never import `torch` or `transformers` and must never
-write files. Deep-learning dependencies are imported lazily only when
-`SundialForecaster.sample()` executes.
+calling `fit()`, must never import `torch`, `transformers`, or `timestral` and
+must never write files. Deep-learning dependencies are imported lazily only when
+`SundialForecaster.sample()` or `TimestralForecaster.predict_quantiles()` executes.
 
 ```python
 from benchmarks import TSFMConfig, TSFMForecastBenchmark
@@ -111,6 +111,31 @@ complete daily returns $r_{p,1}, \dots, r_{p,L}$:
 
 Nonfinite forecaster outputs raise `FloatingPointError` in both modes.
 
+## Quantile-head forecasters (Timestral)
+
+`TimestralForecaster` implements `QuantileForecaster.predict_quantiles()` around
+Mistral AI's `mistralai/Timestral-28M` (21 non-crossing marginal quantiles on
+`{0.01, 0.05, 0.10, ..., 0.90, 0.95, 0.99}` per step, `clip_nonnegative=False`,
+`symmetric_averaging=True`, `float32`).
+
+- **Exact terminal VaR:** In `target="log_price"` mode, $x \mapsto -\operatorname{expm1}(x)$
+  is strictly decreasing, so the $(1 - c)$-quantile of terminal cumulative log-wealth
+  $Y_H$ maps directly to $H$-session VaR without interpolation:
+  $$\widehat{\operatorname{VaR}}_c = -\operatorname{expm1}\!\left(q_{1-c}(Y_H)\right).$$
+  Any confidence level $c$ whose $1 - c$ is not on the forecaster's exact grid
+  raises `ValueError`.
+- **Target restriction:** Marginal daily quantiles cannot be compounded across
+  $H > 1$ sessions without a temporal copula. Quantile forecasters therefore
+  raise `ValueError` for `target="return"` when `horizon_sessions > 1`;
+  `target="return"` is permitted only at `horizon_sessions == 1` (with limited-liability
+  clamping at `-1.0`).
+- **Expected shortfall (`es`):** Because the quantile head provides no grid
+  points below `0.01`, ES is not identifiable from the model output and is
+  recorded as `NaN` (`n_scenarios = 0`, `tail_mass_observations = NaN`,
+  `small_tail_sample = pd.NA`). `TSFMSummary.quantiles` stores the full terminal
+  quantile table (`quantile_level`, `portfolio_return`, `loss`), while
+  `TSFMSummary.scenarios` is empty.
+
 ## Configuration
 
 | Field | Default | Meaning and constraints |
@@ -121,17 +146,18 @@ Nonfinite forecaster outputs raise `FloatingPointError` in both modes.
 | `target` | `"log_price"` | `"log_price"` or `"return"`. |
 | `horizon_sessions` | `1` | Positive integer number of forecast sessions $H$. |
 | `rebalance` | `"daily"` | `"daily"` only. |
-| `confidence_levels` | `(0.95, 0.99)` | Distinct finite confidence levels strictly in $(0, 1)$. |
+| `confidence_levels` | `(0.95, 0.99)` | Distinct finite confidence levels strictly in $(0, 1)$. For `forecaster="timestral"`, every $1 - c$ must lie on the 21-level grid. |
 | `context_sessions` | `252` | Integer $\ge 2$ complete daily returns in the causal context window. |
-| `num_samples` | `1000` | Integer $\ge 2$ simulated trajectories per forecast origin. |
+| `num_samples` | `1000` | Integer $\ge 2$ simulated trajectories per forecast origin (sample forecasters only). |
 | `target_stride` | `1` | Positive integer stride across available evaluation target starts. |
 | `batch_size` | `1` | Positive integer number of origins batched per forecaster call. |
-| `seed` | `0` | Nonnegative integer base seed (`seed + target_index` per origin/batch). |
-| `model_id` | `"thuml/sundial-base-128m"` | Hugging Face model identifier for `SundialForecaster`. |
+| `seed` | `0` | Nonnegative integer base seed (`seed + target_index` per origin/batch; sample forecasters only). |
+| `forecaster` | `"sundial"` | `"sundial"` (sample-path) or `"timestral"` (quantile-head). |
+| `model_id` | `None` | Hugging Face model identifier; resolves to `"thuml/sundial-base-128m"` for `"sundial"` and `"mistralai/Timestral-28M"` for `"timestral"`. |
 | `device` | `"cpu"` | `"cpu"`, `"mps"`, `"cuda"`, or `"auto"` (`"auto"` chooses `"cuda"` else `"cpu"`, skipping Apple MPS where Sundial's flow-matching sampler produced nonfinite outputs on M2). |
-| `dtype` | `"float32"` | `"float32"`, `"float16"`, or `"bfloat16"`. |
-| `sample_chunk_size` | `None` | Optional positive integer chunk size over `num_samples` to cap peak RAM. |
-| `revin` | `True` | Whether to enable Sundial's context-level re-normalization. |
+| `dtype` | `"float32"` | `"float32"`, `"float16"`, or `"bfloat16"` (`"float32"` only for `"timestral"`). |
+| `sample_chunk_size` | `None` | Optional positive integer chunk size over `num_samples` to cap peak RAM (Sundial only). |
+| `revin` | `None` (`False` for `"log_price"`, `True` for `"return"`) | Whether to enable Sundial's context-level re-normalization. Must be `False` when `target="log_price"` to avoid mean-reversion bias on trending cumulative log-wealth series. |
 | `revision` | `None` | Optional pinned Hugging Face commit hash for reproducibility. |
 
 Changing `batch_size` or `sample_chunk_size` alters the PyTorch RNG stream;
@@ -160,12 +186,12 @@ flagged whenever `num_samples * (1 - confidence) < 20`.
    recent `context_sessions` window ending at each `forecast_origin`, making
    it a conditional rolling forecaster. Compare it directly against rolling or
    weighted historical simulation in addition to fixed-window benchmarks.
-2. **Pretraining cutoff disclosure:** `thuml/sundial-base-128m` was released
-   in February 2025 (`arXiv:2502.00816`). Evaluation windows before February
-   2025 may overlap the model's pretraining window; windows after February
-   2025 (such as the latter part of the 2023–2026 test split) are strictly
-   post-release. Never use test data for tuning `target`, `context_sessions`,
-   or `num_samples`.
+2. **Release-date provenance:** `thuml/sundial-base-128m` was released in
+   February 2025 (`arXiv:2502.00816`), so evaluation windows after February 2025
+   are strictly post-release. `mistralai/Timestral-28M` was released in October
+   2026 (`v1.0.0`), after the September 2026 end of the 4stocks dataset; its
+   release date is recorded in `metadata()` for provenance. Never use test data
+   for tuning `target`, `context_sessions`, or `num_samples`.
 3. **1D portfolio scope:** Forecasting the portfolio series directly avoids
    assuming cross-asset independence or perfect correlation, but does not
    generate multivariate cross-stock paths for pairwise correlation or joint

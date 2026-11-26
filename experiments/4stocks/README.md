@@ -33,8 +33,9 @@ uv run python experiments/4stocks/scripts/prepare_data.py
 # 2. Train stabilized, mean-anchored increments SDE-GAN seeds
 uv run python experiments/4stocks/scripts/train.py 0 1 2
 
-# 3. Run the zero-shot Sundial TSFM benchmark on validation (saved to results/tsfm/)
-uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py
+# 3. Run zero-shot TSFM benchmarks on validation (saved to results/tsfm/<forecaster>/)
+uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py --forecaster sundial
+uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py --forecaster timestral
 
 # 4. Evaluate SDE-GAN, Fixed HS, Rolling HS (252d), and saved TSFM forecasts
 uv run python experiments/4stocks/scripts/evaluate.py
@@ -61,4 +62,4 @@ multivariate correlation and ACF diagnostics interactively.
 - [notebooks/](notebooks/): Single interactive inspection and comparison
   notebook (`inspect_and_compare.ipynb`).
 - [results/](results/): Saved model checkpoints (`sde_gan/seed_*/`), TSFM
-  forecasts (`tsfm/`), and combined evaluation tables/plots (`evaluation/`).
+  forecasts (`tsfm/<forecaster>/`), and combined evaluation tables/plots (`evaluation/`).

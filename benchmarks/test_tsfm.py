@@ -18,11 +18,14 @@ import benchmarks
 from benchmarks import (
     HistoricalSimulation,
     HistoricalSimulationConfig,
+    QuantileForecaster,
     SundialForecaster,
     TSFMConfig,
     TSFMForecastBenchmark,
+    TimestralForecaster,
 )
 from benchmarks._common import _empirical_es, _empirical_var
+from benchmarks.tsfm import TIMESTRAL_QUANTILE_LEVELS
 
 
 def frame(values: object, start: str = '2024-01-01') -> pd.DataFrame:
@@ -83,23 +86,99 @@ class ContextEchoForecaster:
         return (base + offsets[None, :, None]) * steps
 
 
+class ConstantQuantileForecaster:
+    """Deterministic mock quantile forecaster returning fixed quantiles per batch row."""
+
+    name = 'mock_quantile'
+
+    def __init__(
+        self,
+        quantiles: np.ndarray,
+        levels: tuple[float, ...] = TIMESTRAL_QUANTILE_LEVELS,
+    ) -> None:
+        # shape (n_levels, horizon)
+        self.quantiles = np.asarray(quantiles, dtype=np.float64)
+        self.levels = levels
+        self.calls: list[dict[str, object]] = []
+
+    def metadata(self) -> dict[str, object]:
+        return {
+            'forecaster': self.name,
+            'quantile_levels': list(self.levels),
+            'package_versions': {},
+        }
+
+    def predict_quantiles(
+        self,
+        contexts: np.ndarray,
+        horizon: int,
+    ) -> tuple[np.ndarray, tuple[float, ...]]:
+        self.calls.append({'contexts': contexts.copy(), 'horizon': horizon})
+        batch = contexts.shape[0]
+        out = np.broadcast_to(
+            self.quantiles[None, :, :],
+            (batch, self.quantiles.shape[0], self.quantiles.shape[1]),
+        ).copy()
+        return out, self.levels
+
+
+class ContextEchoQuantileForecaster:
+    """Deterministic mock quantile forecaster whose quantiles depend on context mean."""
+
+    name = 'mock_quantile_echo'
+
+    def __init__(self, levels: tuple[float, ...] = TIMESTRAL_QUANTILE_LEVELS) -> None:
+        self.levels = levels
+        self.calls: list[dict[str, object]] = []
+
+    def metadata(self) -> dict[str, object]:
+        return {
+            'forecaster': self.name,
+            'quantile_levels': list(self.levels),
+            'package_versions': {},
+        }
+
+    def predict_quantiles(
+        self,
+        contexts: np.ndarray,
+        horizon: int,
+    ) -> tuple[np.ndarray, tuple[float, ...]]:
+        self.calls.append({'contexts': contexts.copy(), 'horizon': horizon})
+        base = contexts.mean(axis=1)[:, None, None]
+        spread = (np.asarray(self.levels, dtype=np.float64) - 0.5) * 0.2
+        steps = np.arange(1, horizon + 1, dtype=np.float64)[None, None, :] / horizon
+        return (base + spread[None, :, None]) * steps, self.levels
+
+
 class TestLazyImportAndValidation(unittest.TestCase):
     def test_lazy_import_does_not_load_torch(self) -> None:
         self.assertNotIn('torch', sys.modules)
         self.assertNotIn('transformers', sys.modules)
+        self.assertNotIn('timestral', sys.modules)
         forecaster = SundialForecaster()
         self.assertEqual(forecaster.name, 'sundial')
         self.assertEqual(forecaster.metadata()['model_id'], 'thuml/sundial-base-128m')
+        timestral_forecaster = TimestralForecaster()
+        self.assertEqual(timestral_forecaster.name, 'timestral')
+        self.assertEqual(timestral_forecaster.metadata()['model_id'], 'mistralai/Timestral-28M')
+        self.assertFalse(timestral_forecaster.metadata()['clip_nonnegative'])
         self.assertNotIn('torch', sys.modules)
         self.assertNotIn('transformers', sys.modules)
+        self.assertNotIn('timestral', sys.modules)
         self.assertTrue(hasattr(benchmarks, 'TSFMForecastBenchmark'))
+        self.assertIs(benchmarks.QuantileForecaster, QuantileForecaster)
+        self.assertIs(benchmarks.TimestralForecaster, TimestralForecaster)
 
     def test_invalid_configuration(self) -> None:
         invalid = [
             {'assets': ()}, {'assets': ('A', 'A')}, {'assets': ('Date',)},
+            {'forecaster': 'chronos'},
             {'return_type': 'percent'}, {'target': 'price'}, {'rebalance': 'buy_and_hold'},
             {'device': 'tpu'}, {'dtype': 'float64'}, {'model_id': ''},
-            {'revin': 'yes'}, {'revision': ''},
+            {'revin': 'yes'}, {'target': 'log_price', 'revin': True}, {'revision': ''},
+            {'forecaster': 'timestral', 'dtype': 'float16'},
+            {'forecaster': 'timestral', 'target': 'return', 'horizon_sessions': 2},
+            {'forecaster': 'timestral', 'confidence_levels': (0.975,)},
             {'horizon_sessions': 0}, {'horizon_sessions': True},
             {'context_sessions': 1}, {'context_sessions': False},
             {'num_samples': 1}, {'num_samples': True},
@@ -119,6 +198,25 @@ class TestLazyImportAndValidation(unittest.TestCase):
             SundialForecaster(device='tpu')
         with self.assertRaises(ValueError):
             SundialForecaster(sample_chunk_size=0)
+        with self.assertRaises(ValueError):
+            TimestralForecaster(model_id='')
+        with self.assertRaises(ValueError):
+            TimestralForecaster(device='tpu')
+        with self.assertRaises(ValueError):
+            TimestralForecaster(dtype='float16')
+        with self.assertRaises(ValueError):
+            TimestralForecaster(symmetric_averaging='yes')  # type: ignore[arg-type]
+        with self.assertRaises(ValueError):
+            TimestralForecaster(clip_nonnegative='no')  # type: ignore[arg-type]
+        self.assertEqual(TSFMConfig().forecaster, 'sundial')
+        self.assertEqual(TSFMConfig().model_id, 'thuml/sundial-base-128m')
+        self.assertEqual(TSFMConfig(forecaster='timestral').model_id, 'mistralai/Timestral-28M')
+        self.assertEqual(
+            TSFMConfig(forecaster='timestral', target='return', horizon_sessions=1).horizon_sessions,
+            1,
+        )
+        self.assertFalse(TSFMConfig(target='log_price').revin)
+        self.assertTrue(TSFMConfig(target='return').revin)
 
 
 class TestContextAndTargetMath(unittest.TestCase):
@@ -363,6 +461,167 @@ class TestMissingContextAndCausality(unittest.TestCase):
                 forecaster=ContextEchoForecaster(),
             ).fit(path).backtest(evaluation)
             self.assertEqual(list(Path(folder).iterdir()), [path])
+
+
+class TestQuantileForecaster(unittest.TestCase):
+    def test_exact_log_price_var_and_es_nan(self) -> None:
+        source = frame([0.02, -0.01, 0.03, -0.02])
+        levels = (0.01, 0.05, 0.50, 0.95, 0.99)
+        # shape (n_levels, horizon=2)
+        q_paths = np.array([
+            [-0.10, -0.18],
+            [-0.06, -0.11],
+            [0.00, 0.01],
+            [0.05, 0.09],
+            [0.08, 0.14],
+        ])
+        mock = ConstantQuantileForecaster(q_paths, levels=levels)
+        summary = TSFMForecastBenchmark(
+            TSFMConfig(
+                forecaster='timestral', target='log_price', horizon_sessions=2,
+                context_sessions=4, confidence_levels=(0.95, 0.99),
+            ),
+            forecaster=mock,
+        ).fit(source).summarize()
+
+        self.assertAlmostEqual(summary.risk['var'].iloc[0], -np.expm1(-0.11), places=14)
+        self.assertAlmostEqual(summary.risk['var'].iloc[1], -np.expm1(-0.18), places=14)
+        self.assertTrue(summary.risk['es'].isna().all())
+        self.assertEqual(summary.risk['n_scenarios'].tolist(), [0, 0])
+        self.assertTrue(summary.risk['tail_mass_observations'].isna().all())
+        self.assertTrue(summary.risk['small_tail_sample'].isna().all())
+        self.assertTrue(summary.scenarios.empty)
+        self.assertEqual(list(summary.scenarios.columns), ['sample_index', 'portfolio_return', 'loss'])
+        self.assertIsNotNone(summary.quantiles)
+        assert summary.quantiles is not None
+        self.assertEqual(summary.quantiles['quantile_level'].tolist(), list(levels))
+        np.testing.assert_allclose(summary.quantiles['portfolio_return'], np.expm1(q_paths[:, -1]), atol=1e-14)
+        np.testing.assert_allclose(summary.quantiles['loss'], -np.expm1(q_paths[:, -1]), atol=1e-14)
+        self.assertEqual(summary.metadata['forecast_type'], 'quantiles')
+        self.assertEqual(summary.metadata['quantile_levels'], list(levels))
+        json.dumps(summary.metadata, allow_nan=False)
+
+    def test_return_mode_h1_and_limited_liability_clamping(self) -> None:
+        source = frame([0.01, -0.02, 0.03])
+        levels = (0.01, 0.05, 0.50)
+        q_paths = np.array([[-1.30], [-0.08], [0.01]])
+        mock = ConstantQuantileForecaster(q_paths, levels=levels)
+        summary = TSFMForecastBenchmark(
+            TSFMConfig(
+                forecaster='timestral', target='return', horizon_sessions=1,
+                context_sessions=3, confidence_levels=(0.95, 0.99),
+            ),
+            forecaster=mock,
+        ).fit(source).summarize()
+        self.assertAlmostEqual(summary.risk['var'].iloc[0], 0.08, places=14)
+        self.assertAlmostEqual(summary.risk['var'].iloc[1], 1.0, places=14)
+        self.assertEqual(summary.risk['n_clamped_paths'].tolist(), [1, 1])
+        self.assertEqual(summary.metadata['counts']['n_clamped_paths'], 1)
+
+    def test_bad_quantile_outputs_and_protocol_guards(self) -> None:
+        source = frame([0.01, -0.01, 0.02])
+
+        # Injected quantile forecaster with target='return' and H>1 must fail even if config.forecaster='sundial'.
+        with self.assertRaises(ValueError):
+            TSFMForecastBenchmark(
+                TSFMConfig(target='return', horizon_sessions=2, context_sessions=3),
+                forecaster=ContextEchoQuantileForecaster(),
+            )
+
+        # Object with neither protocol method must raise TypeError.
+        class EmptyForecaster:
+            name = 'empty'
+            def metadata(self) -> dict[str, object]:
+                return {}
+
+        with self.assertRaises(TypeError):
+            TSFMForecastBenchmark(TSFMConfig(context_sessions=3), forecaster=EmptyForecaster())  # type: ignore[arg-type]
+
+        # Wrong shape -> ValueError.
+        bad_shape = ConstantQuantileForecaster(np.zeros((2, 1)), levels=(0.01, 0.05))
+        with self.assertRaisesRegex(ValueError, 'shape'):
+            TSFMForecastBenchmark(
+                TSFMConfig(forecaster='timestral', target='log_price', horizon_sessions=2, context_sessions=3),
+                forecaster=bad_shape,
+            ).fit(source).summarize()
+
+        # Nonfinite quantiles -> FloatingPointError.
+        bad_nan = ConstantQuantileForecaster(np.array([[np.nan], [-0.05]]), levels=(0.01, 0.05))
+        with self.assertRaises(FloatingPointError):
+            TSFMForecastBenchmark(
+                TSFMConfig(forecaster='timestral', target='log_price', horizon_sessions=1, context_sessions=3),
+                forecaster=bad_nan,
+            ).fit(source).summarize()
+
+        # Crossing quantiles -> ValueError.
+        crossing = ConstantQuantileForecaster(np.array([[-0.05], [-0.10]]), levels=(0.01, 0.05))
+        with self.assertRaisesRegex(ValueError, 'crossing'):
+            TSFMForecastBenchmark(
+                TSFMConfig(forecaster='timestral', target='log_price', horizon_sessions=1, context_sessions=3),
+                forecaster=crossing,
+            ).fit(source).summarize()
+
+        # Missing required level -> ValueError.
+        missing_level = ConstantQuantileForecaster(np.array([[-0.05], [0.0]]), levels=(0.05, 0.50))
+        with self.assertRaisesRegex(ValueError, 'required level'):
+            TSFMForecastBenchmark(
+                TSFMConfig(forecaster='timestral', target='log_price', horizon_sessions=1, context_sessions=3),
+                forecaster=missing_level,
+            ).fit(source).summarize()
+
+        # Overflow in expm1 -> FloatingPointError.
+        huge = ConstantQuantileForecaster(np.array([[-0.1], [1000.0]]), levels=(0.01, 0.05))
+        with self.assertRaises(FloatingPointError):
+            TSFMForecastBenchmark(
+                TSFMConfig(forecaster='timestral', target='log_price', horizon_sessions=1, context_sessions=3),
+                forecaster=huge,
+            ).fit(source).summarize()
+
+    def test_quantile_backtest_causality_and_historical_parity(self) -> None:
+        history = frame([0.01, -0.02, np.nan, 0.03, -0.01, 0.02])
+        evaluation = frame([-0.04, 0.02, np.nan, -0.01, 0.03, -0.02], '2024-01-07')
+        config = TSFMConfig(
+            forecaster='timestral', target='log_price', horizon_sessions=2,
+            context_sessions=4, confidence_levels=(0.95, 0.99), batch_size=2,
+        )
+        benchmark = TSFMForecastBenchmark(config, forecaster=ContextEchoQuantileForecaster()).fit(history)
+        baseline = benchmark.backtest(evaluation)
+
+        self.assertTrue(baseline.forecasts['es'].isna().all())
+        self.assertEqual(str(baseline.forecasts['breach'].dtype), 'boolean')
+        self.assertEqual(str(baseline.forecasts['small_tail_sample'].dtype), 'boolean')
+        json.dumps(baseline.metadata, allow_nan=False)
+
+        # Future invariance.
+        n_targets = len(evaluation) - 2 + 1
+        for target in range(n_targets):
+            changed = evaluation.copy()
+            changed.loc[target:, 'A'] = 0.5
+            alt = benchmark.backtest(changed).forecasts
+            cols = ['var', 'n_context_sessions', 'n_excluded_context_sessions',
+                    'history_start', 'history_end']
+            assert_frame_equal(
+                baseline.forecasts.iloc[2 * target:2 * target + 2][cols],
+                alt.iloc[2 * target:2 * target + 2][cols],
+            )
+
+        # Realized columns match HistoricalSimulation identically.
+        hs = HistoricalSimulation(HistoricalSimulationConfig(
+            horizon_sessions=2, confidence_levels=(0.95, 0.99), min_scenarios=2,
+        )).fit(history).backtest(evaluation)
+        assert_frame_equal(
+            baseline.forecasts[['forecast_origin', 'target_start', 'target_end',
+                                'realized_return', 'realized_loss', 'realization_status']],
+            hs.forecasts[['forecast_origin', 'target_start', 'target_end',
+                          'realized_return', 'realized_loss', 'realization_status']],
+        )
+
+        # Empty evaluation preserves schema and nullable boolean dtypes.
+        empty = benchmark.backtest(evaluation.iloc[:1])
+        self.assertTrue(empty.forecasts.empty)
+        self.assertEqual(str(empty.forecasts['breach'].dtype), 'boolean')
+        self.assertEqual(str(empty.forecasts['small_tail_sample'].dtype), 'boolean')
+        json.dumps(empty.metadata, allow_nan=False)
 
 
 if __name__ == '__main__':
