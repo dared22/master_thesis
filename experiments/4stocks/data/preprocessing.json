@@ -1,6 +1,6 @@
 {
-  "source_file": "Data/eligible/price_histories.csv",
-  "source_sha256": "a2aca90860ec058ca35d8f381a1566b0ada23a2b9c43b04b73063169cebd4c39",
+  "source_file": "Data/processed/log_returns_interpolated.csv",
+  "source_sha256": "2e9ceb9c987fc2874692c19b97e884193f85d7a5b23979119d83eb3637c69dcf",
   "stock_ids": [
     "NO0013536151",
     "CY0200352116",
@@ -66,7 +66,7 @@
     19
   ],
   "time_unit": "market session",
-  "calendar": "Data/eligible/price_histories.csv (XOSL 10-year eligible panel)",
+  "calendar": "Data/processed/log_returns_interpolated.csv (XOSL 10-year eligible panel)",
   "splits": {
     "train": {
       "source": "train_returns.csv",

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 repo_root = Path(__file__).resolve().parents[2]
-data_path = repo_root / "Data/eligible/price_histories.csv"
+data_path = repo_root / "Data/processed/prices_observed.csv"
 output = repo_root / "thesis/figures/theory/stock-price-examples.pdf"
 preview = Path("/tmp/stock-price-examples-preview.png")
 
@@ -20,17 +20,17 @@ STOCKS = [
     ("NO0010063308", "Telenor", "#CC79A7"),
 ]
 
-df = pd.read_csv(data_path, usecols=["stock_id", "Date", "AdjustedPrice"], parse_dates=["Date"])
+stock_ids = [stock_id for stock_id, _, _ in STOCKS]
+df = pd.read_csv(data_path, usecols=["Date", *stock_ids], parse_dates=["Date"]).sort_values("Date")
 
 fig, ax = plt.subplots(figsize=(6.2, 3.0), layout="constrained")
 ax.axhline(100, color="0.6", linewidth=0.9, linestyle=":")
 
 for stock_id, label, color in STOCKS:
-    sub = df[df["stock_id"] == stock_id].sort_values("Date").copy()
-    assert not sub.empty, f"Missing data for {stock_id}"
-    assert sub["AdjustedPrice"].notna().all(), f"Missing prices for {stock_id}"
-    indexed = 100.0 * sub["AdjustedPrice"] / sub["AdjustedPrice"].iloc[0]
-    ax.plot(sub["Date"], indexed, color=color, linewidth=1.1, label=label)
+    series = df[stock_id]
+    assert series.notna().all(), f"Missing prices for {stock_id}"
+    indexed = 100.0 * series / series.iloc[0]
+    ax.plot(df["Date"], indexed, color=color, linewidth=1.1, label=label)
 
 ax.set(
     xlabel="Date",

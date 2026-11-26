@@ -1,0 +1,20 @@
+group,Stocks,Possible within-group pairs,Internal estimate available
+Automobiles and Parts,1,0,False
+Banks,12,66,True
+Basic Resources,2,1,True
+Chemicals,2,1,True
+Construction and Materials,4,6,True
+Consumer Products and Services,2,1,True
+Energy,29,406,True
+Financial Services,6,15,True
+"Food, Beverage and Tobacco",8,28,True
+Health Care,7,21,True
+Industrial Goods and Services,19,171,True
+Insurance,3,3,True
+"Personal Care, Drug and Grocery Stores",1,0,False
+Real Estate,2,1,True
+Retail,2,1,True
+Technology,11,55,True
+Telecommunications,2,1,True
+Travel and Leisure,1,0,False
+Utilities,1,0,False

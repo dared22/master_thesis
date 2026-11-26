@@ -99,7 +99,13 @@ Daily log returns are calculated as
 \end{equation}
 where \(t-1\) is the previous trading day. The first possible return falls on
 the second trading day of the sample. A return remains missing if either
-price is still missing.
+price is still missing. We use log returns for modelling because they are
+unbounded on \((-\infty,\infty)\) and additive over time, which matches the
+additive structure of stochastic differential equations and guarantees positive
+prices. Because portfolio returns combine linearly in simple returns rather
+than log returns, we convert daily log returns back to simple returns via
+\(R_{i,t}=e^{r_{i,t}}-1\) before applying portfolio weights and compounding
+over multi-day horizons in portfolio risk calculations.
 
 Counting the cash dividend once gives Hunter Group a simple return of
 1.99\% on 30 January 2023 \parencite{HunterGroupDividend2023}. We set

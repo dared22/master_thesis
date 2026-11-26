@@ -1,4 +1,4 @@
-"""Run EDA notebooks in order with the project Python interpreter."""
+"""Build Data/processed/ and run EDA notebooks in order with the project Python interpreter."""
 
 import sys
 from pathlib import Path
@@ -7,6 +7,12 @@ import nbformat
 from nbformat import NotebookNode
 from jupyter_client import KernelManager
 from nbclient import NotebookClient
+
+EDA_DIR = Path(__file__).resolve().parent
+if str(EDA_DIR) not in sys.path:
+    sys.path.insert(0, str(EDA_DIR))
+
+from build_dataset import main as build_dataset_main
 
 
 def print_cell_output(cell: NotebookNode, **_: object) -> None:
@@ -17,12 +23,17 @@ def print_cell_output(cell: NotebookNode, **_: object) -> None:
 
 
 def main() -> None:
-    """Run the numbered notebooks, or the paths supplied on the command line."""
+    """Build the processed dataset (when running defaults) and execute the EDA notebooks."""
     eda = Path(__file__).resolve().parent
-    paths = [Path(arg).resolve() for arg in sys.argv[1:]] or [
-        eda / "01_prepare_price_histories.ipynb",
-        eda / "02_sector_dependence.ipynb",
-    ]
+    if sys.argv[1:]:
+        paths = [Path(arg).resolve() for arg in sys.argv[1:]]
+    else:
+        print("Running EDA/build_dataset.py", flush=True)
+        build_dataset_main()
+        paths = [
+            eda / "01_data_overview.ipynb",
+            eda / "02_sector_dependence.ipynb",
+        ]
     for path in paths:
         print(f"Running {path.name}", flush=True)
         notebook = nbformat.read(path, as_version=4)

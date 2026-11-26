@@ -1,0 +1,12 @@
+group,Stocks,Possible within-group pairs,Internal estimate available
+Basic Materials,4,6,True
+Consumer Discretionary,6,15,True
+Consumer Staples,9,36,True
+Energy,28,378,True
+Financials,19,171,True
+Health Care,7,21,True
+Industrials,22,231,True
+Real Estate,2,1,True
+Technology,11,55,True
+Telecommunications,2,1,True
+Utilities,1,0,False

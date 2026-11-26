@@ -112,6 +112,38 @@ def load_observed(split: str, stocks: list[str], dates: pd.DataFrame) -> tuple[p
     return frame, windows
 
 
+COMPATIBLE_PREPROCESSING_EXACT_KEYS = (
+    'stock_ids',
+    'stock_order',
+    'max_interpolation_gap',
+    'observed_missing_prices',
+    'interpolated_prices',
+    'split_fractions',
+    'transform',
+    'ddof',
+    'training_count',
+    'window_length',
+    'stride',
+    'observation_times',
+    'time_unit',
+    'splits',
+)
+
+
+def assert_compatible_preprocessing(saved: dict, current: dict, label: str) -> None:
+    """Verify saved artifact preprocessing matches current data-defining fields."""
+    if not isinstance(saved, dict):
+        raise ValueError(f'{label} preprocessing metadata is missing or invalid')
+    for key in COMPATIBLE_PREPROCESSING_EXACT_KEYS:
+        if saved.get(key) != current.get(key):
+            raise ValueError(
+                f'{label} preprocessing mismatch on {key!r}: {saved.get(key)!r} != {current.get(key)!r}'
+            )
+    for key in ('training_mean', 'training_std'):
+        if not np.allclose(saved.get(key, []), current.get(key, []), rtol=0, atol=1e-15):
+            raise ValueError(f'{label} preprocessing mismatch on {key!r}')
+
+
 def load_tsfm_forecasts(forecaster: str, split: str, metadata: dict) -> pd.DataFrame | None:
     """Load saved TSFM forecasts for one forecaster and split if they match preprocessing."""
     tsfm_dir = DIRECTORY / 'results/tsfm' / forecaster
@@ -120,10 +152,11 @@ def load_tsfm_forecasts(forecaster: str, split: str, metadata: dict) -> pd.DataF
     if not (forecasts_path.is_file() and meta_path.is_file()):
         return None
     saved_meta = json.loads(meta_path.read_text())
-    if saved_meta.get('protocol', {}).get('preprocessing') != metadata:
-        raise ValueError(
-            f'TSFM ({forecaster}) {split} metadata does not match current data/preprocessing.json'
-        )
+    assert_compatible_preprocessing(
+        saved_meta.get('protocol', {}).get('preprocessing'),
+        metadata,
+        f'TSFM ({forecaster}) {split}',
+    )
     return pd.read_csv(forecasts_path, parse_dates=['forecast_origin', 'target_start', 'target_end'])
 
 
@@ -212,7 +245,11 @@ def main() -> None:
         if not (run_dir / 'completion.json').is_file():
             raise FileNotFoundError(f'Missing completed run: {run_dir}')
         load_dir = run_dir if args.checkpoint == 'selected' else run_dir / 'checkpoints' / args.checkpoint
-        assert json.loads((load_dir / 'preprocessing.json').read_text()) == metadata
+        assert_compatible_preprocessing(
+            json.loads((load_dir / 'preprocessing.json').read_text()),
+            metadata,
+            f'SDE-GAN seed {seed} ({args.checkpoint})',
+        )
         model = SDEGAN.load(load_dir)
         standardized = model.sample(args.n_paths, args.sample_seed)
         paths = np.expm1(standardized.astype(np.float64) * scale + mu)

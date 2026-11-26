@@ -1,0 +1,4 @@
+matrix,relative_Frobenius_change_pct,max_absolute_entry_change
+cov_available,2.459052610824325,0.0003484266763079998
+cov_complete,32.5442422395814,0.007358041846675
+cov_shrinkage,27.64474554884447,0.004805155975699998

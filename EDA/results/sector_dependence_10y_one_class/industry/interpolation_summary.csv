@@ -1,0 +1,7 @@
+Measure,Observed,Interpolated,Relative change (%)
+Missing prices,1225.0,3.0,-99.75510204081633
+Missing returns after first session,2263.0,4.0,-99.82324348210341
+Complete return dates,1688.0,2507.0,48.51895734597156
+Mean per-stock daily return variance,0.001342132062967121,0.0013355381109833662,-0.49130425877594863
+Mean per-stock daily return variance on complete dates,0.001424049586305136,0.0013353974674876735,-6.225353363395225
+Pearson sector gap: available pairs,0.06057353043686213,0.06046058370151368,-0.18646219649716134

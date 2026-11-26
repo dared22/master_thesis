@@ -1,4 +1,4 @@
-"""Prepare the 4-stock return splits and standardized windows from Data/eligible."""
+"""Prepare the 4-stock return splits and standardized windows from Data/processed."""
 
 import argparse
 import hashlib
@@ -7,11 +7,13 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy.interpolate import CubicSpline
 
 ROOT = Path(__file__).resolve().parents[3]
 EXPERIMENT_DIR = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / 'Data/eligible/price_histories.csv'
+PROCESSED_DIR = ROOT / 'Data/processed'
+SOURCE_PATH = PROCESSED_DIR / 'log_returns_interpolated.csv'
+STOCKS_PATH = PROCESSED_DIR / 'stocks.csv'
+MANIFEST_PATH = PROCESSED_DIR / 'manifest.json'
 DATA_DIR = EXPERIMENT_DIR / 'data'
 
 DEFAULT_STOCK_IDS = (
@@ -21,36 +23,7 @@ DEFAULT_STOCK_IDS = (
     'NO0012470089',  # TOMRA SYSTEMS
 )
 WINDOW_LENGTH = 20
-MAX_INTERPOLATION_GAP = 5
 SPLIT_FRACTIONS = (0.70, 0.15, 0.15)
-
-# Reviewed event corrections matching EDA/02_sector_dependence.ipynb.
-RETURN_CORRECTIONS: dict[tuple[pd.Timestamp, str], float] = {
-    (pd.Timestamp('2023-01-30'), 'NO0012953720'): float(np.log((0.0889 + 1.80) / 1.852)),
-    (pd.Timestamp('2024-10-31'), 'NO0013601245'): float('nan'),
-}
-
-
-def interpolate_short_price_gaps(
-    frame: pd.DataFrame, max_gap: int = MAX_INTERPOLATION_GAP,
-) -> tuple[pd.DataFrame, int]:
-    """Fill internal missing runs up to max_gap sessions using positive natural cubic splines."""
-    filled = frame.copy()
-    filled_cells = 0
-    for stock_id in frame.columns:
-        values = frame[stock_id].to_numpy(dtype=np.float64)
-        observed = np.flatnonzero(np.isfinite(values))
-        spline = (CubicSpline(observed, values[observed], bc_type='natural', extrapolate=False)
-                  if len(observed) >= 4 else None)
-        changes = np.diff((~np.isfinite(values)).astype(int), prepend=0, append=0)
-        for first, stop in zip(np.flatnonzero(changes == 1), np.flatnonzero(changes == -1)):
-            internal = first > 0 and stop < len(values)
-            if internal and (stop - first) <= max_gap and spline is not None:
-                estimates = spline(np.arange(first, stop))
-                if np.isfinite(estimates).all() and (estimates > 0).all():
-                    filled.iloc[first:stop, filled.columns.get_loc(stock_id)] = estimates
-                    filled_cells += int(stop - first)
-    return filled, filled_cells
 
 
 def build_windows(
@@ -78,40 +51,37 @@ def build_windows(
 def prepare(
     stock_ids: tuple[str, ...] = DEFAULT_STOCK_IDS,
     source_path: Path = SOURCE_PATH,
+    stocks_path: Path = STOCKS_PATH,
+    manifest_path: Path = MANIFEST_PATH,
     output_dir: Path = DATA_DIR,
     window_length: int = WINDOW_LENGTH,
     split_fractions: tuple[float, float, float] = SPLIT_FRACTIONS,
 ) -> dict[str, object]:
-    """Read Data/eligible/price_histories.csv, interpolate short gaps, and write splits."""
+    """Read canonical log returns from Data/processed/ and write experiment splits and windows."""
     if not np.isclose(sum(split_fractions), 1.0, atol=1e-9):
         raise ValueError(f'Split fractions must sum to 1.0, got {split_fractions}')
-    raw = pd.read_csv(
-        source_path,
-        usecols=['stock_id', 'Date', 'AdjustedPrice', 'Name'],
-        parse_dates=['Date'],
-        float_precision='round_trip',
+
+    stocks_meta = pd.read_csv(stocks_path).set_index('stock_id', verify_integrity=True)
+    missing_ids = [sid for sid in stock_ids if sid not in stocks_meta.index]
+    if missing_ids:
+        raise ValueError(f'Requested stock_ids not in canonical processed panel: {missing_ids}')
+
+    log_returns = (
+        pd.read_csv(
+            source_path,
+            usecols=['Date', *stock_ids],
+            parse_dates=['Date'],
+            float_precision='round_trip',
+        )
+        .set_index('Date')
+        .sort_index()
+        .loc[:, list(stock_ids)]
     )
-    all_prices = raw.pivot(index='Date', columns='stock_id', values='AdjustedPrice').sort_index()
-    missing = all_prices.isna()
-    eligible = (all_prices.iloc[-1].notna() & missing.mean().lt(0.05)
-                & ~missing.rolling(MAX_INTERPOLATION_GAP + 1).sum().eq(MAX_INTERPOLATION_GAP + 1).any())
-    ineligible = [sid for sid in stock_ids if sid not in all_prices.columns or not bool(eligible[sid])]
-    if ineligible:
-        raise ValueError(f'Requested stock_ids failed the thesis eligibility screen: {ineligible}')
+    stock_order = [str(stocks_meta.at[sid, 'name']).strip() for sid in stock_ids]
+    observed_missing = int(stocks_meta.loc[list(stock_ids), 'missing_prices'].sum())
+    filled_cells = int(stocks_meta.loc[list(stock_ids), 'estimated_prices'].sum())
+    max_gap = int(json.loads(manifest_path.read_text())['interpolation']['max_gap_sessions'])
 
-    prices = all_prices.loc[:, list(stock_ids)].copy()
-    names_by_id = (raw.drop_duplicates('stock_id').set_index('stock_id')['Name']
-                   .astype(str).str.strip().to_dict())
-    stock_order = [names_by_id[sid] for sid in stock_ids]
-    observed_missing = int(prices.isna().sum().sum())
-    interpolated_prices, filled_cells = interpolate_short_price_gaps(prices, MAX_INTERPOLATION_GAP)
-
-    log_returns = np.log(interpolated_prices).diff()
-    for (date, sid), corrected in RETURN_CORRECTIONS.items():
-        if sid in log_returns.columns and date in log_returns.index:
-            log_returns.at[date, sid] = corrected
-    # Drop the leading diff row so every split begins with an observable daily return.
-    log_returns = log_returns.iloc[1:]
     simple_returns = np.expm1(log_returns)
     simple_returns.columns = stock_order
     log_returns.columns = stock_order
@@ -162,7 +132,7 @@ def prepare(
         'source_sha256': hashlib.sha256(source_path.read_bytes()).hexdigest(),
         'stock_ids': list(stock_ids),
         'stock_order': stock_order,
-        'max_interpolation_gap': MAX_INTERPOLATION_GAP,
+        'max_interpolation_gap': max_gap,
         'observed_missing_prices': observed_missing,
         'interpolated_prices': filled_cells,
         'split_fractions': list(split_fractions),
@@ -175,7 +145,7 @@ def prepare(
         'stride': 1,
         'observation_times': list(range(window_length)),
         'time_unit': 'market session',
-        'calendar': 'Data/eligible/price_histories.csv (XOSL 10-year eligible panel)',
+        'calendar': f'{source_path.relative_to(ROOT)} (XOSL 10-year eligible panel)',
         'splits': split_metadata,
     }
     (output_dir / 'preprocessing.json').write_text(json.dumps(metadata, indent=2) + '\n')
@@ -185,7 +155,7 @@ def prepare(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--stock-ids', nargs='+', default=list(DEFAULT_STOCK_IDS),
-                        help='Ordered stock_id values from Data/eligible/price_histories.csv.')
+                        help='Ordered stock_id values from Data/processed/log_returns_interpolated.csv.')
     args = parser.parse_args()
     metadata = prepare(stock_ids=tuple(args.stock_ids))
     print(f"Prepared {metadata['stock_order']} from {metadata['source_file']}:")

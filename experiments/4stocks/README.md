@@ -2,24 +2,24 @@
 
 This toy experiment builds and checks a reproducible Neural SDE-GAN baseline on
 four Oslo Børs stocks drawn directly from
-[Data/eligible/price_histories.csv](../../Data/eligible/price_histories.csv)
-(the same 10-year eligible panel and short-gap interpolation pipeline used in
-the main thesis analysis), and compares it against Fixed Historical Simulation,
-Rolling 252-session Historical Simulation, and the zero-shot Sundial TSFM
-benchmark.
+[Data/processed/log_returns_interpolated.csv](../../Data/processed/log_returns_interpolated.csv)
+(the canonical 10-year eligible log-return panel built by `EDA/build_dataset.py`),
+and compares it against Fixed Historical Simulation,
+Rolling 252-session Historical Simulation, and the zero-shot Sundial and Timestral TSFM
+benchmarks.
 
 ## Stocks and data
 
-- **Source:** `Data/eligible/price_histories.csv` (`2016-09-08` to `2026-09-08`,
-  2,510 trading sessions → 2,509 daily returns).
+- **Source:** `Data/processed/log_returns_interpolated.csv` (`2016-09-09` to `2026-09-08`,
+  2,509 daily log returns across the 2,510-session XOSL panel).
 - **Companies:** `KONGSBERG GRUPPEN` (`NO0013536151`), `FRONTLINE`
   (`CY0200352116`), `WILH, WILHELMSEN A` (`NO0010571698`), and
   `TOMRA SYSTEMS` (`NO0012470089`).
-- **Preprocessing:** Thesis eligibility screen, natural cubic-spline
-  interpolation for internal gaps up to 5 sessions (matching
-  `EDA/02_sector_dependence.ipynb`; 0 missing prices for these four stocks),
-  chronological **70% / 15% / 15%** train/validation/test split, `log1p`
-  returns standardized with training-only mean and sample standard deviation,
+- **Preprocessing:** Canonical thesis eligibility screen, short-gap natural cubic-spline
+  interpolation (`<= 5` sessions; 0 missing prices for these four stocks), and reviewed
+  corporate-action corrections applied upstream in `EDA/build_dataset.py`;
+  chronological **70% / 15% / 15%** train/validation/test split, log returns
+  standardized with training-only mean and sample standard deviation,
   and complete 20-session windows (stride 1).
 
 ## Workflow
@@ -27,7 +27,7 @@ benchmark.
 Run all commands from the repository root:
 
 ```sh
-# 1. Prepare return splits and standardized windows from Data/eligible
+# 1. Prepare return splits and standardized windows from Data/processed
 uv run python experiments/4stocks/scripts/prepare_data.py
 
 # 2. Train stabilized, mean-anchored increments SDE-GAN seeds

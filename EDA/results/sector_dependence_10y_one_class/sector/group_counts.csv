@@ -1,0 +1,30 @@
+group,Stocks,Possible within-group pairs,Internal estimate available
+Alternative Energy,2,1,True
+Automobiles and Parts,1,0,False
+Banks,12,66,True
+Chemicals,2,1,True
+Construction and Materials,4,6,True
+Electricity,1,0,False
+Electronic and Electrical Equipment,3,3,True
+Finance and Credit Services,1,0,False
+Food Producers,8,28,True
+General Industrials,3,3,True
+Household Goods and Home Construction,1,0,False
+Industrial Engineering,5,10,True
+Industrial Metals and Mining,2,1,True
+Industrial Transportation,8,28,True
+Investment Banking and Brokerage Services,5,10,True
+Leisure Goods,1,0,False
+Life Insurance,1,0,False
+Medical Equipment and Services,1,0,False
+Non-life Insurance,2,1,True
+"Oil, Gas and Coal",27,351,True
+"Personal Care, Drug and Grocery Stores",1,0,False
+Pharmaceuticals and Biotechnology,6,15,True
+Real Estate Investment and Services,2,1,True
+Retailers,2,1,True
+Software and Computer Services,9,36,True
+Technology Hardware and Equipment,2,1,True
+Telecommunications Equipment,1,0,False
+Telecommunications Service Providers,1,0,False
+Travel and Leisure,1,0,False
