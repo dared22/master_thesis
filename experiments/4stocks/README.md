@@ -5,7 +5,8 @@ four Oslo Børs stocks drawn directly from
 [Data/processed/log_returns_interpolated.csv](../../Data/processed/log_returns_interpolated.csv)
 (the canonical 10-year eligible log-return panel built by `EDA/build_dataset.py`),
 and compares it against Fixed Historical Simulation,
-Rolling 252-session Historical Simulation, and the zero-shot Sundial and Timestral TSFM
+Rolling 252-session Historical Simulation, static and GARCH-filtered
+Gaussian/Student-*t* copulas, and the zero-shot Sundial and Timestral TSFM
 benchmarks.
 
 ## Stocks and data
@@ -37,7 +38,7 @@ uv run python experiments/4stocks/scripts/train.py 0 1 2
 uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py --forecaster sundial
 uv run --extra tsfm python experiments/4stocks/scripts/run_tsfm.py --forecaster timestral
 
-# 4. Evaluate SDE-GAN, Fixed HS, Rolling HS (252d), and saved TSFM forecasts
+# 4. Evaluate SDE-GAN, Fixed/Rolling HS, Copula/GARCH-copula, and saved TSFM forecasts
 uv run python experiments/4stocks/scripts/evaluate.py
 
 # Run model and benchmark unit tests

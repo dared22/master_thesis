@@ -85,7 +85,7 @@ def _bounds(history: pd.DataFrame) -> dict[str, Any]:
 
 
 def _load(returns: ReturnInput, assets: tuple[str, ...] | None,
-          return_type: str) -> tuple[pd.DataFrame, dict[str, Any]]:
+          return_type: str, *, convert_log_to_simple: bool = True) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Validate selected source returns and retain their canonical fingerprint."""
     source = None
     if isinstance(returns, (str, Path)):
@@ -150,7 +150,7 @@ def _load(returns: ReturnInput, assets: tuple[str, ...] | None,
     fingerprint = hashlib.sha256(json.dumps(
         canonical, separators=(',', ':'), allow_nan=False).encode()).hexdigest()
     info = {'source': source, 'fingerprint': fingerprint, **_bounds(validated)}
-    if return_type == 'log':
+    if return_type == 'log' and convert_log_to_simple:
         with np.errstate(over='ignore', invalid='ignore'):
             converted = np.expm1(validated.to_numpy())
         if np.isinf(converted).any():

@@ -1,4 +1,4 @@
-"""Evaluate trained SDE-GAN seeds against HistoricalSimulation (fixed & rolling) and TSFM."""
+"""Evaluate trained SDE-GAN seeds against HistoricalSimulation, Copula/GARCH-copula, and TSFM."""
 
 import argparse
 from dataclasses import replace
@@ -18,6 +18,7 @@ DIRECTORY = Path(__file__).resolve().parents[1]
 ROOT = DIRECTORY.parents[1]
 sys.path[:0] = [str(DIRECTORY / 'model'), str(ROOT)]
 
+from benchmarks.copula import CopulaBenchmark, CopulaConfig
 from benchmarks.historical import (
     HistoricalSimulation, HistoricalSimulationConfig, _empirical_es, _empirical_var,
 )
@@ -25,12 +26,19 @@ from sde_gan import SDEGAN
 
 CONFIDENCE_LEVELS = (0.95, 0.99)
 ROLLING_LOOKBACK_SESSIONS = 252
+DEFAULT_COPULA_PATHS = 2_000
 SUNDIAL_RELEASE_DATE = pd.Timestamp('2025-02-01')
 TSFM_FORECASTERS = ('sundial', 'timestral')
 TSFM_STYLES = {
     'sundial': ('C3', 'TSFM (Sundial)'),
     'timestral': ('C4', 'TSFM (Timestral-28M)'),
 }
+COPULA_BENCHMARKS = (
+    ('copula_static_gaussian', 'gaussian', 'static_empirical', 'empirical', 'C5', 'Static Gaussian copula'),
+    ('copula_static_t', 't', 'static_empirical', 'empirical', 'C6', 'Static t-copula'),
+    ('copula_garch_gaussian', 'gaussian', 'garch_t', 'empirical', 'C7', 'GARCH-Gaussian copula'),
+    ('copula_garch_t', 't', 'garch_t', 'empirical', 'C8', 'GARCH-t copula'),
+)
 
 
 def acf(paths: np.ndarray, absolute: bool = False) -> np.ndarray:
@@ -168,6 +176,8 @@ def main() -> None:
     parser.add_argument('--checkpoint', default='selected',
                         help="'selected' (lowest val MMD) or a snapshot name like 'step_2000'.")
     parser.add_argument('--rolling-lookback', type=int, default=ROLLING_LOOKBACK_SESSIONS)
+    parser.add_argument('--copula-paths', type=int, default=DEFAULT_COPULA_PATHS,
+                        help='Monte Carlo paths per forecast origin for copula/GARCH-copula benchmarks.')
     parser.add_argument('--evaluate-test', action='store_true',
                         help='Also score the frozen models on the reserved test split.')
     args = parser.parse_args()
@@ -208,10 +218,25 @@ def main() -> None:
     output = DIRECTORY / 'results/evaluation'
     output.mkdir(parents=True, exist_ok=True)
 
-    risk_records, metric_records, solver_records = [], [], []
+    risk_records, metric_records, solver_records, copula_metric_records = [], [], [], []
     rolling_forecasts: dict[str, pd.DataFrame] = {}
     tsfm_forecasts: dict[str, dict[str, pd.DataFrame]] = {name: {} for name in TSFM_FORECASTERS}
+    copula_forecasts: dict[str, dict[str, pd.DataFrame]] = {spec[0]: {} for spec in COPULA_BENCHMARKS}
+    copula_signed_curves: dict[str, np.ndarray] = {}
+    copula_abs_curves: dict[str, np.ndarray] = {}
     samples, signed_curves, abs_curves = {}, {}, {}
+
+    base_copula_kwargs = dict(
+        assets=tuple(stocks),
+        weights={stock: 1.0 / len(stocks) for stock in stocks},
+        return_type='simple',
+        horizon_sessions=metadata['window_length'],
+        rebalance='daily',
+        confidence_levels=CONFIDENCE_LEVELS,
+        estimation='fixed',
+        num_samples=args.copula_paths,
+        seed=args.sample_seed,
+    )
 
     for split in eval_splits:
         realized = -terminal_returns(observed[split])
@@ -227,6 +252,42 @@ def main() -> None:
         for row in score_backtest_frame(rolling_bt.forecasts):
             risk_records.append({**row, 'split': split,
                                  'model': f'historical_rolling_{args.rolling_lookback}', 'seed': -1})
+
+        for model_name, copula_kind, marginal_kind, pit_kind, _, _ in COPULA_BENCHMARKS:
+            copula_bm = CopulaBenchmark(CopulaConfig(
+                **base_copula_kwargs,
+                copula=copula_kind,
+                marginal=marginal_kind,
+                pit=pit_kind,
+            )).fit(frames['train'])
+            warmup = frames['validation'] if (split == 'test' and marginal_kind.startswith('garch_')) else None
+            copula_bt = copula_bm.backtest(frames[split], warmup_returns=warmup)
+            copula_forecasts[model_name][split] = copula_bt.forecasts
+            for row in score_backtest_frame(copula_bt.forecasts):
+                risk_records.append({**row, 'split': split, 'model': model_name, 'seed': -1})
+            if split == 'validation':
+                copula_paths = copula_bm.sample_paths(args.n_paths, args.sample_seed)
+                flat_c = copula_paths.reshape(-1, len(stocks))
+                means_c, stds_c = flat_c.mean(0), flat_c.std(0, ddof=1)
+                c_signed, c_abs = acf(copula_paths), acf(copula_paths, True)
+                copula_signed_curves[model_name] = c_signed
+                copula_abs_curves[model_name] = c_abs
+                port_c = terminal_returns(copula_paths)
+                copula_metric_records.append({
+                    'model': model_name,
+                    'copula': copula_kind,
+                    'marginal': marginal_kind,
+                    'pit': pit_kind,
+                    'mean_rmse_in_training_std': float(np.sqrt(np.mean(((means_c - train_mean) / train_std) ** 2))),
+                    'vol_rmse_vs_train': float(np.sqrt(np.mean((stds_c / train_std - 1.0) ** 2))),
+                    'vol_rmse_vs_validation': float(np.sqrt(np.mean((stds_c / val_std - 1.0) ** 2))),
+                    'signed_acf_rmse_vs_train': float(np.sqrt(np.mean((c_signed - train_signed) ** 2))),
+                    'absolute_acf_rmse_vs_train': float(np.sqrt(np.mean((c_abs - train_abs) ** 2))),
+                    'cross_stock_corr_rmse_vs_train': float(np.sqrt(np.mean((np.corrcoef(flat_c.T) - train_corr)[pairs] ** 2))),
+                    'portfolio_mean_pct': float(100.0 * port_c.mean()),
+                    'portfolio_std_pct': float(100.0 * port_c.std(ddof=1)),
+                })
+            print(f'Evaluated {model_name} on {split}', flush=True)
 
         for forecaster in TSFM_FORECASTERS:
             tsfm_df = load_tsfm_forecasts(forecaster, split, metadata)
@@ -296,9 +357,11 @@ def main() -> None:
 
     risk_df = pd.DataFrame(risk_records)
     metrics_df = pd.DataFrame(metric_records)
+    copula_metrics_df = pd.DataFrame(copula_metric_records)
     solver_df = pd.DataFrame(solver_records)
     risk_df.to_csv(output / 'risk_scores.csv', index=False)
     metrics_df.to_csv(output / 'distribution_metrics.csv', index=False)
+    copula_metrics_df.to_csv(output / 'copula_distribution_metrics.csv', index=False)
     solver_df.to_csv(output / 'solver_sensitivity.csv', index=False)
 
     summary = risk_df.loc[risk_df.model.eq('sde_gan')].groupby(['split', 'confidence']).agg(
@@ -314,7 +377,7 @@ def main() -> None:
 
     # Plot 1: Validation quantile loss across models and SDE-GAN seeds.
     val_risk = risk_df.loc[risk_df.split.eq('validation')]
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
+    fig, axes = plt.subplots(1, 2, figsize=(15, 4.8), constrained_layout=True)
     for confidence, ax in zip(CONFIDENCE_LEVELS, axes):
         sub = val_risk.loc[val_risk.confidence.eq(confidence)]
         gan_rows = sub.loc[sub.model.eq('sde_gan')]
@@ -324,12 +387,14 @@ def main() -> None:
         colors = ['C1'] * len(bench_rows) + ['C0'] * len(gan_rows)
         ax.bar(labels, vals, color=colors)
         ax.set(title=f'{confidence:.0%} validation quantile loss', ylabel='Quantile loss × 100')
-        ax.tick_params(axis='x', rotation=25)
+        ax.tick_params(axis='x', rotation=35)
+        for tick in ax.get_xticklabels():
+            tick.set_ha('right')
     fig.savefig(output / 'validation_quantile_loss.png', dpi=150)
     plt.close(fig)
 
     # Plot 2: Validation time-series of realized losses vs VaR forecasts (conditional & unconditional).
-    fig, axes = plt.subplots(2, 1, figsize=(13, 7), sharex=True, constrained_layout=True)
+    fig, axes = plt.subplots(2, 1, figsize=(13, 7.5), sharex=True, constrained_layout=True)
     roll_val = rolling_forecasts['validation']
     for confidence, ax in zip(CONFIDENCE_LEVELS, axes):
         rsub = roll_val.loc[roll_val.confidence.eq(confidence)].sort_values('target_start')
@@ -338,8 +403,21 @@ def main() -> None:
         fixed_var = val_risk.loc[val_risk.model.eq('historical_fixed') & val_risk.confidence.eq(confidence),
                                  'var_pct'].iloc[0]
         ax.axhline(fixed_var, color='grey', linestyle='--', linewidth=1.3, label=f'Fixed HS ({fixed_var:.2f}%)')
+        static_t_var = val_risk.loc[val_risk.model.eq('copula_static_t') & val_risk.confidence.eq(confidence),
+                                    'var_pct'].iloc[0]
+        ax.axhline(static_t_var, color='C6', linestyle='-.', linewidth=1.3,
+                   label=f'Static t-copula ({static_t_var:.2f}%)')
         ax.plot(t, 100.0 * rsub['var'], color='C2', linewidth=1.5,
                 label=f'Rolling HS {args.rolling_lookback}d')
+        garch_sub = copula_forecasts['copula_garch_t']['validation'].loc[
+            copula_forecasts['copula_garch_t']['validation'].confidence.eq(confidence)
+        ].sort_values('target_start')
+        ax.plot(garch_sub['target_start'], 100.0 * garch_sub['var'], color='C8', linewidth=1.6,
+                label='GARCH-t copula')
+        garch_breaches = garch_sub.loc[garch_sub['breach'].fillna(False)]
+        if not garch_breaches.empty:
+            ax.scatter(garch_breaches['target_start'], 100.0 * garch_breaches['realized_loss'],
+                       color='C8', s=14, zorder=5, label='GARCH-t breach')
         gan_vars = val_risk.loc[val_risk.model.eq('sde_gan') & val_risk.confidence.eq(confidence), 'var_pct']
         ax.axhline(gan_vars.mean(), color='C0', linewidth=1.6, label=f'SDE-GAN mean ({gan_vars.mean():.2f}%)')
         ax.axhspan(gan_vars.min(), gan_vars.max(), color='C0', alpha=0.12)
@@ -363,9 +441,12 @@ def main() -> None:
     fig.savefig(output / 'validation_var_timeline.png', dpi=150)
     plt.close(fig)
 
-    # Plot 3: Signed and absolute ACF (multivariate: Observed vs SDE-GAN).
+    # Plot 3: Signed and absolute ACF (multivariate: Observed vs SDE-GAN vs GARCH-t copula).
     fig, axes = plt.subplots(2, len(stocks), figsize=(15, 6), constrained_layout=True)
-    for row, (kind, curves) in enumerate((('Signed', signed_curves), ('Absolute', abs_curves))):
+    for row, (kind, curves, cop_curves) in enumerate((
+        ('Signed', signed_curves, copula_signed_curves),
+        ('Absolute', abs_curves, copula_abs_curves),
+    )):
         for j, stock in enumerate(stocks):
             ax = axes[row, j]
             for split_name, color in (('train', 'black'), ('validation', 'grey')):
@@ -373,20 +454,26 @@ def main() -> None:
             stacked = np.stack([curves[s][:, j] for s in args.seeds])
             ax.plot(range(1, 6), stacked.mean(0), color='C0', label='SDE-GAN mean')
             ax.fill_between(range(1, 6), stacked.min(0), stacked.max(0), color='C0', alpha=0.18)
+            ax.plot(range(1, 6), cop_curves['copula_garch_t'][:, j], color='C8', linestyle='--',
+                    label='GARCH-t copula')
             ax.set(title=f'{stock}: {kind}', xlabel='Lag', ylabel='ACF', xticks=range(1, 6))
             ax.legend(fontsize=7)
     fig.savefig(output / 'return_acf.png', dpi=150)
     plt.close(fig)
 
     (output / 'evaluation.json').write_text(json.dumps({
-        'seeds': args.seeds, 'n_paths': args.n_paths, 'sample_seed': args.sample_seed,
-        'checkpoint': args.checkpoint, 'rolling_lookback': args.rolling_lookback,
+        'seeds': args.seeds, 'n_paths': args.n_paths, 'copula_paths': args.copula_paths,
+        'sample_seed': args.sample_seed, 'checkpoint': args.checkpoint,
+        'rolling_lookback': args.rolling_lookback,
+        'copula_models': [spec[0] for spec in COPULA_BENCHMARKS],
         'tsfm_splits_loaded': {name: sorted(splits) for name, splits in tsfm_forecasts.items()},
         'test_evaluated': args.evaluate_test,
     }, indent=2) + '\n')
 
     print('\n=== DISTRIBUTION METRICS (SDE-GAN) ===')
     print(metrics_df.round(4).to_string(index=False))
+    print('\n=== DISTRIBUTION METRICS (COPULA / GARCH-COPULA) ===')
+    print(copula_metrics_df.round(4).to_string(index=False))
     print('\n=== RISK SCORES (ALL MODELS) ===')
     print(risk_df.round(4).to_string(index=False))
     print('\n=== SDE-GAN ACROSS-SEED SUMMARY ===')
